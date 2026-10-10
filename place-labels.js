@@ -63,7 +63,8 @@ function setupPlaceLabels(data){
    face.classList.add('to-'+side);if(!target&&!floorTarget&&!alignmentMode)face.classList.add('unmapped');
    const travel=travelKind(row.name,'',row.travel),inside=(config.linkedMaps||[]).some(l=>l.map===row.toMap&&l.map!==config.id);
    if(inside)face.classList.add('travel');
-   const seal=text('b','','exit-arrow');seal.append(travelSvg(travel||'Exit'));seal.title=travel||'Exit';if(exitArrows[row.arrow])seal.append(text('small',glyph,'travel-direction'));
+   // A plain exit's seal is its compass arrow, as before; a travel sign shows its icon, with a small up or down mark when set.
+   const seal=text('b',travel?'':glyph,'exit-arrow');if(travel){seal.append(travelSvg(travel));seal.title=travel;if(row.arrow==='up'||row.arrow==='down')seal.append(text('small',glyph,'travel-direction'));}
    face.append(seal,text('span',' '+row.name,'exit-name'));
    if(!target&&!floorTarget&&!alignmentMode)face.append(text('small','not mapped yet','exit-soon'));
   }
