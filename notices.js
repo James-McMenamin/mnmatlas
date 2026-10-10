@@ -6,9 +6,12 @@ window.atlasNotices=(()=>{
  let account=null,adapter={},own=[],news=[],tab='news',all=false,serial=0,newsFailed=false,ownFailed=false,points=null,visitSeen={},undoTimer,publishedStamp=null,newsCheckedAt=null,newsLoading=null;
  window.atlasOfferUndo=(label,run)=>{clearTimeout(undoTimer);window.atlasUndo?.line.remove();const line=text('span',' · ','review-undo'),record={line,expires:Date.now()+10000};line.append(button(label,async()=>{if(Date.now()>record.expires)return;window.atlasUndo=null;line.remove();await run();}));window.atlasUndo=record;$('status')?.append(line);window.atlasKeepStatus?.(10000);undoTimer=setTimeout(()=>{line.remove();if(window.atlasUndo===record)window.atlasUndo=null;},10000);};
  const key=kind=>'mnmaps-notices-'+(kind==='mine'?'mine-'+account?.id:'news');
- function seen(kind){try{return JSON.parse(localStorage.getItem(key(kind))||'{}');}catch{return {};}}
+ function stored(kind){try{return localStorage.getItem(key(kind))!==null;}catch{return true;}}
+  function seen(kind){try{return JSON.parse(localStorage.getItem(key(kind))||'{}');}catch{return {};}}
  const newsKey=r=>r.id||r.date+'|'+r.title,newsStamp=r=>JSON.stringify([r.date,r.title,r.text]);
- const pending=(kind,history=seen(kind))=>rules.unread(kind==='mine'?own:news,history,kind==='mine'?r=>String(r.id):newsKey,kind==='mine'?rules.stamp:newsStamp);
+ // Your own changes approved as you sent them are not news to you; nor is anything older than your first look at the bell.
+  const selfApproved=r=>r.review_note==='Approved on sending (admin)';
+  const pending=(kind,given)=>{if(kind==='mine'&&account&&own.length&&!stored('mine')){mark('mine');if(visitSeen.mine)visitSeen.mine=seen('mine');given=seen('mine');}const history=given||seen(kind);return rules.unread(kind==='mine'?own.filter(r=>!selfApproved(r)):news,history,kind==='mine'?r=>String(r.id):newsKey,kind==='mine'?rules.stamp:newsStamp);}
  function mark(kind){const history=seen(kind);for(const r of kind==='mine'?own:news)history[kind==='mine'?String(r.id):newsKey(r)]=kind==='mine'?rules.stamp(r):newsStamp(r);try{localStorage.setItem(key(kind),JSON.stringify(history));}catch{}updateBadge();}
  function updateBadge(){const n=pending('news').length+(account?pending('mine').length:0);badge.textContent=n>99?'99+':String(n);badge.hidden=!n;bell.setAttribute('aria-label','Notices'+(n?' · '+n+' unread':''));}
  async function refresh(){const ticket=++serial,uid=account?.id;ownFailed=false;try{const data=uid?await adapter.rows?.():[];if(ticket!==serial||uid!==account?.id)return;own=rules.ownRows(data||[],uid);points=uid?await adapter.points?.():null;}catch{ownFailed=true;}if(ticket!==serial)return;updateBadge();if(!panel.hidden)render();}
