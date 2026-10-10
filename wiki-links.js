@@ -76,7 +76,7 @@ function normaliseChange(row){
  const normal=p=>{p=normaliseMarker({...p});for(const k of ['name','note'])if(typeof p[k]==='string')p[k]=clean(p[k],k==='note');
   if(p.wiki!==undefined){const link=wikiAddress(p.wiki);if(link!==null)p.wiki=link;}if(p.wikiId!==undefined){const id=wikiIdOf(p.wikiId);if(id!==null)p.wikiId=id;}
   if(p.vendor!==undefined)p.vendor=vendorKindNow(p.vendor);if(Array.isArray(p.sells))p.sells=[...p.sells].sort((a,b)=>sellTypes.indexOf(a)-sellTypes.indexOf(b));return p;};
- const p=normal(row.payload);if(Array.isArray(p.from))p.from=p.from.map(Math.round);else if(p.from)p.from=normal(p.from);
+ const p=normal(row.payload);if(p.travelArrow!==undefined){p.arrow=p.travelArrow;delete p.travelArrow;}if(row.kind==='edit-label'&&p.labelPriority!==undefined){p.priority=p.labelPriority;delete p.labelPriority;}if(Array.isArray(p.from))p.from=p.from.map(Math.round);else if(p.from)p.from=normal(p.from);
  if(Array.isArray(p.to))p.to=p.to.map(Math.round);if(row.kind==='new-marker'){p.x=Math.round(p.x);p.y=Math.round(p.y);}return {...row,payload:p};
 }
 // The kind a vendor's name or note names, the longest words first ("used weapons" before "weapon"); '' if none.
@@ -152,9 +152,10 @@ const trainerOnMap=(row,classes)=>{const c=trainerClasses(row);return c.length>0
 // the same ones: an area label nothing else; a zone exit its arrow and the map it leads to; a marker its colour and wiki
 // page (with the wiki's id), a tradeskill its trade, a class trainer its classes, a vendor its kind and Sells tags. Values are checked
 // where they are saved (app.js valid(), scripts/apply-approved.mjs).
-const markerExtraKeys=['noteType','arrow','toMap','color','wiki','wikiId','trade','classes','vendor','sells'];
+const markerExtraKeys=['noteType','travel','arrow','toMap','toPlace','toLevel','toMarker','direction','switchOnClick','level','minZoom','approximate','color','wiki','wikiId','trade','classes','vendor','sells'];
 function markerExtras(m){
- const out={};
+ const out={};for(const k of ['level','minZoom','approximate'])if(m[k]!==undefined&&m[k]!==null&&m[k]!=='')out[k]=m[k];
+ if(m.noteType!=='label')for(const k of ['travel','arrow','toMap','toPlace','toLevel','toMarker','direction','switchOnClick'])if(m[k]!==undefined&&m[k]!==null&&m[k]!=='')out[k]=m[k];
  if(m.noteType==='label'||m.noteType==='exit'){out.noteType=m.noteType;if(m.noteType==='exit'){if(m.arrow)out.arrow=m.arrow;if(m.toMap)out.toMap=m.toMap;}return out;}
  if(m.color)out.color=m.color;if(m.wiki){out.wiki=m.wiki;if(m.wikiId)out.wikiId=m.wikiId;}
  if(m.category==='Tradeskill'&&m.trade)out.trade=m.trade;

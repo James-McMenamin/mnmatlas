@@ -48,6 +48,7 @@ Object.assign(categoryPaths,{'Herbs':tradePaths['Herbalism'],'Wood':tradePaths['
 const pinColours={Red:'#a04438',Amber:'#b5861f',Green:'#4f7a3a',Teal:'#385f60',Blue:'#2f6f9a',Purple:'#6a4a7a',Brown:'#6b4f2e',Slate:'#4d5560'};
 // Ways to travel inside a zone: one pictogram each, on the round travel seals and on travel signs.
 const travelPaths={
+  'Exit':'M3 12h16 M14 7l5 5-5 5 M21 3v18',
   'Lift':'M6 2h12v20H6z M12 5.5v13 M9 8.5l3-3 3 3 M9 15.5l3 3 3-3',
   'Stairs':'M3 20h4v-4h4v-4h4V8h4V4h2 M3 20h18V4',
   'Ladder':'M7 2v20 M17 2v20 M7 6h10 M7 11h10 M7 16h10',
@@ -71,11 +72,11 @@ function travelSvg(kind){
   for(const [key,value] of Object.entries({viewBox:'0 0 24 24',fill:'none',stroke:'currentColor','stroke-width':'2','stroke-linecap':'round','stroke-linejoin':'round','aria-hidden':'true','focusable':'false'}))svg.setAttribute(key,value);
   const shape=document.createElementNS(ns,'path');shape.setAttribute('d',travelPaths[kind]);svg.append(shape);return svg;
 }
-const exitArrows={north:'↑',northeast:'↗',east:'→',southeast:'↘',south:'↓',southwest:'↙',west:'←',northwest:'↖'};
+const exitArrows={up:'⤒',down:'⤓',north:'↑',northeast:'↗',east:'→',southeast:'↘',south:'↓',southwest:'↙',west:'←',northwest:'↖'};
 function tradeskillName(marker){return marker.category==='Tradeskill'?marker.name.split(/\s+[—–-]\s+/)[0].trim():'';}
 function markerSymbol(marker){
-  const travel=!marker.noteType&&['Lift','Stairs','Ladder','Teleporter','Level connection'].includes(marker.category)?travelKind(marker.name,marker.category):'';
-  if(travel)return travelSvg(travel);
+  const travel=!marker.noteType&&['Exit','Lift','Stairs','Ladder','Bridge','Teleporter','Level connection'].includes(marker.category)?travelKind(marker.name,marker.category,marker.travel):'';
+  if(travel){const face=text('span','','travel-symbol');face.append(travelSvg(travel));if(exitArrows[marker.direction])face.append(text('small',exitArrows[marker.direction]));return face;}
   if(marker.toLevel)return text('b',marker.direction==='up'?'↑':'↓');
   if(marker.noteType==='exit')return text('b',exitArrows[marker.arrow]||'→');
   if(marker.noteType==='label')return text('b','Aa','label-glyph');

@@ -72,5 +72,17 @@ for(const [a,b] of [['',''],['Old hall','New hall'],['Same  words','Same words!'
  const diff=diffWords(a,b);assert.equal(diff.filter(r=>r.op!=='ins').map(r=>r.text).join(''),a);assert.equal(diff.filter(r=>r.op!=='del').map(r=>r.text).join(''),b);assert(diff.every(r=>['same','del','ins'].includes(r.op)));
 }
 const browser=vm.createContext({window:{}});vm.runInContext(await readFile(new URL('../changes.js',import.meta.url),'utf8'),browser);assert(browser.window.atlasChanges);
-assert((await readFile(new URL('../index.html',import.meta.url),'utf8')).includes('<script defer src="changes.js?v=atlas-1"></script><script defer src="community.js'));
+assert((await readFile(new URL('../index.html',import.meta.url),'utf8')).includes('<script defer src="changes.js?v=atlas-2"></script><script defer src="community.js'));
+{
+ const from={...marker,category:'Vendor',vendor:'Baker',sells:['Food & drink'],travel:'Lift',arrow:'up',toMap:'other',toPlace:'dock',minZoom:2,approximate:true};
+ const payload={name:from.name,from,travel:'Bridge',arrow:'down',toMap:null,toPlace:null,toLevel:'upper',toMarker:'stairs',direction:'up',switchOnClick:true,level:'upper',minZoom:3,approximate:false};
+ const r=row(400,'edit-marker',payload),set=buildChanges({...fixture([r]),markers:[from]}),t=set.forRow(400);
+ for(const k of ['travel','arrow','toMap','toPlace','toLevel','toMarker','direction','switchOnClick','level','minZoom','approximate'])assert(fieldsOf(r).has(k),k);
+ assert.equal(t.effective.travel,'Bridge');assert.equal(t.effective.toMap,undefined);assert.equal(t.effective.toMarker,'stairs');assert.equal(nextFrom(t,'edit-marker').vendor,'Baker');assert.deepEqual(plain(nextFrom(t,'edit-marker').sells),['Food & drink']);
+ const blank=buildChanges({...fixture([]),markers:[{...marker,category:'Vendor'}]}).get('marker:bank');assert.equal(nextFrom(blank,'edit-marker').vendor,null);assert.equal(nextFrom(blank,'edit-marker').sells,null);
+ const labelRow=row(401,'edit-label',{name:'Hall',kind:'exit',travel:'Ladder',arrow:'down',toMap:'other',toPlace:'gate',tier:'major',priority:100,minZoom:1,approximate:false,from:{name:'Hall',kind:'building'}},{target_id:'hall'});
+ const place=buildChanges(fixture([labelRow])).forRow(401);assert.equal(place.effective.kind,'exit');assert.equal(place.effective.arrow,'down');assert.equal(place.effective.priority,100);
+ const chipRow=row(402,'edit-marker',{name:'Tutor',building:'East guild',from:{name:'Tutor',building:'Tutor'}},{target_id:'trainer'});assert.equal(buildChanges(fixture([chipRow])).forRow(402).effective.building,'East guild');
+ const split=buildChanges(fixture([edit(403,'Waiting','Bank',{status:'pending'}),edit(404,'Approved')]));assert.equal(split.get('marker:bank').effective.name,'Approved','A waiting conflict cannot hide an approved change');assert.equal(split.get('marker:bank').proposed.name,'Waiting');
+}
 console.log('Change ledger checks passed: published positions, composition, conflicts, removals, shared places, labels, chips, floors, history, credits, word diffs and pure inputs.');

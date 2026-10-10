@@ -34,6 +34,7 @@ function trainerIcon(m){
  const body=text('div','','trainer-body');body.append(text('i','','trainer-leader'),face);
  return L.divIcon({className:'trainer-pin',html:body,iconSize:[width,25],iconAnchor:[width/2,32],popupAnchor:[0,-30]});
 }
+const placeLabelSize=(kind,zoom)=>(kind==='zone'?Math.min(30,16+Math.max(0,zoom-1)*4):kind==='region'?Math.min(40,22+Math.max(0,zoom-1)*5):kind==='district'?Math.min(21,15+Math.max(0,zoom-2)*1.5):kind==='exit'?Math.min(16,Math.max(13,12+(zoom-2)*.8)):12);
 function setupPlaceLabels(data){
  labelPins.clear();
  atlasLabels=data;trainerDetails=new Map(data.trainers.map(r=>[r.id,r]));
@@ -44,6 +45,7 @@ function setupPlaceLabels(data){
  const entries=data.labels.filter(atLevel).sort((a,b)=>b.priority-a.priority).map(row=>{
   // A boat dock opens a card with its departure times and every stop on the route, instead of jumping to one map.
   const boat=row.kind==='exit'&&Array.isArray(row.route)&&row.route.length>1;
+  const floorTarget=(config.levels||[]).some(l=>l.id===row.toLevel);
   const target=!boat&&(row.kind==='exit'||row.kind==='zone')&&!alignmentMode&&registry.maps.find(c=>c.id===row.toMap);
   const face=text(target?'a':'span',row.kind==='exit'?'':row.name,'place-name '+row.kind+(target||boat&&!alignmentMode?' linked':'')+(boat?' boat':''));
   if(boat){
@@ -58,27 +60,28 @@ function setupPlaceLabels(data){
    // Published exits may also go up or down (ladders, roof cracks); unknown arrows fall back to a plain one.
    const glyph=exitArrows[row.arrow]||{up:'⤒',down:'⤓'}[row.arrow]||'→';
    const side=/west/.test(row.arrow)?'west':/east/.test(row.arrow)?'east':['south','down'].includes(row.arrow)?'south':'north';
-   face.classList.add('to-'+side);if(!target&&!alignmentMode)face.classList.add('unmapped');
+   face.classList.add('to-'+side);if(!target&&!floorTarget&&!alignmentMode)face.classList.add('unmapped');
    const travel=travelKind(row.name,'',row.travel),inside=(config.linkedMaps||[]).some(l=>l.map===row.toMap&&l.map!==config.id);
    if(inside)face.classList.add('travel');
-   const seal=text('b',travel?'':glyph,'exit-arrow');if(travel){seal.append(travelSvg(travel));seal.title=travel;}
+   const seal=text('b','','exit-arrow');seal.append(travelSvg(travel||'Exit'));seal.title=travel||'Exit';if(exitArrows[row.arrow])seal.append(text('small',glyph,'travel-direction'));
    face.append(seal,text('span',' '+row.name,'exit-name'));
-   if(!target&&!alignmentMode)face.append(text('small','not mapped yet','exit-soon'));
+   if(!target&&!floorTarget&&!alignmentMode)face.append(text('small','not mapped yet','exit-soon'));
   }
   // Exit names that lead to another published map open it, at the matching exit when given.
   if(target){
    const url=mapLink(target.id);if(row.toPlace)url.searchParams.set('place',row.toPlace);
    face.href=url.href;face.title='Open the '+target.title+' map';if(singleMap){face.target='_blank';face.rel='noopener';face.title+=' in MnM Atlas';}
    L.DomEvent.disableClickPropagation(face);
-   face.addEventListener('click',e=>{if(singleMap||e.button||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();goToMap(target.id,url);});
+   face.addEventListener('click',e=>{if(singleMap||e.button||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();choosePlace({...row,kind:'label'});});
   }
   const icon=L.divIcon({className:'place-name-anchor',html:face,iconSize:[0,0],iconAnchor:[0,0]});
-  const marker=L.marker(locationOf(row),{icon,pane:'placeNames',alt:row.name,interactive:alignmentMode,keyboard:alignmentMode,draggable:alignmentMode,bubblingMouseEvents:false});
+  const marker=L.marker(locationOf(row),{icon,pane:'placeNames',alt:row.name,interactive:!singleMap,keyboard:!singleMap,draggable:alignmentMode,bubblingMouseEvents:false});
   if(alignmentMode){
    marker.on('click',()=>{selectAlignment(row,'label');labelEditPopup(row);});
    marker.on('dragstart',()=>{selectAlignment(row,'label');map.closePopup();});
    marker.on('dragend',()=>moveAlignedLabel(row.id,marker.getLatLng()));
   }
+  if(!alignmentMode&&!target&&!boat&&!singleMap){face.tabIndex=0;face.setAttribute('role','button');face.addEventListener('click',()=>choosePlace({...row,kind:'label'}));face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choosePlace({...row,kind:'label'});}});}
   labelPins.set(row.id,marker);
   return {row,face,marker};
  });
@@ -125,7 +128,7 @@ function setupPlaceLabels(data){
    const p=map.latLngToContainerPoint(locationOf(row));
    if(p.x<0||p.y<0||p.x>view.width||p.y>view.height){marker.remove();continue;}
    if(!map.hasLayer(marker))marker.addTo(map);
-   face.style.fontSize=(row.kind==='zone'?Math.min(30,16+Math.max(0,zoom-1)*4):row.kind==='region'?Math.min(40,22+Math.max(0,zoom-1)*5):row.kind==='district'?Math.min(21,15+Math.max(0,zoom-2)*1.5):row.kind==='exit'?Math.min(16,Math.max(13,12+(zoom-2)*.8)):12)+'px';
+   face.style.fontSize=placeLabelSize(row.kind,zoom)+'px';
    const selected=alignmentMode&&selectedAlignmentKind==='label'&&selectedAlignmentId===row.id;
    face.classList.toggle('selected',selected);marker.setZIndexOffset(selected?1000:0);
    face.style.visibility='hidden';

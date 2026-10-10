@@ -33,7 +33,7 @@ const context=vm.createContext({URL});
 const app=await readFile(resolve(root,'app.js'),'utf8'),icons=await readFile(resolve(root,'icons.js'),'utf8'),wikiLinks=await readFile(resolve(root,'wiki-links.js'),'utf8');
 vm.runInContext(app.slice(app.indexOf('const baseCategories='),app.indexOf('const mobileLayout=')),context);
 vm.runInContext(icons,context);
-vm.runInContext(await readFile(resolve(root,'changes.js'),'utf8'),context);const {buildChanges,fieldsOf,matchesFrom,conflicts,applyTo,whatOf}=context.atlasChanges;
+vm.runInContext(await readFile(resolve(root,'changes.js'),'utf8'),context);const {buildChanges,fieldsOf,matchesFrom,conflicts,applyTo,whatOf,editKeys}=context.atlasChanges;
 // Wiki links: only pages on the sites the atlas knows, in the same stored form the site writes.
 vm.runInContext(wikiLinks,context);const wikiAddress=vm.runInContext('wikiAddress',context),wikiIdOf=vm.runInContext('wikiIdOf',context),classesOk=vm.runInContext('classesOk',context),vendorKindOk=vm.runInContext('vendorKindOk',context),vendorKindNow=vm.runInContext('vendorKindNow',context),sellsOk=vm.runInContext('sellsOk',context),sellTypes=vm.runInContext('sellTypes',context),normaliseChange=vm.runInContext('normaliseChange',context),normaliseMarker=vm.runInContext('normaliseMarker',context),classAbbreviations=vm.runInContext('classAbbreviations',context);
 const base=vm.runInContext('Object.keys(allCategories)',context),supported=vm.runInContext('({categories:Object.keys(allCategories),trades:Object.keys(tradePaths),arrows:Object.keys(exitArrows),colours:Object.values(pinColours)})',context);
@@ -51,18 +51,20 @@ function wikiOf(value,id){const link=wikiAddress(value);if(link===null)fail('Uns
 // The wiki's id for the linked entry, kept beside the link it was picked with.
 function wikiIdFrom(p,id){const wikiId=wikiIdOf(p.wikiId);if(wikiId===null)fail('Invalid wiki id for suggestion '+id+'.');return wikiId;}
 function validatePayload(row,c){
- const p=normaliseMarker(structuredClone(row.payload));if(!p||Array.isArray(p)||typeof p!=='object'||typeof p.name!=='string'||!clean(p.name)||p.name.length>100||Buffer.byteLength(JSON.stringify(p))>=4096)fail('Invalid payload for suggestion '+row.id+'.');
+ const p=normaliseMarker(structuredClone(row.payload));if(p?.travelArrow!==undefined){p.arrow=p.travelArrow;delete p.travelArrow;}if(!p||Array.isArray(p)||typeof p!=='object'||typeof p.name!=='string'||!clean(p.name)||p.name.length>100||Buffer.byteLength(JSON.stringify(p))>=4096)fail('Invalid payload for suggestion '+row.id+'.');
  if(!['move-marker','move-label','new-marker','edit-marker','edit-label'].includes(row.kind))fail('Invalid kind for suggestion '+row.id+'.');
+ if(p.arrow!==undefined&&p.arrow!==null&&p.arrow!==''&&!supported.arrows.includes(p.arrow))fail('Unsupported arrow for suggestion '+row.id+'.');
  if(p.remove!==undefined&&(p.remove!==true||!['edit-marker','edit-label'].includes(row.kind)||p.reason!==undefined&&!['duplicate','missing','other'].includes(p.reason)))fail('Invalid removal for suggestion '+row.id+'.');
- if(row.kind!=='new-marker'&&(Object.hasOwn(p,'bounty')||Object.hasOwn(p,'priority')))fail('Bounty flags need a new marker.');
+ if(row.kind!=='new-marker'&&(Object.hasOwn(p,'bounty')||Object.hasOwn(p,'priority')&&!(row.kind==='edit-label'&&typeof p.priority==='number')))fail('Bounty flags need a new marker.');
  if((row.kind==='edit-marker'||row.kind==='edit-label')&&(!p.from||typeof p.from!=='object'||typeof p.from.name!=='string'||typeof (p.note??'')!=='string'||(p.note||'').length>2000))fail('Invalid edit for suggestion '+row.id+'.');
  if(row.kind==='new-marker'){
+  if(p.classes===null||p.sells===null)fail('Unsupported '+(p.sells===null?'Sells tags':'classes')+' for suggestion '+row.id+'.');
   // Only categories the atlas can draw: every map's page knows every map's types (app.js merges them at start, as the
   // note form offers them), so a "Notable NPC" may stand on any zone map. An unknown one would break the map for everyone.
   if(!supported.categories.includes(p.category)||typeof (p.note??'')!=='string'||(p.note||'').length>2000||![undefined,'marker','label','exit'].includes(p.noteType)||p.trade!==undefined&&!supported.trades.includes(p.trade)||p.color!==undefined&&!supported.colours.includes(p.color)||p.arrow!==undefined&&!supported.arrows.includes(p.arrow))fail('Unsupported marker fields for suggestion '+row.id+'.');
  }else if(typeof row.target_id!=='string'||!row.target_id)fail('Missing target for suggestion '+row.id+'.');
  // A marker edit may change the type too (set while reviewing): the same check as a new marker's type.
- if(row.kind==='edit-marker'&&p.category!==undefined&&(!supported.categories.includes(p.category)||p.category==='Personal'||p.trade!==undefined&&!supported.trades.includes(p.trade)))fail('Unsupported marker fields for suggestion '+row.id+'.');
+ if(row.kind==='edit-marker'&&p.category!==undefined&&(!supported.categories.includes(p.category)||p.trade!==undefined&&!supported.trades.includes(p.trade)))fail('Unsupported marker fields for suggestion '+row.id+'.');
  p.name=clean(p.name);if(p.note!==undefined)p.note=clean(p.note,true);
  if(p.from&&!Array.isArray(p.from))p.from={...p.from,name:clean(p.from.name),...(p.from.note!==undefined?{note:clean(p.from.note,true)}:{})};
  if(row.kind==='new-marker')point([p.x,p.y],c,row.id);else if(row.kind.startsWith('move-')){point(p.from,c,row.id);point(p.to,c,row.id);}
@@ -74,16 +76,33 @@ function before(path,m,row){const key=path+'#'+runKey(row);if(!original.has(key)
 const typeKeys=['trade','classes','vendor','sells'];
 function typeFields(m,p,id){
  if(p.trade&&p.category==='Tradeskill')m.trade=p.trade;
- if(p.category==='Class trainer'&&p.classes!==undefined){if(!classesOk(p.classes))fail('Unsupported classes for suggestion '+id+'.');m.classes=[...p.classes];}
- if(p.category==='Vendor'){if(p.vendor!==undefined){if(typeof p.vendor!=='string'||!vendorKindOk(p.vendor))fail('Unsupported vendor kind for suggestion '+id+'.');m.vendor=vendorKindNow(p.vendor);}
-  if(!sellsOk(p.sells))fail('Unsupported Sells tags for suggestion '+id+'.');if(p.sells)m.sells=[...p.sells].sort((a,b)=>sellTypes.indexOf(a)-sellTypes.indexOf(b));}
+ if(p.category==='Class trainer'&&p.classes!==undefined){if(p.classes!==null&&!classesOk(p.classes))fail('Unsupported classes for suggestion '+id+'.');if(p.classes)m.classes=[...p.classes];}
+ if(p.category==='Vendor'){if(p.vendor!==undefined){if(p.vendor!==null&&(typeof p.vendor!=='string'||!vendorKindOk(p.vendor)))fail('Unsupported vendor kind for suggestion '+id+'.');if(p.vendor)m.vendor=vendorKindNow(p.vendor);}
+  if(p.sells!==null&&!sellsOk(p.sells))fail('Unsupported Sells tags for suggestion '+id+'.');if(p.sells)m.sells=[...p.sells].sort((a,b)=>sellTypes.indexOf(a)-sellTypes.indexOf(b));}
  return m;
 }
 const targetKind=row=>row.kind.endsWith('label')||row.kind==='new-marker'&&['label','exit'].includes(row.payload?.noteType)?'label':'marker';
 const runKey=row=>row.runKey||row.map+'#'+targetKind(row)+'#'+(row.kind==='new-marker'?'community-'+row.id:row.target_id);
 // Validate the whole run before any retry can use a later row as a link in its chain.
+const ownerKeys=['minZoom','approximate','tier','priority'];let adminAuthors=null;
+async function validateExtra(row,p,c){
+ const touched=row.kind==='new-marker'?new Set(Object.keys(p)):fieldsOf({...row,payload:p});
+ if(ownerKeys.some(k=>touched.has(k)&&!(row.kind==='new-marker'&&k==='priority'&&typeof p.priority==='boolean'))){
+  if(!adminAuthors){const ids=await request('admins?select=user_id');adminAuthors=new Set((ids||[]).map(r=>r.user_id));}
+  if(!row.user_id||!adminAuthors.has(row.user_id))fail('Only a cartographer may change display settings; the author is not an admin.');
+ }
+ for(const k of ['toMap','toPlace','toLevel','toMarker','direction','travel','kind','building','tier','minZoom','priority','approximate','switchOnClick']){
+  const v=p[k];if(v===undefined||v===null||v==='')continue;
+  const valid=k==='travel'?['Exit','Lift','Stairs','Ladder','Bridge','Teleporter'].includes(v):k==='kind'?['region','zone','district','building','exit'].includes(v):k==='direction'?supported.arrows.includes(v):k==='toMap'?typeof v==='string'&&registry.maps.some(m=>m.id===v):k==='toLevel'?typeof v==='string'&&(c.levels||[]).some(l=>l.id===v):['toPlace','toMarker','building'].includes(k)?typeof v==='string'&&v.length<=100:k==='tier'?['major','minor','building'].includes(v):k==='minZoom'?Number.isFinite(v)&&v>=-5&&v<=10:k==='priority'?row.kind==='new-marker'&&typeof v==='boolean'||Number.isFinite(v)&&v>=0&&v<=1000:typeof v==='boolean';
+  if(!valid)fail('Unsupported '+k+' for suggestion '+row.id+'.');
+ }
+ if(p.toLevel&&p.toMap)fail('Choose a map or a floor, not both.');
+ if(p.toMarker){const conf={...c,...c.levels?.find(l=>l.id===p.toLevel)},f=await file(conf.markersFile);if(!f.data.some(m=>m.id===p.toMarker&&(!m.level||m.level===p.toLevel)))fail('Arrival marker missing on that floor.');}
+ if(p.toPlace){const dest=registry.maps.find(m=>m.id===p.toMap);if(!dest)fail('Choose the map before the arrival place.');const level=dest.levels?.find(l=>l.id===dest.defaultLevel)||dest.levels?.[0],conf={...dest,...level},markers=conf.markersFile?(await file(conf.markersFile)).data:[],labels=conf.labelsFile?(await file(conf.labelsFile)).data.labels:[];if(![...markers,...labels].some(m=>m.id===p.toPlace))fail('Arrival place missing on that map.');}
+}
 async function prepare(row){
  const c=configuration(row),p=validatePayload(row,c),label=targetKind({...row,payload:p})==='label';
+ await validateExtra(row,p,c);
  if(row.kind==='new-marker')[p.x,p.y]=point([p.x,p.y],c,row.id);
  else if(row.kind.startsWith('move-')){p.from=point(p.from,c,row.id);p.to=point(p.to,c,row.id);}
  const f=await file(label?c.labelsFile:c.markersFile),rows=label?f.data?.labels:f.data;
@@ -98,7 +117,7 @@ async function prepare(row){
   const typed=typeFields({category},{...p,category},row.id);for(const k of typeKeys)if(Object.hasOwn(p,k)){if(Object.hasOwn(typed,k))p[k]=typed[k];else delete p[k];}
   if(p.from&&!Array.isArray(p.from)){p.from=normaliseMarker(p.from);if(p.from.vendor!==undefined)p.from.vendor=vendorKindNow(p.from.vendor);if(Array.isArray(p.from.sells))p.from.sells=[...p.from.sells].sort((a,b)=>sellTypes.indexOf(a)-sellTypes.indexOf(b));}
  }
- if(row.kind.startsWith('edit-'))for(const k of ['color','level','arrow','toMap'])if(p[k]!==undefined&&(k==='color'&&!supported.colours.includes(p[k])||k==='level'&&!(c.levels||[]).some(l=>l.id===p[k])||k==='arrow'&&!supported.arrows.includes(p[k])||k==='toMap'&&!registry.maps.some(r=>r.id===p[k])))fail('Unsupported marker fields for suggestion '+row.id+'.');
+ if(row.kind.startsWith('edit-'))for(const k of ['color','level','arrow','toMap'])if(p[k]!==undefined&&p[k]!==null&&p[k]!==''&&(k==='color'&&!supported.colours.includes(p[k])||k==='level'&&!(c.levels||[]).some(l=>l.id===p[k])||k==='arrow'&&!supported.arrows.includes(p[k])||k==='toMap'&&!registry.maps.some(r=>r.id===p[k])))fail('Unsupported marker fields for suggestion '+row.id+'.');
  const added=batch.find(r=>r.kind==='new-marker'&&r.map===row.map&&'community-'+r.id===row.target_id),level=(label?row.level:(row.kind==='new-marker'?c.levelId:(m||chip)?.level||added?.level))?'#'+(row.level||''):'';
  return {...row,payload:p,runKey:row.map+'#'+targetKind({...row,payload:p})+'#'+(row.kind==='new-marker'?'community-'+row.id:row.target_id)+level};
 }
@@ -138,8 +157,9 @@ async function applyRow(row){
   if(existing)return 'already present';
   if((await publishedSuggestions()).some(r=>r.payload?.remove===true&&r.map===row.map&&targetKind(r)===targetKind(row)&&r.target_id===id)||(history.get(runKey(row))||[]).some(r=>r.fields.has('removed')))return 'already removed';
   const m={id,community:true,name:clean(p.name),...(label?{kind:p.noteType==='exit'?'exit':'building',priority:50,minZoom:0}:{category:p.category}),note:clean(p.note||'',true),x,y,...(c.levels?{level:c.levelId}:{})};
-  if(label&&p.noteType==='exit'){m.arrow=p.arrow||'east';if(typeof p.toMap==='string'&&registry.maps.some(r=>r.id===p.toMap))m.toMap=p.toMap;}
+  if(label&&p.noteType==='exit'){if(p.arrow)m.arrow=p.arrow;if(typeof p.toMap==='string'&&registry.maps.some(r=>r.id===p.toMap))m.toMap=p.toMap;}
   if(!label){typeFields(m,p,row.id);if(p.color)m.color=p.color;const wiki=wikiOf(p.wiki,row.id),wikiId=wikiIdFrom(p,row.id);if(wiki){m.wiki=wiki;if(wikiId)m.wikiId=wikiId;}}
+  for(const k of editKeys.filter(k=>!['name','note','kind','priority'].includes(k)))if(p[k]!==undefined&&p[k]!==null&&p[k]!=='')m[k]=p[k];
   rows.push(m);f.changed=true;return label?'place name added':'marker added';
  }
  const label=row.kind.endsWith('label'),path=label?c.labelsFile:c.markersFile,f=await file(path),rows=label?f.data?.labels:f.data;
@@ -147,14 +167,14 @@ async function applyRow(row){
  let m=rows.find(m=>m.id===row.target_id&&(fieldsOf(row).has('level')||!c.levels||!m.level||m.level===c.levelId)),mf=f,mrows=rows;
  const lf=c.labelsFile?await file(c.labelsFile):null,chips=lf?.data?.trainers,chip=chips?.find(t=>t.id===row.target_id&&(fieldsOf(row).has('level')||!c.levels||!t.level||t.level===c.levelId));
  if(!m&&!label&&chip){m=chip;mf=lf;mrows=chips;}
- const live=m&&m===chip?{...m,name:m.name||m.building||'',category:m.category||'Class trainer'}:m;
+ const live=m&&chip&&m!==chip?{...m,...(chip.building!==undefined?{building:chip.building}:{})}:m&&m===chip?{...m,name:m.name||m.building||'',category:m.category||'Class trainer'}:m;
  const edit=row.kind.startsWith('edit-'),fields=fieldsOf(row);
  if(edit){
   // Validate even an unchanged link or type before deciding that a retry is already live.
   const linked=!label&&p.wiki!==undefined,wiki=linked?wikiOf(p.wiki,row.id):m?.wiki||'',wikiId=linked||p.wikiId!==undefined?wikiIdFrom(p,row.id):'';
   if(linked)wikiOf(p.from.wiki,row.id);
   const category=p.category||m?.category||(m&&m===chip?'Class trainer':undefined),validated=typeFields({category},{...p,category},row.id),typed=fields.has('type')?validated:null;
-  for(const k of ['color','level','arrow','toMap'])if(p[k]!==undefined&&(k==='color'&&!supported.colours.includes(p[k])||k==='level'&&!(c.levels||[]).some(l=>l.id===p[k])||k==='arrow'&&!supported.arrows.includes(p[k])||k==='toMap'&&!registry.maps.some(r=>r.id===p[k])))fail('Unsupported marker fields for suggestion '+row.id+'.');
+  for(const k of ['color','level','arrow','toMap'])if(p[k]!==undefined&&p[k]!==null&&p[k]!==''&&(k==='color'&&!supported.colours.includes(p[k])||k==='level'&&!(c.levels||[]).some(l=>l.id===p[k])||k==='arrow'&&!supported.arrows.includes(p[k])||k==='toMap'&&!registry.maps.some(r=>r.id===p[k])))fail('Unsupported marker fields for suggestion '+row.id+'.');
   if(!conflicts(row,live,history.get(runKey(row))||[]).length&&superseded(row,live))return 'already superseded';
   if(!m){check(row,null,path);if(p.remove)return 'already removed';fail('Target missing for suggestion '+row.id+'.');}
   const next=structuredClone(m);
@@ -163,12 +183,14 @@ async function applyRow(row){
   if(fields.has('note'))next.note=clean(p.note||'',true);
   if(typed){next.category=typed.category;for(const k of typeKeys)if(Object.hasOwn(typed,k))next[k]=typed[k];else delete next[k];}
   if(fields.has('wiki')){if(wiki){next.wiki=wiki;if(wikiId)next.wikiId=wikiId;else if(p.wikiId!==undefined||wiki!==m.wiki)delete next.wikiId;}else{delete next.wiki;delete next.wikiId;}}
-  for(const k of ['color','level','arrow','toMap'])if(fields.has(k))next[k]=p[k];
+  for(const k of editKeys.filter(k=>!['name','note'].includes(k)))if(fields.has(k)&&!(k==='building'&&chip&&chip!==m)){if(p[k]===null||p[k]==='')delete next[k];else next[k]=p[k];}
   // Retries after a successful push can find the desired values already on the map.
   const hits=conflicts(row,live,history.get(runKey(row))||[]);if(hits.length)fail('conflicts with #'+hits.join(', #'));
-  if(JSON.stringify(next)===JSON.stringify(m))return 'already edited';
-  check(row,live,path);next.community=true;mrows[mrows.indexOf(m)]=next;mf.changed=true;
-  if(chip&&chip!==m){if(typed&&next.category!=='Class trainer')chips.splice(chips.indexOf(chip),1);else{const updated=structuredClone(chip);if(fields.has('name'))updated.name=next.name;if(fields.has('note'))updated.note=next.note;if(next.classes?.length){updated.classes=[...next.classes];updated.abbreviations=next.classes.map(k=>classAbbreviations[k]);}chips[chips.indexOf(chip)]=updated;}lf.changed=true;}
+  if(JSON.stringify(next)===JSON.stringify(m)&&(!fields.has('building')||!chip||chip===m||chip.building===p.building))return 'already edited';
+  check(row,live,path);next.community=true;
+  const floor=fields.has('level')&&p.level?{...registry.maps.find(c=>c.id===row.map),...c.levels?.find(l=>l.id===p.level)}:null,destPath=floor?(label||m===chip?floor.labelsFile:floor.markersFile):m===chip?c.labelsFile:path;
+  if(destPath&&destPath!==(m===chip?c.labelsFile:path)){const dest=await file(destPath),list=label?dest.data.labels:m===chip?dest.data.trainers:dest.data;if(list.some(x=>x.id===next.id))fail('A mark with this name already stands on that floor.');mrows.splice(mrows.indexOf(m),1);list.push(next);dest.changed=true;}else mrows[mrows.indexOf(m)]=next;mf.changed=true;
+  if(chip&&chip!==m){if(typed&&next.category!=='Class trainer')chips.splice(chips.indexOf(chip),1);else{const updated=structuredClone(chip);if(fields.has('name'))updated.name=next.name;if(fields.has('note'))updated.note=next.note;for(const k of ['building','level','minZoom','approximate'])if(fields.has(k)){const v=k==='building'?p[k]:next[k];if(v===undefined||v===null||v==='')delete updated[k];else updated[k]=v;}if(next.classes?.length){updated.classes=[...next.classes];updated.abbreviations=next.classes.map(k=>classAbbreviations[k]);}if(floor?.labelsFile&&floor.labelsFile!==c.labelsFile){const dest=await file(floor.labelsFile);if(dest.data.trainers.some(x=>x.id===updated.id))fail('A trainer chip already stands on that floor.');chips.splice(chips.indexOf(chip),1);dest.data.trainers.push(updated);dest.changed=true;}else chips[chips.indexOf(chip)]=updated;}lf.changed=true;}
   else if(m===chip&&next.classes?.length)next.abbreviations=next.classes.map(k=>classAbbreviations[k]);
   return label?'place name edited':'marker edited';
  }
@@ -177,8 +199,8 @@ async function applyRow(row){
  if(superseded(row,live))return 'already superseded';
  if(!m)fail('Target missing for suggestion '+row.id+'.');
  if(Math.round(m.x)===x&&Math.round(m.y)===y)return 'already positioned';
- check(row,live,path);m.x=x;m.y=y;m.community=true;mf.changed=true;
- if(!label&&chip&&chip!==m){chip.x=x;chip.y=y;lf.changed=true;}return 'position moved';
+ check(row,live,path);m.x=x;m.y=y;m.approximate=false;m.community=true;mf.changed=true;
+ if(!label&&chip&&chip!==m){chip.x=x;chip.y=y;chip.approximate=false;lf.changed=true;}return 'position moved';
 }
 async function apply(row){
  staged=new Map();try{const result=await applyRow(row);for(const [path,f] of staged)files.set(path,f);

@@ -36,6 +36,7 @@ function mapIdOf(url){const first=url.pathname.startsWith(siteRoot.pathname)?url
 const compact=()=>isEmbed||mobileLayout.matches;
 let disposeZones=()=>{},disposeBackdrop=()=>{};
 let registry,map,config,originals=[],personal=[],pins=new Map(),placeIndex=[],hiddenController;
+let noteFields=null;
 let enabled=new Set(Object.keys(categories)),showPins=true,draftPin=null,draft=null,statusTimer;
 let alignmentMode=false,editSnapshot=null,selectedAlignmentId=null,selectedAlignmentKind='marker',alignmentPositions={},alignmentLabelPositions={},publishedPositions=new Map(),publishedLabelPositions=new Map();
 let desktopPanelOpen=true,disposeLabels=()=>{},loadSerial=0,loading=false,applyingView=false,urlTimer,activePlace=null,sharedPin=null;
@@ -71,7 +72,7 @@ function bounded(x,y,z=map.getZoom()){return Number.isFinite(x)&&Number.isFinite
 function valid(m){m=normaliseMarker(m);return m&&validLevel(m.level)&&(m.toMap===undefined||typeof m.toMap==='string'&&!!registry?.maps.some(c=>c.id===m.toMap))&&typeof m.id==='string'&&/^personal-[a-zA-Z0-9-]{1,80}$/.test(m.id)&&typeof m.name==='string'&&m.name.trim()&&m.name.length<=100&&typeof m.note==='string'&&m.note.length<=2000&&Object.hasOwn(categories,m.category)&&[undefined,'label','exit'].includes(m.noteType)&&(m.arrow===undefined||Object.hasOwn(exitArrows,m.arrow))&&(m.trade===undefined||Object.hasOwn(tradePaths,m.trade))&&(m.color===undefined||Object.values(pinColours).includes(m.color))&&(m.wiki===undefined||typeof m.wiki==='string'&&m.wiki.length<=300)&&(m.wikiId===undefined||!!wikiIdOf(m.wikiId))&&classesOk(m.classes)&&vendorKindOk(m.vendor)&&sellsOk(m.sells)&&Number.isFinite(m.x)&&m.x>=0&&m.x<=config.width&&Number.isFinite(m.y)&&m.y>=0&&m.y<=config.height;}
 function persist(next){try{localStorage.setItem(storageKey('notes'),JSON.stringify(next));personal=next;window.dispatchEvent(new CustomEvent('atlas:notes'));return true;}catch{status('Your browser could not save this change. Free some storage and try again.',true);return false;}}
 function download(data,name){const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=text('a','');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function allMarkers(){return [...originals,...personal];}
+function allMarkers(){return [...originals,...(labelData.trainers||[]).filter(t=>!originals.some(m=>m.id===t.id)).map(t=>({...t,name:t.name||t.building||'Class trainers',note:t.note||'',category:'Class trainer'})),...personal];}
 // A class trainer reads as its class first ("Enchanter trainer"), so the pin says what it is; the trainer's own name,
 // when it names someone, sits underneath. Names that already spell out the classes ("Cleric / Paladin — Hospice") stay.
 const classesOf=m=>m.category==='Class trainer'&&Array.isArray(m.classes)?m.classes.filter(c=>typeof c==='string'&&c.trim()):[];
@@ -178,6 +179,7 @@ function popup(m){const n=text('div',''),card=npcCardFor(m),title=text('h3',card
  // A lift to a linked map (Evershade Weald and Faelindral) goes to the matching lift there.
  {const to=!m.noteType&&m.toPlace&&registry.maps.find(c=>c.id===m.toMap);if(to)n.append(button((m.direction==='up'?'Go up to ':m.direction==='down'?'Go down to ':'Go to ')+to.title,()=>{const url=mapLink(to.id);url.searchParams.set('place',m.toPlace);goToMap(to.id,url);},'level-link'));}
 const leads=m.noteType==='exit'&&!alignmentMode&&registry.maps.find(c=>c.id===m.toMap);if(leads)n.append(button('Go to '+leads.title,()=>openMap(leads.id),'level-link'));
+ if(!m.noteType&&m.toMap&&!m.toPlace){const to=registry.maps.find(c=>c.id===m.toMap);if(to)n.append(button('Go to '+to.title,()=>openMap(to.id),'level-link'));}
  if(m.id.startsWith('personal-'))n.append(button('Edit note',()=>openEditor(m),'','edit'),button('Delete',()=>confirmDelete(m),'popup-delete','delete'));
  if(alignmentPositions[m.id]){n.append(text('p','Position moved in this browser.','moved-note'));if(alignmentMode)n.append(button('Reset position',()=>resetMarker(m.id),'','reset'));}
  if(m.community&&!m.id.startsWith('personal-'))n.append(text('p','Community contribution','community-note'));
@@ -188,7 +190,7 @@ function labelEditPopup(row){
  window.atlasCommunity?.placePopup?.({...row,kind:'label'},n);
  L.popup({autoPan:false,offset:[0,-8]}).setLatLng(locationOf(row)).setContent(n).openOn(map);
 }
-function placePopup(p){const n=text('div','');n.append(text('div',p.kind==='hidden'?'Hidden area':'Place name','tag'),text('h3',p.name));if(p.note)n.append(text('p',p.note));const wiki=wikiButton(p);if(wiki)n.append(wiki);if(p.community)n.append(text('p','Community contribution','community-note'));n.append(copyButton(p));if(!singleMap)window.atlasCommunity?.placePopup?.(p,n);return tidyActions(n);}
+function placePopup(p){const n=text('div',''),row=labelData.labels.find(l=>l.id===p.id)||p;const destination=registry.maps.find(c=>c.id===row.toMap);if(destination)n.append(button('Go to '+destination.title,()=>{const url=mapLink(destination.id);if(row.toPlace)url.searchParams.set('place',row.toPlace);goToMap(destination.id,url);},'level-link'));if(row.toLevel)n.append(button('Go to '+row.toLevel,()=>changeLevel(row.toLevel,originals.find(m=>m.id===row.toMarker)),'level-link'));n.append(text('div',p.kind==='hidden'?'Hidden area':'Place name','tag'),text('h3',p.name));if(p.note)n.append(text('p',p.note));const wiki=wikiButton(p);if(wiki)n.append(wiki);if(p.community)n.append(text('p','Community contribution','community-note'));n.append(copyButton(p));if(!singleMap)window.atlasCommunity?.placePopup?.(p,n);return tidyActions(n);}
 // Makes a marker shown on the map again: its type on, pins shown, no search or vendor filter hiding it.
 function revealMarker(m){enabled.add(m.category);showPins=true;$('search').value='';$('clear-search').hidden=true;setVendorGroup('');updateCategoryButtons();drawMarkers();}
 function setVendorGroup(value){vendorGroup=value;const pick=$('vendor-filter-select');if(pick)pick.value=value;}
@@ -213,15 +215,16 @@ function pinIcon(m){
  // Personal area labels and zone exits are lettering, drawn like the map's own names.
  if(m.noteType){
   // Personal zone exits are the same signboard as the map's own exits.
-  const face=text('span',m.noteType==='exit'?'':m.name,'personal-label '+(m.noteType==='exit'?'exit':'district'));
-  if(m.noteType==='exit')face.append(text('b',exitArrows[m.arrow]||'→','exit-arrow'),text('span',' '+m.name,'exit-name'));
+  const face=text('span',m.noteType==='exit'?'':m.name,(m.atlasLabel?'place-name ':'personal-label ')+(m.noteType==='exit'?'exit':m.atlasLabel?m.kind||'district':'district'));
+  if(m.atlasLabel){face.style.transform='translate(-50%,-50%)';face.style.fontSize=placeLabelSize(m.kind,map.getZoom())+'px';}
+  if(m.noteType==='exit'){const seal=text('b','','exit-arrow');seal.append(travelSvg(travelKind(m.name,'',m.travel)||'Exit'));if(exitArrows[m.arrow])seal.append(text('small',exitArrows[m.arrow],'travel-direction'));face.append(seal,text('span',' '+m.name,'exit-name'));}
   return L.divIcon({className:'personal-label-anchor',html:face,iconSize:[0,0],iconAnchor:[0,0],popupAnchor:[0,-14]});
  }
  if(m.category==='Class trainer')return trainerIcon(m);
  const face=text('span','');face.style.setProperty('--pin',m.color||categories[m.category][1]);face.append(markerSymbol(m));
  if((m.toLevel||m.toMap&&m.direction)&&face.firstChild?.tagName==='svg')face.append(text('i',m.direction==='up'?'↑':'↓','level-dir'));
  // Ways up and down (ladders, stairs, lifts, passages) are round seals centred on the spot, like the exit signs' arrows.
- if(m.toLevel||['Ladder','Stairs','Lift','Passage','Level connection'].includes(m.category))return L.divIcon({className:'pin level-pin',html:face,iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-13]});
+ if(m.toLevel||['Exit','Ladder','Stairs','Lift','Bridge','Teleporter','Passage','Level connection'].includes(m.category))return L.divIcon({className:'pin level-pin',html:face,iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-13]});
  return L.divIcon({className:'pin',html:face,iconSize:[25,25],iconAnchor:[12,25],popupAnchor:[0,-23]});
 }
 function openMap(id){goToMap(id);}
@@ -245,9 +248,7 @@ function drawMarkers(){
   // A marker that stands for another published map (a dungeon entrance on the world map) opens that map.
   // Personal zone exits keep their popup (Go to, Edit note) instead.
   const opens=!own&&!alignmentMode&&typeof m.toMap==='string'&&!m.toPlace&&registry.maps.find(c=>c.id===m.toMap);
-  pin.on('click',()=>opens?openMap(opens.id):m.switchOnClick&&!alignmentMode?switchAt(m):choose(m));if(opens)pin.unbindPopup();
-  // A floor link switches floor straight away; its details stay in the search menu list.
-  if(m.switchOnClick&&!alignmentMode)pin.unbindPopup();
+  pin.on('click',()=>m.switchOnClick&&!alignmentMode?switchAt(m):choose(m));pin.on('contextmenu',()=>choose(m));
   if(alignmentMode){pin.on('dragstart',()=>{map.closePopup();if(!own)selectAlignment(m,'marker');});pin.on('dragend',()=>(own?movePersonal:moveAlignedMarker)(m.id,pin.getLatLng()));}
   if(!m.noteType)pin.bindTooltip(()=>text('span',markerTitle(m)),{direction:'top',offset:[0,-23]});if(showPins)pin.addTo(map);pins.set(m.id,pin);
   list.append(resultRow(markerTitle(m),markerDetail(m,own?'Personal note':''),()=>opens?openMap(opens.id):choose(m),m));
@@ -325,7 +326,7 @@ function setEditing(on){
  alignmentMode=on;selectedAlignmentId=null;selectedAlignmentKind='marker';document.body.classList.toggle('aligning',on);
  $('edit-bar').hidden=!on;$('alignment-tools').hidden=!on;$('edit-positions').hidden=on;
  const toggle=$('edit-toggle');toggle.title=on?'Finish editing':'Edit';toggle.setAttribute('aria-label',toggle.title);toggle.classList.toggle('active',on);
- map.closePopup();disposeLabels();disposeLabels=setupPlaceLabels(labelData);drawMarkers();updateAlignmentStatus();
+ window.dispatchEvent(new CustomEvent('atlas:editing'));map.closePopup();disposeLabels();disposeLabels=setupPlaceLabels(labelData);drawMarkers();updateAlignmentStatus();
 }
 function enterEdit(){
  if(alignmentMode||!map||singleMap)return;cancelPlacement();
@@ -380,7 +381,7 @@ function finishEdit(save){
 function noteTypeValue(){return document.querySelector('input[name="note-type"]:checked')?.value||'marker';}
 // Each category has its own pin colour, so types stay recognisable on the map; only Personal notes pick one.
 // The dot beside Category shows the colour the pin will have.
-function updateEditorFields(){const type=noteTypeValue(),own=categories[$('category').value]?.[1]||'#a04438',picked=document.querySelector('input[name="pin-colour"]:checked')?.value;$('default-colour').style.setProperty('--swatch',own);$('pin-colours').hidden=$('category').value!=='Personal';$('pin-preview').hidden=$('category').value==='Personal';$('pin-preview').style.setProperty('--swatch',$('category').value==='Personal'&&picked?picked:draft?.color||own);$('marker-fields').hidden=type!=='marker';$('trade-field').hidden=type!=='marker'||$('category').value!=='Tradeskill';$('exit-fields').hidden=type!=='exit';$('exit-target-field').hidden=type!=='exit';$('wiki-field').hidden=type!=='marker';$('class-field').hidden=type!=='marker'||$('category').value!=='Class trainer';$('vendor-field').hidden=type!=='marker'||$('category').value!=='Vendor';$('sells-field').hidden=$('vendor-field').hidden;guessTrade();guessVendor();}
+function updateEditorFields(){const type=noteTypeValue(),own=categories[$('category').value]?.[1]||'#a04438',picked=document.querySelector('input[name="pin-colour"]:checked')?.value;$('default-colour').style.setProperty('--swatch',own);$('pin-colours').hidden=type!=='marker'||$('category').value!=='Personal';$('pin-preview').hidden=type!=='marker'||$('category').value==='Personal';$('pin-preview').style.setProperty('--swatch',picked||draft?.color||own);noteFields?.fit();for(const k of ['category','trade','classes','vendor','sells','wiki'])if(noteFields?.boxes[k])noteFields.boxes[k].hidden=type!=='marker'||k!=='category'&&k!=='wiki'&&noteFields.boxes[k].hidden;guessTrade();guessVendor();}
 // A class trainer's classes ride on the wiki field (a wiki pick may give two); the Class menu shows a single one and
 // sets it. Every change goes through pickClasses, so the two never disagree.
 function pickedClasses(){try{const v=JSON.parse($('wiki').dataset.wikiClasses||'[]');return classesOk(v)?v:[];}catch{return [];}}
@@ -392,9 +393,8 @@ function guessTrade(){if($('category').value!=='Tradeskill'||$('trade').value)re
 function openEditor(m){m=normaliseMarker(m);draft={...m};$('editor-title').textContent=personal.some(p=>p.id===m.id)?'Your discovery':'A new discovery';$('name').value=m.name;$('category').value=m.category;$('note').value=m.note;$('wiki').value=m.wiki||'';setWikiPick($('wiki'),m.wiki,m.wikiId);pickClasses(m.classes);$('vendor-kind').value=vendorKindNow(m.vendor)||'';
  for(const i of $('sells-chips').querySelectorAll('input'))i.checked=Array.isArray(m.sells)&&m.sells.includes(i.value);
  for(const r of document.querySelectorAll('input[name="note-type"]'))r.checked=r.value===(m.noteType||'marker');$('trade').value=m.trade||'';
- for(const r of document.querySelectorAll('input[name="exit-arrow"]'))r.checked=r.value===(m.arrow||'north');
  for(const r of document.querySelectorAll('input[name="pin-colour"]'))r.checked=r.value===(m.color||'');
- {const target=$('exit-target');target.replaceChildren(Object.assign(text('option','Not set'),{value:''}));for(const c of registry.maps.filter(c=>c.id!==config.id).sort((a,b)=>a.title.localeCompare(b.title))){const o=text('option',c.title);o.value=c.id;target.append(o);}target.value=m.toMap||'';}
+ noteFields.fill({...m,classes:pickedClasses(),category:m.category});
 updateEditorFields();$('delete').hidden=!personal.some(p=>p.id===m.id);window.dispatchEvent(new CustomEvent('atlas:editor-open',{detail:{note:m}}));$('editor').showModal();$('name').focus();}
 function closeEditor(){draft=null;$('editor').close();cancelPlacement();}
 function selectAlignment(row,kind){selectedAlignmentId=row.id;selectedAlignmentKind=kind;schedulePlaceLabels();}
@@ -581,6 +581,9 @@ function validateRegistry(data){
  return data;
 }
 async function loadMap(id,url=new URL(location.href),push=false){
+ if(map&&window.atlasCommunity?.leaveReview?.()===false){const current=mapLink(config.id);if(config.levelId)current.searchParams.set('level',config.levelId);history.replaceState({map:config.id},'',current);return;}
+ if(alignmentMode&&editChanged()){const current=mapLink(config.id);if(config.levelId)current.searchParams.set('level',config.levelId);history.replaceState({map:config.id},'',current);confirmDialog('edit-map-confirm','Save your moves before travelling?','Save these positions and choose which to send before opening another map.',[['Keep editing',()=>{}],['Discard and travel',()=>{finishEdit(false);loadMap(id,url,push);}],['Save and travel',()=>{finishEdit(true);const go=()=>loadMap(id,url,push);if(window.atlasCommunity?.afterPositions)window.atlasCommunity.afterPositions(go);else go();},'primary']]);return;}
+
  const serial=++loadSerial;clearTimeout(urlTimer);loading=true;document.body.dataset.ready='false';
  const requested=registry.maps.find(c=>c.id===id),base=requested||registry.maps.find(c=>c.id===registry.defaultMap);let next=base;
  if(push)url.searchParams.delete('level');
@@ -761,6 +764,7 @@ function buildMapPicker(host){
  return {busy(on){loadingMap=on;button.setAttribute('aria-disabled',String(on));if(on)close(false);},set(id){current=id;const c=registry.maps.find(m=>m.id===id);value.textContent=c?c.title:'';button.setAttribute('aria-label','Choose map: '+(c?c.title:''));for(const o of options)o.setAttribute('aria-selected',String(o.dataset.map===id));}};
 }
 function setupControls(){
+ const host=$('shared-note-fields');noteFields=window.atlasFields.build(host,{personal:true,owner:()=>window.atlasCommunity?.isAdmin?.()===true,mode:noteTypeValue,prefix:'note',ids:{name:'name',category:'category',trade:'trade',classes:'trainer-class',vendor:'vendor-kind',sells:'sells-chips',note:'note',wiki:'wiki'}});noteFields.boxes.wiki.id='wiki-field';noteFields.root.append($('pin-colours'));noteFields.boxes.category.append($('pin-preview'));window.dispatchEvent(new CustomEvent('atlas:fields'));
  instantTips();
  $('about').onclick=()=>{$('about-dialog').showModal();showContributors();};$('close-about').onclick=()=>$('about-dialog').close();
 
@@ -776,13 +780,12 @@ function setupControls(){
  $('add').onclick=startPlacement;if($('add-note'))$('add-note').onclick=startPlacement;
  for(const [name,hex] of Object.entries(pinColours)){const label=text('label','');label.title=name;const input=text('input','');input.type='radio';input.name='pin-colour';input.value=hex;input.setAttribute('aria-label',name);const swatch=text('span','');swatch.style.setProperty('--swatch',hex);label.append(input,swatch);$('colour-swatches').append(label);}
  // A class trainer's class: picked here, or filled from the wiki pick; it rides with the note as its classes.
- fillSelect($('trainer-class'),atlasClasses.map(c=>[c,c]));
+
  $('trainer-class').onchange=()=>pickClasses($('trainer-class').value?[$('trainer-class').value]:[]);
- fillSelect($('vendor-kind'),vendorKindItems(false));
- sellsChips($('sells-chips'));
+
  for(const id of ['name','note'])$(id).addEventListener('input',()=>{guessTrade();guessVendor();});
  {const pick=$('vendor-filter-select');fillSelect(pick,[...vendorKindItems(true),{label:'Sells',options:sellTypes.map(t=>[t,'s:'+t])}]);pick.onchange=()=>{vendorGroup=pick.value;drawMarkers();};}
- fillSelect($('trade'),Object.keys(tradePaths).sort((a,b)=>a.localeCompare(b)).map(t=>[t,t]));
+
  for(const r of document.querySelectorAll('input[name="note-type"],input[name="pin-colour"]'))r.onchange=updateEditorFields;$('category').onchange=updateEditorFields;
  $('cancel-place').onclick=cancelPlacement;document.addEventListener('keydown',e=>{if(e.key==='Escape'){cancelPlacement();if(compact())setPanel(false);}});
  // Closing the editor without saving also drops a new note's pin; a saved note has already ended placement.
@@ -792,14 +795,9 @@ function setupControls(){
    if(sharing&&type==='marker'&&kind==='Tradeskill'&&!$('trade').value){status('Choose the trade before suggesting it for the public map.');$('trade').focus();return;}
    if(sharing&&type==='marker'&&kind==='Class trainer'&&!$('marker-form').classList.contains('bounty-mode')&&!pickedClasses().length){status('Choose the class they teach before suggesting it for the public map.');$('trainer-class').focus();return;}}
   // What the form says, then only the fields this kind of note keeps (markerExtras).
-  const type=noteTypeValue(),category=type==='marker'?$('category').value:'Personal',wiki=type==='marker'?wikiAddress($('wiki').value):'';
-  if(wiki===null){status(wikiHint);$('wiki').focus();return;}
+  const type=noteTypeValue(),category=type==='marker'?$('category').value:'Personal';let values;try{values=noteFields.read();}catch(e){status(e.message);return;}
   const colour=document.querySelector('input[name="pin-colour"]:checked')?.value,base={...draft};for(const k of markerExtraKeys)delete base[k];
-  const m={...base,name:$('name').value.trim(),note:$('note').value,category,...markerExtras({category,noteType:type==='marker'?undefined:type,
-   arrow:document.querySelector('input[name="exit-arrow"]:checked')?.value||'north',toMap:$('exit-target').value,trade:$('trade').value,vendor:$('vendor-kind').value,sells:pickedSells($('sells-chips')),
-   color:colour&&(category==='Personal'||colour===draft.color)?colour:'',wiki,wikiId:wiki?wikiIdFor($('wiki'),wiki):'',
-   // A trainer picked from the wiki keeps its classes, so it reads class first ("Beastmaster trainer").
-   classes:pickedClasses()})};
+  const m={...base,name:values.name,note:values.note,category,...markerExtras({...values,category,noteType:type==='marker'?undefined:type,classes:pickedClasses(),color:colour&&(category==='Personal'||colour===draft.color)?colour:''})};
   if(!valid(m)){status('This note could not be saved: check its name and fields.');return;}if(personal.length>=2000&&!personal.some(p=>p.id===m.id)){status('You have reached the 2,000-note limit. Export and remove older notes.');return;}const added=!personal.some(p=>p.id===m.id);if(persist([...personal.filter(p=>p.id!==m.id),m])){keepInSnapshot(m);closeEditor();cancelPlacement();enabled.add(m.category);setupCategoryControls();$('search').value='';buildPlaceIndex();refreshSearch();choose(m);status('Saved to your field notes.');if(added)window.dispatchEvent(new CustomEvent('atlas:note-added'));window.dispatchEvent(new CustomEvent('atlas:note-saved',{detail:{note:m}}));}};
  $('delete').onclick=()=>{if(draft&&deleteNote(draft.id))closeEditor();};
  $('export').onclick=()=>download({version:1,map:config.id,tileRevision:config.tileRevision,markers:personal},`${config.id}-field-notes.json`);
