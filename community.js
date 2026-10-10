@@ -66,6 +66,7 @@
  accountBox.addEventListener('focusout',e=>{if(e.relatedTarget&&!accountBox.contains(e.relatedTarget))closeAccount(false);});
  // Waiting suggestions on every map, shown beside Review suggestions.
  async function countWaiting(){
+  if(!admin)return;
   try{const {count,error}=await client.from('suggestions').select('id',{count:'exact',head:true}).eq('status','pending');if(error)throw error;reviewCount.textContent=count>99?'99+':String(count||'');reviewButton.textContent='Review ('+(count||0)+')';reviewCount.hidden=!count;}catch{reviewCount.hidden=true;}
  }
  $('about-community').textContent='Optional Discord sign-in stores your Discord name and id, your suggestions and reports and, if you sign in, your notes, so they follow you between devices. Delete my account removes all of it.';$('about-community').hidden=false;
@@ -113,7 +114,8 @@
   },'danger');
   actions.append(button('Cancel',()=>d.close()),go);d.append(actions);
  }
- function showDialog(title,floating=false){dialog.replaceChildren();const heading=text('h2',title);heading.id='community-title';dialog.append(heading);if(!dialog.open){if(floating)dialog.show();else dialog.showModal();}return dialog;}
+ function showDialog(title,floating=false){dialog.oncancel=dialog.onclose=null;dialog.classList.remove('place-change','suggest-sheet');for(const k of ['left','top','right','bottom','maxHeight','width'])dialog.style[k]='';dialog.replaceChildren();const heading=text('h2',title);heading.id='community-title';dialog.append(heading);if(!dialog.open){if(floating)dialog.show();else dialog.showModal();}if(floating)fitFloating(dialog);return dialog;}
+ function fitFloating(card,point){const r=$('map-frame').getBoundingClientRect(),margin=12,width=Math.min(330,r.width-2*margin),height=r.height-2*margin;card.style.maxHeight=height+'px';card.style.width=width+'px';card.style.left=Math.max(r.left+margin,Math.min(r.right-width-margin,r.left+(point?.x||0)+60))+'px';card.style.top=r.top+margin+'px';card.style.right=card.style.bottom='auto';}
  // A labelled field of a dialog.
  function field(d,label,id,el){const l=text('label',label);l.htmlFor=id;el.id=id;d.append(l,el);return el;}
  const textBox=(rows,max,placeholder='')=>{const t=document.createElement('textarea');t.rows=rows;t.maxLength=max;t.placeholder=placeholder;return t;};
@@ -127,7 +129,7 @@
  // A dialog's send button: it needs an account, runs once at a time and says what went wrong.
  function sendButton(label,run,failed,what){const b=button(label,async()=>{if(!user){signInDialog();return;}b.disabled=true;try{await run();}catch(e){status(sendError(e,failed,what));}finally{b.disabled=false;}},'primary');return b;}
  function signInDialog(){const d=showDialog('Sign in to contribute');d.append(text('p','Sign in with Discord to report problems or send suggestions for review. Your positions and notes remain saved in this browser.'));const actions=text('div','','dialog-actions');actions.append(button('Close',()=>d.close()),button('Sign in with Discord',signIn,'primary'));d.append(actions);}
- function freshPopup(){if(!map||loading)return;for(const m of allMarkers()){const pin=pins.get(m.id);if(pin)pin.setPopupContent(popup(m));}}
+ function freshPopup(){if(!map||loading)return;for(const m of allMarkers()){const pin=pins.get(m.id);if(pin?.isPopupOpen?.())pin.setPopupContent(()=>popup(m));}}
  // A report says what is wrong, so it can be acted on; it waits in review until fixed or dismissed.
  const reasons={position:'Wrong position',name:'Wrong name',type:'Wrong type or icon',missing:'Not there in the game',other:'Something else'};
  const turnedOff=e=>String(e?.message||'').includes('turned off for this account');
@@ -148,7 +150,8 @@
   actions.append(button('Cancel',()=>d.close()),send);d.append(actions);
  }
  // A published marker's or place name's text can be corrected; the change waits in review like any suggestion.
- const changeSet=()=>window.atlasChanges.buildChanges({mapId:config.id,levelId:config.levelId,markers:originals,labels:[...publishedMapLabels.filter(l=>!labelData.labels.some(p=>p.id===l.id&&p.level===l.level)),...labelData.labels],trainers:labelData.trainers||[],publishedPositions,publishedLabelPositions:new Map([...publishedMapLabels.map(l=>[l.id,[l.x,l.y]]),...publishedLabelPositions]),rows:[...approvedRows,...pendingRows,...rejectedRows],normalise:normaliseChange});
+ let cachedChanges=null;
+ function changeSet(){const version=[mapSerial,config.id,config.levelId,originals,labelData,publishedPositions,publishedLabelPositions,approvedRows,pendingRows,rejectedRows,publishedMapLabels];if(cachedChanges&&version.every((v,i)=>v===cachedChanges.version[i]))return cachedChanges.set;const set=window.atlasChanges.buildChanges({mapId:config.id,levelId:config.levelId,markers:originals,labels:[...publishedMapLabels.filter(l=>!labelData.labels.some(p=>p.id===l.id&&p.level===l.level)),...labelData.labels],trainers:labelData.trainers||[],publishedPositions,publishedLabelPositions:new Map([...publishedMapLabels.map(l=>[l.id,[l.x,l.y]]),...publishedLabelPositions]),rows:[...approvedRows,...pendingRows,...rejectedRows],normalise:normaliseChange});cachedChanges={version,set};return set;}
  const targetState=(m,kind)=>changeSet().get((kind==='edit-label'?'label':originals.some(p=>p.id===m.id)||m.id.startsWith('community-')?'marker':'chip')+':'+m.id);
  const reviewMaps=new Map();let currentReviewSet=null;
  async function reviewLocations(rows){
@@ -176,7 +179,10 @@
    let payload=structuredClone(row.payload);if(fields){const now=fields.read();if(row.kind==='new-marker'){payload={...payload,...now};for(const k of ['trade','classes','vendor','sells','wikiId'])if(payload[k]===null)delete payload[k];}else{const delta=window.atlasFields.delta(now,value);delete delta.from;delete delta.name;if(now.name!==value.name)delta.name=now.name;Object.assign(payload,delta);}}
    if(position.every(Number.isFinite)){if(!bounded(...position,config.minZoom))throw Error('Keep the pin inside the map.');if(move)payload.to=position;else if(row.kind==='new-marker'||JSON.stringify(position)!==start){payload.x=position[0];payload.y=position[1];if(payload.from&&!Array.isArray(payload.from))payload.from={...base,...payload.from};}}
    if(row.kind==='edit-label'&&Object.hasOwn(payload,'priority')){payload.labelPriority=payload.priority;delete payload.priority;}if(row.kind==='new-marker'&&['up','down'].includes(payload.arrow)){payload.travelArrow=payload.arrow;delete payload.arrow;}
-   const {data,error}=await version(client.from('suggestions').update({payload,comment:why.value.trim()||null}).eq('id',row.id).eq('user_id',user.id).eq('status','pending').is('reviewed_at',null),row).select('*');if(error||!data?.length)throw error||Error('Changed since opened');d.close();await loadApproved();status('Your suggestion is updated and waiting for review.');
+   const amendments=[...approvedRows,...pendingRows],newest=newestOnTarget(row,amendments);
+   if(row.kind==='report'||newest?.id===row.id){const {data,error}=await version(client.from('suggestions').update({payload,comment:why.value.trim()||null,...(admin?{status:'approved',reviewed_at:new Date().toISOString()}:{})}).eq('id',row.id).eq('user_id',user.id).eq('status','pending').is('reviewed_at',null),row).select('*');if(error||!data?.length)throw error||Error('Changed since opened');}
+   else{const now=fields?.read(),added=row.kind==='new-marker',kind=added?(t?.kind==='label'?'edit-label':'edit-marker'):row.kind,from=window.atlasChanges.nextFrom({effective:base.name?base:value},kind);payload=move?{...payload,from:[base.x,base.y]}:now?window.atlasFields.delta(now,from):{...payload,from};if(!move&&position.every(Number.isFinite)&&JSON.stringify(position)!==start){payload.x=position[0];payload.y=position[1];}await saveOwn({kind,target_id:added?'community-'+row.id:row.target_id,map:row.map,level:row.level,user_id:user.id,author_name:displayName(user),credit:row.credit,payload,comment:why.value.trim()||null},amendments);}
+   d.close();await loadApproved();status(admin?'Saved for the next edition.':'Your suggestion is updated and waiting for review.');
   },'This suggestion changed or is already being reviewed. Open it again.'));d.append(actions);d.oncancel=e=>{e.preventDefault();try{if(leave())d.close();}catch{if(window.confirm('Leave without saving these changes?'))d.close();}};d.addEventListener('close',()=>{fields?.dispose();clearPreview();},{once:true});
  }
  async function sentUndo(id){if(id==null||!user)return;let found;try{found=await client.from('suggestions').select('*').eq('id',id).maybeSingle();}catch{return;}const {data,error}=found;if(error||!data)return;const row=normaliseSuggestion(data);window.atlasOfferUndo('Delete just-sent suggestion',async()=>{try{let q=version(client.from('suggestions').delete().eq('id',row.id).eq('user_id',user.id).eq('status',row.status),row);if(!admin)q=q.is('reviewed_at',null);const {data:done,error}=await q.select('id');if(error||!done?.length)throw error||Error();await loadApproved();status('Just-sent suggestion withdrawn.');}catch{status('This suggestion changed or was reviewed; it could not be withdrawn.');}});}
@@ -449,7 +455,7 @@
   let moved=null,movePin=null,start=base.x!==undefined?[base.x,base.y]:null;
   // A name stays on the map while its floating card is open, and can be dragged on touch screens too.
   if(kind==='edit-label'&&start){map.closePopup();const pin=labelPins.get(target.id);if(pin){movePin=pin;pin.dragging?.enable();pin.getElement?.()?.classList.add('change-selected');const drag=()=>{moved=pixelsOf(pin.getLatLng());};pin.on('dragend',drag);d.addEventListener('close',()=>{pin.off?.('dragend',drag);if(!alignmentMode)pin.dragging?.disable();pin.setLatLng?.(locationOf({...base,x:target.x,y:target.y}));pin.getElement?.()?.classList.remove('change-selected');},{once:true});}}
-  if(kind==='edit-label'&&!compact()&&map.latLngToContainerPoint){const at=map.latLngToContainerPoint(locationOf(base)),r=$('map-frame').getBoundingClientRect();d.style.left=Math.max(r.left+12,Math.min(r.right-350,r.left+at.x+60))+'px';d.style.top=Math.max(r.top+12,Math.min(r.bottom-400,r.top+at.y-100))+'px';d.style.right=d.style.bottom='auto';d.addEventListener('close',()=>{d.style.left=d.style.top=d.style.right=d.style.bottom='';},{once:true});}
+  if(kind==='edit-label')fitFloating(d,map.latLngToContainerPoint?.(locationOf(base)));
   if(kind==='edit-label')d.append(text('p','Drag the name on the map to move it.','form-hint'));
   const actions=text('div','','dialog-actions'),send=sendButton(admin?'Save':'Send for review',async()=>{
    let now;try{now=fields.read();}catch(e){status(e.message);return;}let payload=window.atlasFields.delta(now,window.atlasChanges.nextFrom(state||{effective:base},kind));
@@ -480,14 +486,15 @@
  function moveDialog(target,kind){
   if(!user){signInDialog();return;}const amendments=[...approvedRows,...pendingRows],state=targetState(target,kind),base=state?.effective||target,from=[base.x,base.y];map.closePopup();clearPreview();reviewLayer=L.layerGroup().addTo(map);
   const pin=L.marker(locationOf(base),{icon:pinIcon({...base,noteType:kind==='edit-label'?base.kind==='exit'?'exit':'label':undefined,category:base.category||'Personal'}),draggable:true,zIndexOffset:600}).addTo(reviewLayer),bar=text('section','','community-preview move-sheet');bar.id='community-preview';bar.append(text('strong','It stands somewhere else'),text('p','Drag the faded mark, or tap its rightful spot.','form-hint'));$('map-frame').append(bar);
-  const tap=e=>pin.setLatLng(e.latlng);map.on('click',tap);bar.addEventListener('wiki-done',()=>map.off('click',tap));const actions=text('div','','dialog-actions');actions.append(button('Cancel',clearPreview),sendButton(admin?'Save':'Send for review',async()=>{const to=pixelsOf(pin.getLatLng());if(!bounded(...to,config.minZoom)){status('Keep it inside the map.');return;}await saveOwn({kind:kind==='edit-label'?'move-label':'move-marker',target_id:target.id,map:config.id,level:target.level||config.levelId||null,payload:{name:base.name,from,to},user_id:user.id,author_name:displayName(user)},amendments);clearPreview();await loadApproved();status(admin?'Saved for the next edition.':'Thanks! The move is waiting for review.');},'The move could not be saved.'));bar.append(actions);
+  const why=field(bar,'Why (optional)','move-comment',textBox(2,500,'Tell the cartographers what changed.')),credit=creditBox(bar);const tap=e=>pin.setLatLng(e.latlng);map.on('click',tap);bar.addEventListener('wiki-done',()=>map.off('click',tap));const actions=text('div','','dialog-actions');actions.append(button('Cancel',clearPreview),sendButton(admin?'Save':'Send for review',async()=>{const to=pixelsOf(pin.getLatLng());if(!bounded(...to,config.minZoom)){status('Keep it inside the map.');return;}await saveOwn({kind:kind==='edit-label'?'move-label':'move-marker',target_id:target.id,map:config.id,level:target.level||config.levelId||null,payload:{name:base.name,from,to},comment:why.value.trim()||null,credit:credit.checked,user_id:user.id,author_name:displayName(user)},amendments);clearPreview();await loadApproved();status(admin?'Saved for the next edition.':'Thanks! The move is waiting for review.');},'The move could not be saved.'));bar.append(actions);
  }
  // Repeated saves amend only this account's open row; the original base still protects earlier contributions.
+ function newestOnTarget(row,rows){const rules=window.atlasReview;return rows.filter(r=>!r.sourceStatus&&['pending','approved'].includes(r.status)&&rules.target(r)===rules.target(row)&&rules.targetKind(r)===rules.targetKind(row)&&r.map===row.map&&(rules.targetKind(row)!=='label'||(r.level||null)===(row.level||null))).sort((a,b)=>Number(b.id)-Number(a.id))[0];}
  async function saveOwn(row,amendments=[...approvedRows,...pendingRows]){if(row.kind==='edit-label'&&Object.hasOwn(row.payload,'priority')){row.payload.labelPriority=row.payload.priority;delete row.payload.priority;}
-  const old=admin&&row.target_id?amendments.filter(r=>!r.sourceStatus&&r.user_id===user.id&&r.kind===row.kind&&r.target_id===row.target_id&&r.map===row.map&&(r.level||null)===(row.level||null)).sort((a,b)=>Number(b.id)-Number(a.id))[0]:null;
-  if(!old)return submit(row);let payload={...old.payload,...row.payload,from:row.kind.startsWith('move-')?old.payload.from:{...row.payload.from,...old.payload.from}};
+  const newest=row.target_id?newestOnTarget(row,amendments):null,old=newest&&newest.user_id===user.id&&newest.kind===row.kind&&(admin||newest.status==='pending'&&!newest.reviewed_at)?newest:null;
+  if(!old)return submit(row);const delta={...row.payload};if(!row.kind.startsWith('move-')&&delta.remove!==true&&delta.name===delta.from?.name)delete delta.name;let payload={...old.payload,...delta,from:row.kind.startsWith('move-')?old.payload.from:{...row.payload.from,...old.payload.from}};
   if(row.kind==='edit-label'&&Object.hasOwn(payload,'priority')){if(!Object.hasOwn(payload,'labelPriority'))payload.labelPriority=payload.priority;delete payload.priority;}if(row.payload.remove!==true){delete payload.remove;delete payload.reason;}if(payloadBytes(payload)>=4096)throw Object.assign(Error('Too long'),{code:'too-long'});
-  const {data,error}=await version(client.from('suggestions').update({payload,status:'approved',comment:row.comment??old.comment,credit:row.credit??old.credit,reviewed_at:new Date().toISOString()}).eq('id',old.id).eq('user_id',user.id).eq('status',old.status),old).select('*');if(error||!data?.length)throw error||Error('Changed since opened');await loadApproved();return true;
+  let q=client.from('suggestions').update({payload,status:admin?'approved':'pending',comment:row.comment??old.comment,credit:row.credit??old.credit,...(admin?{reviewed_at:new Date().toISOString()}:{})}).eq('id',old.id).eq('user_id',user.id).eq('status',old.status);if(!admin)q=q.is('reviewed_at',null);const {data,error}=await version(q,old).select('*');if(error||!data?.length)throw error||Error('Changed since opened');await loadApproved();return true;
  }
  const editButton=(target,kind)=>button('Change',()=>suggestSheet(target,kind),'community-edit','edit');
  const sharedToken=m=>scope()+':'+m.id;
@@ -517,13 +524,14 @@
  function ledger(target,kind,n){
   const t=targetState(target,kind),rows=t?.rows.filter(r=>['pending','approved'].includes(r.status)&&!approvedLive(r))||[],box=text('div','','change-ledger');
   if(rows.length){box.append(text('h4','Changes on their way'));for(const r of rows){const fields=[...r.fields].map(k=>({position:'moved',name:'renamed',note:'description updated',removed:'removal',type:'type changed',added:'charted'}[k]||k+' changed')),line=text('div','','ledger-change');line.append(text('i',r.fields.has('position')?'⚒':r.fields.has('removed')?'✕':'✎'),text('strong',fields.join(' · ')||'Details checked'),text('small','by '+(r.author_name||'a traveller')+' · '+new Date(r.created_at||r.reviewed_at||Date.now()).toLocaleString()));line.append(text('span',r.status==='approved'?'approved':'waiting for review','change-state '+r.status));box.append(line);}}
-  const published=mapCredits[(kind==='edit-label'?'label':t?.kind==='chip'?'marker':'marker')+':'+target.id+(kind==='edit-label'&&target.level?'#'+target.level:'')]||mapCredits[target.id]||Object.entries(mapCredits).filter(([k])=>k.startsWith('label:'+target.id+'#')).flatMap(([,v])=>Array.isArray(v)?v:[])||[],names=[...new Set(published.map(c=>c.name).filter(Boolean))],anonymous=published.filter(c=>!c.name).length;
-  if(published.length)box.append(text('p','Charted by '+names.join(', ')+(anonymous?(names.length?' and ':'')+(anonymous===1?'a traveller':anonymous+' travellers'):'')+'.','contributors-line'));
+  const key=(kind==='edit-label'?'label':'marker')+':'+target.id,published=mapCredits[key+(kind==='edit-label'&&target.level?'#'+target.level:'')]||mapCredits[key]||[];
+  if(published.length)box.append(text('p',creditWords(published)+'.','contributors-line'));
   const actions=text('div','','change-actions');actions.append(editButton(target,kind));const row=rows.find(r=>r.status==='pending')||rows[0];if(admin&&row&&!row.sourceStatus)actions.append(button('Review '+(row.fields.has('position')?'move':row.fields.has('removed')?'removal':'details'),()=>preview(row,loadApproved,loadApproved,null,true)));actions.append(button('✕ Remove',()=>removalDialog(target,kind),'community-remove'));box.append(actions);n.append(box);
  }
- window.atlasCommunity={deleteNotice,isAdmin:()=>admin,reviewOpen:()=>desk.opened,reviewCurrent:token=>desk.currentPreview(token),reviewLabel:()=>desk.opened&&desk.selected?.kind.endsWith('label')?desk.selected.target_id:null,leaveReview:token=>desk.leaveMap(token)&&allowLeave(),closeReview:()=>desk.opened?desk.close():null,afterPositions:go=>{if(dialog.open)dialog.addEventListener('close',go,{once:true});else go();},report:reportDialog,fields:window.atlasFields,refresh:loadApproved,popup(m,n){
+ function creditWords(rows){const groups=new Map();for(const c of rows){const verb=c.what==='added'?'charted':c.what==='moved'?'moved':'improved';if(!groups.has(verb))groups.set(verb,[]);groups.get(verb).push(c.name||null);}return [...groups].map(([verb,names],i)=>{const known=[...new Set(names.filter(Boolean))],unknown=names.filter(n=>!n).length,who=known.length>2?known.slice(0,2).join(', ')+' and '+(known.length-2)+' travellers':known.join(' and ');return (i?verb:verb[0].toUpperCase()+verb.slice(1))+' by '+who+(unknown?(who?' and ':'')+(unknown>1?'other travellers':'a traveller'):'');}).join(' · ');}
+ window.atlasCommunity={deleteNotice,change(target,kind){if(!user)return false;editDialog(target,kind);return true;},isAdmin:()=>admin,reviewOpen:()=>desk.opened,reviewCurrent:token=>desk.currentPreview(token),reviewLabel:()=>desk.opened&&desk.selected?.kind.endsWith('label')?desk.selected.target_id:null,leaveReview:token=>desk.leaveMap(token)&&allowLeave(),closeReview:()=>desk.opened?desk.close():null,afterPositions:go=>{if(dialog.open)dialog.addEventListener('close',go,{once:true});else go();},report:reportDialog,fields:window.atlasFields,refresh:loadApproved,popup(m,n){
   if(m.atlasLabel){ledger(m,'edit-label',n);return;}if(m.id.startsWith('personal-')){if(alignmentMode)return;const shared=readSet(sharedKey).has(sharedToken(m));if(!config.zonesFile)n.append(shared?text('p','Shared for review','moved-note'):button('Share with everyone',()=>shareNote(m),'','share'));return;}ledger(m,'edit-marker',n);
- },placePopup(p,n){const target=labelData.labels.find(l=>l.id===p.id)||changeSet().get('label:'+p.id)?.published||p;ledger(target,'edit-label',n);},chipPopup(p,n){ledger(p,'edit-marker',n);}};
+ },placePopup(p,n){if(!['label','exit','building','district'].includes(p.kind))return;const target=labelData.labels.find(l=>l.id===p.id)||changeSet().get('label:'+p.id)?.published||p;ledger(target,'edit-label',n);},chipPopup(p,n){ledger(p,'edit-marker',n);}};
  function movedItems(){
   const sent=readSet(sentKey),rows=[];
   for(const [kind,items,positions] of [['move-marker',originals,publishedPositions],['move-label',labelData.labels,publishedLabelPositions]])for(const m of items){
@@ -745,7 +753,7 @@
  }
  async function onMap(){
   if(!map||loading)return;const serial=++mapSerial;syncReady='';clearPreview();desk.mapChanged();
-  map.off?.('zoomend',drawApproved);map.on?.('zoomend',drawApproved);loadApproved();await syncNotes(serial);
+  map.off?.('zoomend',zoomApproved);map.on?.('zoomend',zoomApproved);loadApproved();await syncNotes(serial);
  }
  // Suggestions on the map before they are live. Approved ones wait for the publishing run: admins see them all, and each
  // author their own (the read policy already lets authors read their rows). Admins also see those waiting for review,
@@ -753,7 +761,9 @@
  // new spot with a dotted line from the current one, an edit tagged as such. Each goes once its change is live.
  // Suggestions close together (or naming the same NPC), and ones repeating a marker already on the map, are flagged
  // as possible duplicates, with a jump between them.
- let approvedLayer=null,approvedRows=[],pendingRows=[],rejectedRows=[],approvedSerial=0,mapCredits={},publishedMapLabels=[];const suggestionPins=new Map();
+ let approvedLayer=null,approvedRows=[],pendingRows=[],rejectedRows=[],approvedSerial=0,mapCredits={},publishedMapLabels=[],loadedSignature='';const suggestionPins=new Map(),creditsCache=new Map();
+ function zoomApproved(){if(changeSet().targets().some(t=>t.kind==='label'))drawApproved();}
+ async function creditsForMap(){const key=config.id,edition=loadSerial;let entry=creditsCache.get(key);if(!entry||entry.edition!==edition){entry={edition,read:fetch('data/credits/'+key+'.json').then(r=>r.ok?r.json():{}).catch(()=>({}))};creditsCache.set(key,entry);}return entry.read;}
  const approvedKey='mnmaps-show-approved',pendingKey='mnmaps-show-pending',rejectedKey='mnmaps-show-rejected';
  // Rejected suggestions stay in the database and never go live; admins see the ones rejected since the site was last
  // published, crossed out, until the next update. The published time is the site files' Last-Modified (as the update
@@ -765,7 +775,7 @@
  const shownSetting=key=>{try{return localStorage.getItem(key)!=='false';}catch{return true;}};
  function approvedLive(row){const p=row.payload||{},t=changeSet().forRow(row.id),live=t?.published;
   if(row.kind==='new-marker')return !!live||!!row.sourceStatus&&t?.effective.removed===true;if(p.remove===true)return !live;if(!live)return false;
-  const next=row.sourceStatus?t.effective:window.atlasChanges.applyTo(live,row);return [...window.atlasChanges.fieldsOf(row)].every(f=>f==='position'?next.x===live.x&&next.y===live.y:f==='type'?['category','trade','classes','vendor','sells'].every(k=>JSON.stringify(next[k])===JSON.stringify(live[k])):f==='wiki'?next.wiki===live.wiki&&next.wikiId===live.wikiId:JSON.stringify(next[f])===JSON.stringify(live[f]));}
+  const next=window.atlasChanges.applyTo(live,row);return [...window.atlasChanges.fieldsOf(row)].every(f=>f==='position'?next.x===live.x&&next.y===live.y:f==='type'?['category','trade','classes','vendor','sells'].every(k=>JSON.stringify(next[k])===JSON.stringify(live[k])):f==='wiki'?next.wiki===live.wiki&&next.wikiId===live.wikiId:JSON.stringify(next[f])===JSON.stringify(live[f]));}
  const drawable=r=>['new-marker','move-marker','edit-marker','move-label','edit-label'].includes(r.kind);
  function suggestionAt(row){const t=changeSet().forRow(row.id),p=t?.proposed;return Number.isFinite(p?.x)&&Number.isFinite(p?.y)?[p.x,p.y]:null;}
  // Possible duplicates of a new marker: other suggestions within 15 map units or naming the same NPC, and markers
@@ -792,12 +802,11 @@
  async function loadApproved(){
   const serial=++approvedSerial;let approved=[],pending=[],rejected=[],published=[];
   if(user&&config&&!config.zonesFile){
-   const read=async(state,since)=>{let q=client.from('suggestions').select('*').eq('status',state).eq('map',config.id);if(since)q=q.gte('reviewed_at',since);const {data,error}=await q.limit(500);if(error)throw error;return Array.isArray(data)?data.map(normaliseSuggestion):[];};
-   try{approved=await read('approved');pending=await read('pending');published=await read('published');}catch{}
+   const read=async(state,since)=>{let q=client.from('suggestions').select('*').eq('status',state).eq('map',config.id);if(since)q=q.gte('reviewed_at',since).order('reviewed_at',{ascending:false}).order('id',{ascending:false});const {data,error}=await q.limit(500);if(error)throw error;return Array.isArray(data)?data.map(normaliseSuggestion):[];};
+   try{const since=await publishedSince();approved=await read('approved');pending=await read('pending');published=await read('published',since);}catch{}
    if(admin)try{rejected=await read('rejected',await publishedSince());}catch{}}
   let labels=[];try{const source=(config.levels||[]).filter(l=>l.labelsFile&&l.labelsFile!==config.labelsFile);labels=(await Promise.all(source.map(async l=>{const data=await fetchData(l.labelsFile,{labels:[]});return (data.labels||[]).map(p=>({...p,level:p.level||l.id}));}))).flat();}catch{}
-  let credits={};try{const r=await fetch('data/credits/'+config.id+'.json',{cache:'no-store'});if(r.ok)credits=await r.json();}catch{}
-  if(serial!==approvedSerial)return;currentReviewSet=null;window.atlasNotices?.refresh();mapCredits=credits;publishedMapLabels=labels;approvedRows=[...approved,...published.map(r=>({...r,status:'approved',sourceStatus:'published'}))];pendingRows=pending;rejectedRows=rejected;drawApproved();freshPopup();
+  const credits=await creditsForMap();if(serial!==approvedSerial)return;const signature=JSON.stringify([mapSerial,loadSerial,originals,labelData,approved,pending,rejected,published,labels,credits]);currentReviewSet=null;window.atlasNotices?.refresh();if(signature===loadedSignature){freshPopup();return;}loadedSignature=signature;mapCredits=credits;publishedMapLabels=labels;approvedRows=[...approved,...published];pendingRows=pending;rejectedRows=rejected;cachedChanges=null;approvedRows=[...approved,...published.filter(r=>!approvedLive(r)).map(r=>({...r,status:'approved',sourceStatus:'published'}))];cachedChanges=null;drawApproved();freshPopup();
  }
  function drawApproved(){
   approvedLayer?.remove();approvedLayer=null;suggestionPins.clear();const ready=map&&config;
@@ -806,7 +815,7 @@
   if(alignmentMode||!ready)return;const visible=new Set([...(shownSetting(approvedKey)?approved:[]),...(shownSetting(pendingKey)?pending:[])].map(r=>String(r.id)));approvedLayer=L.layerGroup().addTo(map);
   for(const t of changeSet().targets()){
    const rows=t.rows.filter(r=>visible.has(String(r.id)));if(!rows.length||rows.some(r=>desk.hides(r)))continue;const proposed=t.proposed;if(config.levels&&proposed.level&&proposed.level!==config.levelId)continue;if(!Number.isFinite(proposed.x)||!Number.isFinite(proposed.y))continue;
-   const at=locationOf(proposed),look={...proposed,id:t.id,...(t.kind==='label'?{category:'Personal',atlasLabel:true,noteType:proposed.kind==='exit'?'exit':'label'}:{})},waiting=rows.filter(r=>r.status==='pending').length,words=[...t.changed].map(k=>({position:'moved',name:'renamed',note:'details',removed:'removal',type:'type changed',added:'new'}[k]||k)).join(' · '),plate=words+' · '+(waiting?waiting+' waiting':'approved');
+   const at=locationOf(proposed),look={...proposed,id:t.id,...(t.kind==='label'?{category:'Personal',atlasLabel:true,noteType:proposed.kind==='exit'?'exit':'label'}:{})},waiting=rows.filter(r=>r.status==='pending').length,words=[...t.changed].map(k=>({position:'moved',name:'renamed',note:'details',removed:'removal',type:'type changed',added:'new'}[k]||k)).join(' · '),plate=[words,waiting?waiting+' waiting':'approved'].filter(Boolean).join(' · ');
    if(t.published&&t.changed.has('position'))approvedLayer.addLayer(L.polyline([locationOf(t.published),at],{color:'#e2b46a',weight:2,dashArray:'3 6',interactive:false}));
    const ownPopup=()=>{const real=originals.find(m=>m.id===t.id),n=t.kind==='label'&&typeof placePopup==='function'?placePopup({...t.published||proposed,id:t.id}):popup(real||look);const dup=duplicateList(rows[0],jumpTo);if(dup)n.append(dup);return n;};
    const pin=L.marker(at,{icon:pinIcon(look),zIndexOffset:-500,interactive:false,keyboard:false,label:plate+' ('+(waiting?'waiting for review':'approved, not live yet')+'): '+proposed.name}).bindPopup(ownPopup);pin.on('add',()=>pin.getElement()?.classList.add('combined-ghost'));approvedLayer.addLayer(pin);
@@ -878,7 +887,9 @@
  client.auth.getSession().then(({data,error})=>{if(error)throw error;return authChanged(data.session);}).catch(()=>status('Account could not load. Your local notes are safe.'));
  window.addEventListener('atlas:loaded',()=>{for(const f of finders)f.reset();onMap().catch(()=>status('Community data could not load.'));});
  window.addEventListener('atlas:notes',scheduleSync);window.addEventListener('atlas:positions',offerPositions);
- window.addEventListener('focus',()=>{if(!loading){reviewMaps.clear();loadApproved();countWaiting();if(desk.opened)desk.refresh();}});window.addEventListener('atlas:editing',drawApproved);
+ window.addEventListener('atlas:published',()=>{creditsCache.clear();if(!loading)loadApproved();});
+ window.addEventListener('resize',()=>{if(dialog.open&&dialog.classList.contains('place-change'))fitFloating(dialog);});
+ window.addEventListener('focus',()=>{if(!loading){reviewMaps.clear();loadApproved();if(admin)countWaiting();if(desk.opened)desk.refresh();}});window.addEventListener('atlas:editing',drawApproved);
  window.addEventListener('atlas:edit-ended',()=>{drawApproved();if(user&&syncReady!==syncIdentity())syncNotes(mapSerial);});
  window.addEventListener('online',()=>{pushJobs();if(user&&map&&!loading&&syncReady!==syncIdentity())syncNotes(mapSerial);});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)pushJobs();});

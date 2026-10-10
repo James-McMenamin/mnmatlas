@@ -355,7 +355,7 @@ dialog fieldset{border:0;padding:0;margin:13px 0 0;min-width:0}dialog legend{fon
 .notice{-webkit-user-select:none;user-select:none}
 body.notice-dragging,body.notice-dragging *{-webkit-user-select:none;user-select:none;cursor:grabbing}
 /* A bounty's note: the wiki facts as plain text in place of their fields; Notes stays editable. */
-.note-form.bounty-mode .note-type,.note-form.bounty-mode .field:has(>#name),.note-form.bounty-mode #marker-fields,.note-form.bounty-mode #wiki-field,.note-form.bounty-mode #exit-fields,.note-form.bounty-mode #exit-target-field{display:none!important}
+.note-form.bounty-mode .note-type,.note-form.bounty-mode .shared-field:has(>#name),.note-form.bounty-mode .shared-field:has(>#category),.note-form.bounty-mode .shared-field:has(>#trade),.note-form.bounty-mode .shared-field:has(>#trainer-class),.note-form.bounty-mode .shared-field:has(>#vendor-kind),.note-form.bounty-mode .sells-field,.note-form.bounty-mode #wiki-field,.note-form.bounty-mode .shared-travel,.note-form.bounty-mode #pin-colours,.note-form.bounty-mode #pin-preview{display:none!important}
 .bounty-facts{display:flex;flex-direction:column;gap:10px}
 .bounty-facts dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:0;font-size:13px}
 .bounty-facts dt{color:var(--muted-foreground);font-size:12px}
@@ -508,7 +508,7 @@ dialog.moved::backdrop{background:#0000001f}
 .desk-bulk{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:7px;background:#2b2116;border:1px solid #936133;border-radius:3px;font-size:10px}
 .desk-bulk strong{margin-right:auto}.desk-bulk button{padding:4px;font-size:10px}
 .desk-bulk input,.desk-note{width:100%;padding:6px 8px;background:var(--muted);color:var(--foreground);border:1px solid var(--border);border-radius:3px;font-size:11px}
-.desk-map{border-top:1px solid var(--border);padding-top:12px;margin:14px 0 8px;font:10px var(--body);text-transform:uppercase;letter-spacing:1px}
+.desk-map{display:flex;justify-content:space-between;border-top:1px solid var(--border);padding-top:12px;margin:14px 0 8px;font:10px var(--body);text-transform:uppercase;letter-spacing:1px}.desk-map small{font:10px var(--body)}
 .desk-floor{margin:9px 0 5px;font:12px var(--heading);color:var(--muted-foreground)}
 .desk-place{font-size:10px;color:var(--muted-foreground);margin:10px 0 7px}
 .desk-row{display:flex;gap:6px;align-items:center;padding:5px;border:1px solid transparent;border-radius:3px;margin:4px 0}
@@ -546,5 +546,7 @@ dialog.moved::backdrop{background:#0000001f}
  .review-desk:has(.desk-card)>.desk-head,.review-desk:has(.desk-card)>.desk-tabs,.review-desk:has(.desk-card)>.desk-filters,.review-desk:has(.desk-card)>.desk-bulk,.review-desk:has(.desk-card)>.desk-footer,.desk-list:has(.desk-card) .desk-map,.desk-list:has(.desk-card) .desk-floor,.desk-list:has(.desk-card) .desk-place,.desk-list:has(.desk-card) .desk-row,.desk-list:has(.desk-card) .desk-item:not(:has(.desk-card)){display:none}
  .desk-card{padding:0;margin:0;border:0;background:transparent}.desk-card-body{display:none}.desk-card.expanded .desk-card-body{display:block;margin-top:10px;border-top:1px solid var(--border);padding-top:10px}.desk-mobile{display:block;position:relative}.desk-mobile::before{content:'';display:block;margin:0 auto 8px;width:36px;height:3px;background:var(--border);border-radius:3px}.desk-mobile-meta{font-size:10px;margin-right:40px;color:var(--muted-foreground)}.desk-mobile>.desk-id{position:absolute;top:9px;right:0}.desk-mobile-name{font:19px var(--heading);display:block;margin:3px 0}.desk-mobile>small{font-size:10px;color:var(--muted-foreground)}.desk-mobile .desk-decisions button{padding:9px 4px}.desk-more{display:block;width:100%;padding:5px;margin-top:5px;background:transparent;border:0;font-size:10px;color:var(--muted-foreground)}
  .notices-panel{position:fixed;top:58px;right:8px;width:min(360px,calc(100vw - 16px));max-height:calc(100dvh - 76px)}.notices-bell{padding:7px}.masthead{gap:6px}.masthead>#toggle-panel{padding:7px;font-size:11px}
- .reviewing #status{bottom:calc(var(--review-sheet-height,45vh) + 12px)}
+ body.reviewing #map-frame #status{bottom:calc(var(--review-sheet-height,45vh) + 12px)}
 }
+/* Floating cards stay inside the chart; their actions remain within reach. */
+.community-dialog.place-change{overflow:auto;max-width:calc(100vw - 24px)}.community-dialog.place-change .dialog-actions{position:sticky;bottom:-18px;z-index:2;padding:10px 0;background:var(--popover);margin-bottom:0}.community-preview{max-height:calc(100% - 24px);overflow:auto}.community-preview .dialog-actions{position:sticky;bottom:-12px;background:var(--popover);padding:8px 0;margin-bottom:0}.community-preview .community-check input{width:17px;margin-top:0;padding:0}.community-preview textarea{display:block;width:100%;padding:8px;background:var(--muted);color:var(--foreground);border:1px solid var(--border);border-radius:3px;font:12px var(--body)}

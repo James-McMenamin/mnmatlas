@@ -74,7 +74,7 @@ for(const [a,b] of [['',''],['Old hall','New hall'],['Same  words','Same words!'
 const browser=vm.createContext({window:{}});vm.runInContext(await readFile(new URL('../changes.js',import.meta.url),'utf8'),browser);assert(browser.window.atlasChanges);
 const page=await readFile(new URL('../index.html',import.meta.url),'utf8');for(const script of ['changes.js','review-model.js','review-desk.js','notices.js'])assert(page.indexOf('src="'+script)<page.indexOf('src="community.js'),script+' loads before community');
 {
- const r=row(600,'edit-marker',{name:'Moved bank',x:30,y:40,from:{...marker,x:10,y:20}}),t=buildChanges(fixture([r])).forRow(600);assert(fieldsOf(r).has('position'));assert.equal(t.effective.x,30);assert.equal(t.effective.name,'Moved bank');assert.equal(t.effective.approximate,false);const stale=row(601,'move-marker',{name:'Bank',from:[10,20],to:[50,60]});assert.deepEqual([...buildChanges(fixture([r,stale])).forRow(601).rows[1].conflictsWith],[600]);
+ const r=row(600,'edit-marker',{name:'Moved bank',x:30,y:40,from:{...marker,x:10,y:20}}),t=buildChanges(fixture([r])).forRow(600);assert(fieldsOf(r).has('position'));assert.equal(t.effective.x,30);assert.equal(t.effective.name,'Moved bank');assert(!Object.hasOwn(t.effective,'approximate'));const stale=row(601,'move-marker',{name:'Bank',from:[10,20],to:[50,60]});assert.deepEqual([...buildChanges(fixture([r,stale])).forRow(601).rows[1].conflictsWith],[600]);
 }
 {
  const from={...marker,category:'Vendor',vendor:'Baker',sells:['Food & drink'],travel:'Lift',arrow:'up',toMap:'other',toPlace:'dock',minZoom:2,approximate:true};
@@ -88,4 +88,9 @@ const page=await readFile(new URL('../index.html',import.meta.url),'utf8');for(c
  const chipRow=row(402,'edit-marker',{name:'Tutor',building:'East guild',from:{name:'Tutor',building:'Tutor'}},{target_id:'trainer'});assert.equal(buildChanges(fixture([chipRow])).forRow(402).effective.building,'East guild');
  const split=buildChanges(fixture([edit(403,'Waiting','Bank',{status:'pending'}),edit(404,'Approved')]));assert.equal(split.get('marker:bank').effective.name,'Approved','A waiting conflict cannot hide an approved change');assert.equal(split.get('marker:bank').proposed.name,'Waiting');
 }
-console.log('Change ledger checks passed: published positions, composition, conflicts, removals, shared places, labels, chips, floors, history, credits, word diffs and pure inputs.');
+// R17: moving a mark does not change how certain its position is.
+{
+ const live={...marker,approximate:true},input={...fixture([move(700,[10,20],[30,40])]),markers:[live]};assert.equal(buildChanges(input).forRow(700).effective.approximate,true);input.rows[0].payload.approximate=false;assert.equal(buildChanges(input).forRow(700).effective.approximate,false);
+ input.rows=[row(701,'edit-marker',{name:'Bank',x:30,y:40,from:{name:'Bank',x:10,y:20}})];assert.equal(buildChanges(input).forRow(701).effective.approximate,true);
+}
+console.log('Change ledger checks passed: published positions, composition, conflicts, removals, shared places, labels, chips, floors, history, credits, word diffs, R17 approximate moves and pure inputs.');

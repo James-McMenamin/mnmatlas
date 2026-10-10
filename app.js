@@ -176,7 +176,7 @@ function popup(m){const n=text('div',''),card=npcCardFor(m),title=text('h3',card
  if(m.category==='Vendor'&&m.vendor==='Shady merchant')n.append(text('p','Buys anything; sells what players have sold to it.','marker-sells'));
  else if(m.category==='Vendor'&&Array.isArray(m.sells)&&m.sells.length)n.append(text('p','Sells: '+sellTypes.filter(t=>m.sells.includes(t)).join(' · '),'marker-sells'));
  // With a wiki card the wiki comes first; the atlas's own note and actions follow.
- if(card)n.append(npcCard(card,m));if(m.note){if(card){const ours=text('section','','npc-section npc-ours');ours.append(text('h4','Atlas note','npc-heading'),text('p',m.note));n.append(ours);}else n.append(text('p',m.note));}const wiki=!card&&wikiButton(m);if(wiki)n.append(wiki);n.append(copyButton(m));if(m.toLevel)n.append(button(m.direction==='up'?'Go up':'Go down',()=>switchAt(m),'level-link'));
+ if(card)n.append(npcCard(card,m));if(m.note){if(card){const ours=text('section','','npc-section npc-ours');ours.append(text('h4','Atlas note','npc-heading'),text('p',m.note));n.append(ours);}else n.append(text('p',m.note));}const wiki=!card&&wikiButton(m);if(wiki)n.append(wiki);n.append(copyButton(m));if(m.toLevel){const floor=config.levels?.find(l=>l.id===m.toLevel);n.append(button((m.direction==='up'?'Go up to ':'Go down to ')+(floor?.title||floor?.name||m.toLevel),()=>switchAt(m),'level-link'));}
  // A lift to a linked map (Evershade Weald and Faelindral) goes to the matching lift there.
  {const to=!m.noteType&&m.toPlace&&registry.maps.find(c=>c.id===m.toMap);if(to)n.append(button((m.direction==='up'?'Go up to ':m.direction==='down'?'Go down to ':'Go to ')+to.title,()=>{const url=mapLink(to.id);url.searchParams.set('place',m.toPlace);goToMap(to.id,url);},'level-link'));}
 const leads=m.noteType==='exit'&&!alignmentMode&&registry.maps.find(c=>c.id===m.toMap);if(leads)n.append(button('Go to '+leads.title,()=>openMap(leads.id),'level-link'));
@@ -191,7 +191,7 @@ function labelEditPopup(row){
  window.atlasCommunity?.placePopup?.({...row,kind:'label'},n);
  L.popup({autoPan:false,offset:[0,-8]}).setLatLng(locationOf(row)).setContent(n).openOn(map);
 }
-function placePopup(p){const n=text('div',''),row=labelData.labels.find(l=>l.id===p.id)||p;const destination=registry.maps.find(c=>c.id===row.toMap);if(destination)n.append(button('Go to '+destination.title,()=>{const url=mapLink(destination.id);if(row.toPlace)url.searchParams.set('place',row.toPlace);goToMap(destination.id,url);},'level-link'));if(row.toLevel)n.append(button('Go to '+row.toLevel,()=>changeLevel(row.toLevel,originals.find(m=>m.id===row.toMarker)),'level-link'));n.append(text('div',p.kind==='hidden'?'Hidden area':'Place name','tag'),text('h3',p.name));if(p.note)n.append(text('p',p.note));const wiki=wikiButton(p);if(wiki)n.append(wiki);if(p.community)n.append(text('p','Community contribution','community-note'));n.append(copyButton(p));if(!singleMap)window.atlasCommunity?.placePopup?.(p,n);return tidyActions(n);}
+function placePopup(p){const n=text('div',''),row=labelData.labels.find(l=>l.id===p.id)||p;const destination=registry.maps.find(c=>c.id===row.toMap),floor=config.levels?.find(l=>l.id===row.toLevel);n.append(text('div',p.kind==='hidden'?'Hidden area':row.kind==='exit'?'Zone exit':'Place name','tag'),text('h3',p.name));if(p.note)n.append(text('p',p.note));if(destination)n.append(button('Go to '+destination.title,()=>{const url=mapLink(destination.id);if(row.toPlace)url.searchParams.set('place',row.toPlace);goToMap(destination.id,url);},'level-link'));if(floor)n.append(button('Go to '+(floor.title||floor.name||floor.id),()=>changeLevel(row.toLevel,originals.find(m=>m.id===row.toMarker)),'level-link'));const wiki=wikiButton(p);if(wiki)n.append(wiki);if(p.community)n.append(text('p','Community contribution','community-note'));n.append(copyButton(p));if(!singleMap)window.atlasCommunity?.placePopup?.(p,n);return tidyActions(n);}
 // Makes a marker shown on the map again: its type on, pins shown, no search or vendor filter hiding it.
 function revealMarker(m){enabled.add(m.category);showPins=true;$('search').value='';$('clear-search').hidden=true;setVendorGroup('');updateCategoryButtons();drawMarkers();}
 function setVendorGroup(value){vendorGroup=value;const pick=$('vendor-filter-select');if(pick)pick.value=value;}
@@ -209,7 +209,7 @@ function openPlace(p,zoom=config.defaultView.placeZoom){
  if(p.kind==='marker'){const pin=pins.get(p.id);if(pin&&!map.hasLayer(pin))pin.addTo(map);pin?.openPopup();}
  // A boat dock opens its departures-and-stops card here too.
  else if(p.kind==='label'&&Array.isArray(p.route)&&p.route.length>1)boatCard(p);
- else {if(p.kind==='hidden')hiddenController?.show(p.id);L.popup({autoPan:false}).setLatLng(locationOf(p)).setContent(placePopup(p)).openOn(map);}
+ else {if(p.kind==='hidden')hiddenController?.show(p.id);L.popup({autoPan:true,autoPanPaddingTopLeft:[24,compact()?155:150],autoPanPaddingBottomRight:[70,40],maxHeight:Math.max(120,($('map')?.clientHeight||600)-200)}).setLatLng(locationOf(p)).setContent(placePopup(p)).openOn(map);}
  activePlace=p;applyingView=false;if(compact())setPanel(false);scheduleUrl();
 }
 function pinIcon(m){
@@ -242,17 +242,17 @@ function drawMarkers(){
  const matches=visibleMarkers();$('count').textContent=matches.length+' places';
  for(const m of matches){
   const own=m.id.startsWith('personal-');
-  const pin=L.marker(locationOf(m),{icon:pinIcon(m),alt:[markerTitle(m),markerSubtitle(m)].filter(Boolean).join(', '),keyboard:true,riseOnHover:true,draggable:alignmentMode}).bindPopup(popup(m),{autoPan:false});
+  const pin=L.marker(locationOf(m),{icon:pinIcon(m),alt:[markerTitle(m),markerSubtitle(m)].filter(Boolean).join(', '),keyboard:true,riseOnHover:true,draggable:alignmentMode}).bindPopup(()=>popup(m),{autoPan:false});
   pin.atlasMinZoom=m.minZoom;
   // The hover tooltip shows the name; an aria-label (not a title) keeps it accessible without a second browser tooltip.
   pin.on('add',()=>pin.getElement()?.setAttribute('aria-label',[markerTitle(m),markerSubtitle(m)].filter(Boolean).join(', ')));
   // A marker that stands for another published map (a dungeon entrance on the world map) opens that map.
   // Personal zone exits keep their popup (Go to, Edit note) instead.
   const opens=!own&&!alignmentMode&&typeof m.toMap==='string'&&!m.toPlace&&registry.maps.find(c=>c.id===m.toMap);
-  pin.on('click',()=>m.switchOnClick&&!alignmentMode?switchAt(m):choose(m));pin.on('contextmenu',()=>choose(m));
+  pin.on('click',()=>opens?openMap(opens.id):m.switchOnClick&&!alignmentMode?switchAt(m):alignmentMode&&!own?window.atlasCommunity?.change?.(m,'edit-marker')||choose(m):choose(m));pin.on('contextmenu',()=>choose(m));
   if(alignmentMode){pin.on('dragstart',()=>{map.closePopup();if(!own)selectAlignment(m,'marker');});pin.on('dragend',()=>(own?movePersonal:moveAlignedMarker)(m.id,pin.getLatLng()));}
   if(!m.noteType)pin.bindTooltip(()=>text('span',markerTitle(m)),{direction:'top',offset:[0,-23]});if(showPins)pin.addTo(map);pins.set(m.id,pin);
-  list.append(resultRow(markerTitle(m),markerDetail(m,own?'Personal note':''),()=>opens?openMap(opens.id):choose(m),m));
+  list.append(resultRow(markerTitle(m),markerDetail(m,own?'Personal note':''),()=>choose(m),m));
  }
  // Place names and hidden areas can be found even when their visual layer hides.
  const terms=searchTerms();

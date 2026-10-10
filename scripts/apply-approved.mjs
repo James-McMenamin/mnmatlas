@@ -85,8 +85,9 @@ const targetKind=row=>row.kind.endsWith('label')||row.kind==='new-marker'&&['lab
 const runKey=row=>row.runKey||row.map+'#'+targetKind(row)+'#'+(row.kind==='new-marker'?'community-'+row.id:row.target_id);
 // Validate the whole run before any retry can use a later row as a link in its chain.
 const ownerKeys=['minZoom','approximate','tier','priority'];let adminAuthors=null;
-async function validateExtra(row,p,c){
+async function validateExtra(row,p,c,live){
  const touched=row.kind==='new-marker'?new Set(Object.keys(p)):fieldsOf({...row,payload:p});
+ if(row.kind.startsWith('move-')&&Object.hasOwn(p,'approximate'))touched.add('approximate');
  if(ownerKeys.some(k=>touched.has(k)&&!(row.kind==='new-marker'&&k==='priority'&&typeof p.priority==='boolean'))){
   if(!adminAuthors){const ids=await request('admins?select=user_id');adminAuthors=new Set((ids||[]).map(r=>r.user_id));}
   if(!row.user_id||!adminAuthors.has(row.user_id))fail('Only a cartographer may change display settings; the author is not an admin.');
@@ -96,18 +97,19 @@ async function validateExtra(row,p,c){
   const valid=k==='travel'?['Exit','Lift','Stairs','Ladder','Bridge','Teleporter'].includes(v):k==='kind'?['region','zone','district','building','exit'].includes(v):k==='direction'?supported.arrows.includes(v):k==='toMap'?typeof v==='string'&&registry.maps.some(m=>m.id===v):k==='toLevel'?typeof v==='string'&&(c.levels||[]).some(l=>l.id===v):['toPlace','toMarker','building'].includes(k)?typeof v==='string'&&v.length<=100:k==='tier'?['major','minor','building'].includes(v):k==='minZoom'?Number.isFinite(v)&&v>=-5&&v<=10:k==='priority'?row.kind==='new-marker'&&typeof v==='boolean'||Number.isFinite(v)&&v>=0&&v<=1000:typeof v==='boolean';
   if(!valid)fail('Unsupported '+k+' for suggestion '+row.id+'.');
  }
- if(p.toLevel&&p.toMap)fail('Choose a map or a floor, not both.');
- if(p.toMarker){const conf={...c,...c.levels?.find(l=>l.id===p.toLevel)},f=await file(conf.markersFile);if(!f.data.some(m=>m.id===p.toMarker&&(!m.level||m.level===p.toLevel)))fail('Arrival marker missing on that floor.');}
- if(p.toPlace){const dest=registry.maps.find(m=>m.id===p.toMap);if(!dest)fail('Choose the map before the arrival place.');const level=dest.levels?.find(l=>l.id===dest.defaultLevel)||dest.levels?.[0],conf={...dest,...level},markers=conf.markersFile?(await file(conf.markersFile)).data:[],labels=conf.labelsFile?(await file(conf.labelsFile)).data.labels:[];if(![...markers,...labels].some(m=>m.id===p.toPlace))fail('Arrival place missing on that map.');}
+ const destination={...live,...(!Array.isArray(p.from)?p.from:{}),...p};
+ if(destination.toLevel&&destination.toMap)fail('Choose a map or a floor, not both.');
+ if(p.toMarker){if(!destination.toLevel)fail('Choose the floor before the arrival marker.');const conf={...c,...c.levels?.find(l=>l.id===destination.toLevel)},f=await file(conf.markersFile);if(!f.data.some(m=>m.id===p.toMarker&&(!m.level||m.level===destination.toLevel)))fail('Arrival marker missing on that floor.');}
+ if(p.toPlace){const dest=registry.maps.find(m=>m.id===destination.toMap);if(!dest)fail('Choose the map before the arrival place.');const level=dest.levels?.find(l=>l.id===dest.defaultLevel)||dest.levels?.[0],conf={...dest,...level},markers=conf.markersFile?(await file(conf.markersFile)).data:[],labels=conf.labelsFile?(await file(conf.labelsFile)).data.labels:[];if(![...markers,...labels].some(m=>m.id===p.toPlace))fail('Arrival place missing on that map.');}
 }
 async function prepare(row){
  const c=configuration(row),p=validatePayload(row,c),label=targetKind({...row,payload:p})==='label';
- await validateExtra(row,p,c);
  if(row.kind==='new-marker')[p.x,p.y]=point([p.x,p.y],c,row.id);
  else if(row.kind.startsWith('move-')){p.from=point(p.from,c,row.id);p.to=point(p.to,c,row.id);}
  const f=await file(label?c.labelsFile:c.markersFile),rows=label?f.data?.labels:f.data;
  if(!Array.isArray(rows))fail('Invalid feature file for suggestion '+row.id+'.');
  const m=rows.find(m=>m.id===row.target_id),chip=!label&&c.labelsFile?(await file(c.labelsFile)).data?.trainers?.find(m=>m.id===row.target_id):null;
+ await validateExtra(row,p,c,m||chip||batch.find(r=>r.kind==='new-marker'&&r.map===row.map&&'community-'+r.id===row.target_id)?.payload);
  const category=p.category||p.from?.category||m?.category||(chip?'Class trainer':undefined);
  if(!label&&!row.kind.startsWith('move-')){
   if(!category&&p.classes!==undefined&&!classesOk(p.classes))fail('Unsupported classes for suggestion '+row.id+'.');
@@ -182,7 +184,7 @@ async function applyRow(row){
   if(fields.has('name'))next.name=clean(p.name);
   if(fields.has('note'))next.note=clean(p.note||'',true);
   // A reviewer can adjust an edit's spot without replacing its traveller's row or credit.
-  if(fields.has('position')){[next.x,next.y]=point([p.x,p.y],c,row.id);next.approximate=false;}
+  if(fields.has('position'))[next.x,next.y]=point([p.x,p.y],c,row.id);
   if(typed){next.category=typed.category;for(const k of typeKeys)if(Object.hasOwn(typed,k))next[k]=typed[k];else delete next[k];}
   if(fields.has('wiki')){if(wiki){next.wiki=wiki;if(wikiId)next.wikiId=wikiId;else if(p.wikiId!==undefined||wiki!==m.wiki)delete next.wikiId;}else{delete next.wiki;delete next.wikiId;}}
   for(const k of editKeys.filter(k=>!['name','note'].includes(k)))if(fields.has(k)&&!(k==='building'&&chip&&chip!==m)){if(p[k]===null||p[k]==='')delete next[k];else next[k]=p[k];}
@@ -192,7 +194,7 @@ async function applyRow(row){
   check(row,live,path);next.community=true;
   const floor=fields.has('level')&&p.level?{...registry.maps.find(c=>c.id===row.map),...c.levels?.find(l=>l.id===p.level)}:null,destPath=floor?(label||m===chip?floor.labelsFile:floor.markersFile):m===chip?c.labelsFile:path;
   if(destPath&&destPath!==(m===chip?c.labelsFile:path)){const dest=await file(destPath),list=label?dest.data.labels:m===chip?dest.data.trainers:dest.data;if(list.some(x=>x.id===next.id))fail('A mark with this name already stands on that floor.');mrows.splice(mrows.indexOf(m),1);list.push(next);dest.changed=true;}else mrows[mrows.indexOf(m)]=next;mf.changed=true;
-  if(chip&&chip!==m){if(typed&&next.category!=='Class trainer')chips.splice(chips.indexOf(chip),1);else{const updated=structuredClone(chip);if(fields.has('position')){updated.x=next.x;updated.y=next.y;updated.approximate=false;}if(fields.has('name'))updated.name=next.name;if(fields.has('note'))updated.note=next.note;for(const k of ['building','level','minZoom','approximate'])if(fields.has(k)){const v=k==='building'?p[k]:next[k];if(v===undefined||v===null||v==='')delete updated[k];else updated[k]=v;}if(next.classes?.length){updated.classes=[...next.classes];updated.abbreviations=next.classes.map(k=>classAbbreviations[k]);}if(floor?.labelsFile&&floor.labelsFile!==c.labelsFile){const dest=await file(floor.labelsFile);if(dest.data.trainers.some(x=>x.id===updated.id))fail('A trainer chip already stands on that floor.');chips.splice(chips.indexOf(chip),1);dest.data.trainers.push(updated);dest.changed=true;}else chips[chips.indexOf(chip)]=updated;}lf.changed=true;}
+  if(chip&&chip!==m){if(typed&&next.category!=='Class trainer')chips.splice(chips.indexOf(chip),1);else{const updated=structuredClone(chip);if(fields.has('position')){updated.x=next.x;updated.y=next.y;}if(fields.has('name'))updated.name=next.name;if(fields.has('note'))updated.note=next.note;for(const k of ['building','level','minZoom','approximate'])if(fields.has(k)){const v=k==='building'?p[k]:next[k];if(v===undefined||v===null||v==='')delete updated[k];else updated[k]=v;}if(next.classes?.length){updated.classes=[...next.classes];updated.abbreviations=next.classes.map(k=>classAbbreviations[k]);}if(floor?.labelsFile&&floor.labelsFile!==c.labelsFile){const dest=await file(floor.labelsFile);if(dest.data.trainers.some(x=>x.id===updated.id))fail('A trainer chip already stands on that floor.');chips.splice(chips.indexOf(chip),1);dest.data.trainers.push(updated);dest.changed=true;}else chips[chips.indexOf(chip)]=updated;}lf.changed=true;}
   else if(m===chip&&next.classes?.length)next.abbreviations=next.classes.map(k=>classAbbreviations[k]);
   return label?'place name edited':'marker edited';
  }
@@ -201,8 +203,8 @@ async function applyRow(row){
  if(superseded(row,live))return 'already superseded';
  if(!m)fail('Target missing for suggestion '+row.id+'.');
  if(Math.round(m.x)===x&&Math.round(m.y)===y)return 'already positioned';
- check(row,live,path);m.x=x;m.y=y;m.approximate=false;m.community=true;mf.changed=true;
- if(!label&&chip&&chip!==m){chip.x=x;chip.y=y;chip.approximate=false;lf.changed=true;}return 'position moved';
+ check(row,live,path);m.x=x;m.y=y;if(Object.hasOwn(p,'approximate'))m.approximate=p.approximate;m.community=true;mf.changed=true;
+ if(!label&&chip&&chip!==m){chip.x=x;chip.y=y;if(Object.hasOwn(p,'approximate'))chip.approximate=p.approximate;lf.changed=true;}return 'position moved';
 }
 async function apply(row){
  staged=new Map();try{const result=await applyRow(row);for(const [path,f] of staged)files.set(path,f);

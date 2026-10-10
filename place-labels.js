@@ -72,16 +72,16 @@ function setupPlaceLabels(data){
    const url=mapLink(target.id);if(row.toPlace)url.searchParams.set('place',row.toPlace);
    face.href=url.href;face.title='Open the '+target.title+' map';if(singleMap){face.target='_blank';face.rel='noopener';face.title+=' in MnM Atlas';}
    L.DomEvent.disableClickPropagation(face);
-   face.addEventListener('click',e=>{if(singleMap||e.button||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();choosePlace({...row,kind:'label'});});
+   face.addEventListener('click',e=>{if(singleMap||e.button||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();goToMap(target.id,url);});
   }
   const icon=L.divIcon({className:'place-name-anchor',html:face,iconSize:[0,0],iconAnchor:[0,0]});
   const marker=L.marker(locationOf(row),{icon,pane:'placeNames',alt:row.name,interactive:!singleMap,keyboard:!singleMap,draggable:alignmentMode,bubblingMouseEvents:false});
   if(alignmentMode){
-   marker.on('click',()=>{selectAlignment(row,'label');labelEditPopup(row);});
+   marker.on('click',()=>{selectAlignment(row,'label');if(!window.atlasCommunity?.change?.(row,'edit-label'))labelEditPopup(row);});
    marker.on('dragstart',()=>{selectAlignment(row,'label');map.closePopup();});
    marker.on('dragend',()=>moveAlignedLabel(row.id,marker.getLatLng()));
   }
-  if(!alignmentMode&&!target&&!boat&&!singleMap){face.tabIndex=0;face.setAttribute('role','button');face.addEventListener('click',()=>choosePlace({...row,kind:'label'}));face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choosePlace({...row,kind:'label'});}});}
+  if(!alignmentMode&&!target&&!boat&&!singleMap){face.tabIndex=0;face.setAttribute('role','button');const open=()=>openPlace({...row,kind:'label'});face.addEventListener('click',open);face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});}
   labelPins.set(row.id,marker);
   return {row,face,marker};
  });

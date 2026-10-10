@@ -44,7 +44,7 @@
   }
   else for(const f of fields){
    if(f==='removed')out.removed=true;
-   else if(f==='position'){[out.x,out.y]=(row.kind.startsWith('move-')?p.to:[p.x,p.y]).map(Math.round);out.approximate=false;}
+   else if(f==='position'){[out.x,out.y]=(row.kind.startsWith('move-')?p.to:[p.x,p.y]).map(Math.round);if(has(p,'approximate'))out.approximate=p.approximate;}
    else if(f==='type'){if(has(p,'category'))for(const k of typeKeys)delete out[k];for(const k of keysFor(p))if(has(p,k)&&p[k]!==null&&p[k]!=='')out[k]=copy(p[k]);}
    else if(f==='wiki'){const changed=has(p,'wiki')&&p.wiki!==out.wiki;for(const k of ['wiki','wikiId'])if(has(p,k))out[k]=p[k];else if(k==='wikiId'&&changed)delete out[k];if(!out.wikiId)delete out.wikiId;if(!out.wiki){delete out.wiki;delete out.wikiId;}}
    else if(p[f]===null||p[f]==='')delete out[f];else out[f]=copy(p[f]);
