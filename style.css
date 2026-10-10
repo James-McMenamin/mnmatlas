@@ -555,3 +555,5 @@ dialog.moved::backdrop{background:#0000001f}
 @media(max-width:760px){.place-change .place-move-button{display:block}.place-change.moving-place{padding:8px 12px;max-height:64px!important;overflow:hidden}.place-change.moving-place>:not(.place-move-bar){display:none}.place-change.moving-place .place-move-bar{display:flex;align-items:center;gap:12px}.place-move-bar strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}}
 
 .desk-mobile-name{white-space:pre-wrap}
+/* Notices: readable sizes (larger than the first cut). */
+@media(min-width:761px){.notices-panel{width:400px}}.notices-row>strong{font-size:13px}.notices-row>small{font-size:12px;line-height:1.45}.notice-state{font-size:11px}.notices-row blockquote{font-size:12px}.notice-links button,.notices-footer button,.notices-footer{font-size:12px}.notices-count{font-size:10px}
