@@ -72,7 +72,10 @@ for(const [a,b] of [['',''],['Old hall','New hall'],['Same  words','Same words!'
  const diff=diffWords(a,b);assert.equal(diff.filter(r=>r.op!=='ins').map(r=>r.text).join(''),a);assert.equal(diff.filter(r=>r.op!=='del').map(r=>r.text).join(''),b);assert(diff.every(r=>['same','del','ins'].includes(r.op)));
 }
 const browser=vm.createContext({window:{}});vm.runInContext(await readFile(new URL('../changes.js',import.meta.url),'utf8'),browser);assert(browser.window.atlasChanges);
-assert((await readFile(new URL('../index.html',import.meta.url),'utf8')).includes('<script defer src="changes.js?v=atlas-2"></script><script defer src="community.js'));
+const page=await readFile(new URL('../index.html',import.meta.url),'utf8');for(const script of ['changes.js','review-model.js','review-desk.js','notices.js'])assert(page.indexOf('src="'+script)<page.indexOf('src="community.js'),script+' loads before community');
+{
+ const r=row(600,'edit-marker',{name:'Moved bank',x:30,y:40,from:{...marker,x:10,y:20}}),t=buildChanges(fixture([r])).forRow(600);assert(fieldsOf(r).has('position'));assert.equal(t.effective.x,30);assert.equal(t.effective.name,'Moved bank');assert.equal(t.effective.approximate,false);const stale=row(601,'move-marker',{name:'Bank',from:[10,20],to:[50,60]});assert.deepEqual([...buildChanges(fixture([r,stale])).forRow(601).rows[1].conflictsWith],[600]);
+}
 {
  const from={...marker,category:'Vendor',vendor:'Baker',sells:['Food & drink'],travel:'Lift',arrow:'up',toMap:'other',toPlace:'dock',minZoom:2,approximate:true};
  const payload={name:from.name,from,travel:'Bridge',arrow:'down',toMap:null,toPlace:null,toLevel:'upper',toMarker:'stairs',direction:'up',switchOnClick:true,level:'upper',minZoom:3,approximate:false};

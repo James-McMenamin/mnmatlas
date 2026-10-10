@@ -67,7 +67,7 @@ function validatePayload(row,c){
  if(row.kind==='edit-marker'&&p.category!==undefined&&(!supported.categories.includes(p.category)||p.trade!==undefined&&!supported.trades.includes(p.trade)))fail('Unsupported marker fields for suggestion '+row.id+'.');
  p.name=clean(p.name);if(p.note!==undefined)p.note=clean(p.note,true);
  if(p.from&&!Array.isArray(p.from))p.from={...p.from,name:clean(p.from.name),...(p.from.note!==undefined?{note:clean(p.from.note,true)}:{})};
- if(row.kind==='new-marker')point([p.x,p.y],c,row.id);else if(row.kind.startsWith('move-')){point(p.from,c,row.id);point(p.to,c,row.id);}
+ if(row.kind==='new-marker')point([p.x,p.y],c,row.id);else if(row.kind.startsWith('move-')){point(p.from,c,row.id);point(p.to,c,row.id);}else if(fieldsOf(row).has('position')){point([p.from.x,p.from.y],c,row.id);point([p.x,p.y],c,row.id);}
  return normaliseChange({...row,payload:p}).payload;
 }
 // Every row works on private file copies; a refused row never leaves part of its change behind.
@@ -156,7 +156,7 @@ async function applyRow(row){
   const existing=rows.find(m=>m.id===id);
   if(existing)return 'already present';
   if((await publishedSuggestions()).some(r=>r.payload?.remove===true&&r.map===row.map&&targetKind(r)===targetKind(row)&&r.target_id===id)||(history.get(runKey(row))||[]).some(r=>r.fields.has('removed')))return 'already removed';
-  const m={id,community:true,name:clean(p.name),...(label?{kind:p.noteType==='exit'?'exit':'building',priority:50,minZoom:0}:{category:p.category}),note:clean(p.note||'',true),x,y,...(c.levels?{level:c.levelId}:{})};
+  const m={id,community:true,name:clean(p.name),...(label?{kind:p.kind||(p.noteType==='exit'?'exit':'building'),priority:typeof p.priority==='number'?p.priority:50,minZoom:0}:{category:p.category}),note:clean(p.note||'',true),x,y,...(c.levels?{level:c.levelId}:{})};
   if(label&&p.noteType==='exit'){if(p.arrow)m.arrow=p.arrow;if(typeof p.toMap==='string'&&registry.maps.some(r=>r.id===p.toMap))m.toMap=p.toMap;}
   if(!label){typeFields(m,p,row.id);if(p.color)m.color=p.color;const wiki=wikiOf(p.wiki,row.id),wikiId=wikiIdFrom(p,row.id);if(wiki){m.wiki=wiki;if(wikiId)m.wikiId=wikiId;}}
   for(const k of editKeys.filter(k=>!['name','note','kind','priority'].includes(k)))if(p[k]!==undefined&&p[k]!==null&&p[k]!=='')m[k]=p[k];
@@ -181,6 +181,8 @@ async function applyRow(row){
   if(p.remove){check(row,live,path);mrows.splice(mrows.indexOf(m),1);mf.changed=true;if(chip&&chip!==m){chips.splice(chips.indexOf(chip),1);lf.changed=true;}return label?'place name removed':'marker removed';}
   if(fields.has('name'))next.name=clean(p.name);
   if(fields.has('note'))next.note=clean(p.note||'',true);
+  // A reviewer can adjust an edit's spot without replacing its traveller's row or credit.
+  if(fields.has('position')){[next.x,next.y]=point([p.x,p.y],c,row.id);next.approximate=false;}
   if(typed){next.category=typed.category;for(const k of typeKeys)if(Object.hasOwn(typed,k))next[k]=typed[k];else delete next[k];}
   if(fields.has('wiki')){if(wiki){next.wiki=wiki;if(wikiId)next.wikiId=wikiId;else if(p.wikiId!==undefined||wiki!==m.wiki)delete next.wikiId;}else{delete next.wiki;delete next.wikiId;}}
   for(const k of editKeys.filter(k=>!['name','note'].includes(k)))if(fields.has(k)&&!(k==='building'&&chip&&chip!==m)){if(p[k]===null||p[k]==='')delete next[k];else next[k]=p[k];}
@@ -190,7 +192,7 @@ async function applyRow(row){
   check(row,live,path);next.community=true;
   const floor=fields.has('level')&&p.level?{...registry.maps.find(c=>c.id===row.map),...c.levels?.find(l=>l.id===p.level)}:null,destPath=floor?(label||m===chip?floor.labelsFile:floor.markersFile):m===chip?c.labelsFile:path;
   if(destPath&&destPath!==(m===chip?c.labelsFile:path)){const dest=await file(destPath),list=label?dest.data.labels:m===chip?dest.data.trainers:dest.data;if(list.some(x=>x.id===next.id))fail('A mark with this name already stands on that floor.');mrows.splice(mrows.indexOf(m),1);list.push(next);dest.changed=true;}else mrows[mrows.indexOf(m)]=next;mf.changed=true;
-  if(chip&&chip!==m){if(typed&&next.category!=='Class trainer')chips.splice(chips.indexOf(chip),1);else{const updated=structuredClone(chip);if(fields.has('name'))updated.name=next.name;if(fields.has('note'))updated.note=next.note;for(const k of ['building','level','minZoom','approximate'])if(fields.has(k)){const v=k==='building'?p[k]:next[k];if(v===undefined||v===null||v==='')delete updated[k];else updated[k]=v;}if(next.classes?.length){updated.classes=[...next.classes];updated.abbreviations=next.classes.map(k=>classAbbreviations[k]);}if(floor?.labelsFile&&floor.labelsFile!==c.labelsFile){const dest=await file(floor.labelsFile);if(dest.data.trainers.some(x=>x.id===updated.id))fail('A trainer chip already stands on that floor.');chips.splice(chips.indexOf(chip),1);dest.data.trainers.push(updated);dest.changed=true;}else chips[chips.indexOf(chip)]=updated;}lf.changed=true;}
+  if(chip&&chip!==m){if(typed&&next.category!=='Class trainer')chips.splice(chips.indexOf(chip),1);else{const updated=structuredClone(chip);if(fields.has('position')){updated.x=next.x;updated.y=next.y;updated.approximate=false;}if(fields.has('name'))updated.name=next.name;if(fields.has('note'))updated.note=next.note;for(const k of ['building','level','minZoom','approximate'])if(fields.has(k)){const v=k==='building'?p[k]:next[k];if(v===undefined||v===null||v==='')delete updated[k];else updated[k]=v;}if(next.classes?.length){updated.classes=[...next.classes];updated.abbreviations=next.classes.map(k=>classAbbreviations[k]);}if(floor?.labelsFile&&floor.labelsFile!==c.labelsFile){const dest=await file(floor.labelsFile);if(dest.data.trainers.some(x=>x.id===updated.id))fail('A trainer chip already stands on that floor.');chips.splice(chips.indexOf(chip),1);dest.data.trainers.push(updated);dest.changed=true;}else chips[chips.indexOf(chip)]=updated;}lf.changed=true;}
   else if(m===chip&&next.classes?.length)next.abbreviations=next.classes.map(k=>classAbbreviations[k]);
   return label?'place name edited':'marker edited';
  }

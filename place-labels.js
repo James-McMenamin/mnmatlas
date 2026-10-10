@@ -121,14 +121,19 @@ function setupPlaceLabels(data){
    leader.style.transform=`rotate(${Math.atan2(-dx,dy-20)}rad)`;
    occupied.push(face.getBoundingClientRect());badgeRects.push(face.getBoundingClientRect());
   }
-  if(!toggle.checked){for(const e of entries)e.marker.remove();return;}
+  const reviewing=window.atlasCommunity?.reviewLabel?.();
+  if(!toggle.checked&&!reviewing){for(const e of entries)e.marker.remove();return;}
   const ordered=entries.slice().sort((a,b)=>Number(selectedAlignmentKind==='label'&&selectedAlignmentId===b.row.id&&alignmentMode)-Number(selectedAlignmentKind==='label'&&selectedAlignmentId===a.row.id&&alignmentMode)||b.row.priority-a.row.priority);
   for(const {row,face,marker} of ordered){
-   if(zoom<row.minZoom&&!(alignmentMode&&showAll.checked)){marker.remove();continue;}
+   const underReview=row.id===reviewing;
+   if(!toggle.checked&&!underReview||zoom<row.minZoom&&!(alignmentMode&&showAll.checked)&&!underReview){marker.remove();continue;}
    const p=map.latLngToContainerPoint(locationOf(row));
    if(p.x<0||p.y<0||p.x>view.width||p.y>view.height){marker.remove();continue;}
    if(!map.hasLayer(marker))marker.addTo(map);
    face.style.fontSize=placeLabelSize(row.kind,zoom)+'px';
+   // Keep the live sign beside its faded proposal even when the usual name spacing would hide it.
+   if(underReview){face.style.visibility='';face.classList.add('review-live-sign');face.style.transform='translate(-50%,-50%)';continue;}
+   face.classList.remove('review-live-sign');
    const selected=alignmentMode&&selectedAlignmentKind==='label'&&selectedAlignmentId===row.id;
    face.classList.toggle('selected',selected);marker.setZIndexOffset(selected?1000:0);
    face.style.visibility='hidden';

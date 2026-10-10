@@ -13,6 +13,7 @@
   if(row.kind!=='edit-marker'&&row.kind!=='edit-label')return out;
   if(p.remove===true)return new Set(['removed']);
   for(const k of editKeys)if(has(p,k)&&!equal(value(p,k),value(f,k)))out.add(k);
+  if(['x','y'].some(k=>has(p,k)&&!equal(p[k],f[k])))out.add('position');
   if(['wiki','wikiId'].some(k=>has(p,k)&&!equal(value(p,k),value(f,k))))out.add('wiki');
   // Phase 2 must send the full type base in from: category and all of its type keys.
   if(keysFor(p).some(k=>has(p,k)&&!equal(p[k]??null,f[k]??null)))out.add('type');
@@ -20,7 +21,7 @@
  }
  function matchesFrom(row,state,field){
   const p=row.payload||{},f=p.from||{};if(!state)return false;
-  if(field==='position')return Array.isArray(f)&&equal(f.map(Math.round),[state.x,state.y].map(Math.round));
+  if(field==='position'){const at=Array.isArray(f)?f:[f.x,f.y];return at.every(Number.isFinite)&&equal(at.map(Math.round),[state.x,state.y].map(Math.round));}
   if(field==='removed')return value(state,'name')===value(f,'name')&&(!has(f,'note')||value(state,'note')===value(f,'note'));
   if(field==='type')return keysFor(f).filter(k=>has(f,k)).every(k=>equal(state[k]??null,f[k]??null));
   if(field==='wiki')return ['wiki','wikiId'].filter(k=>has(p,k)&& (k==='wiki'||has(f,k))).every(k=>equal(value(state,k),value(f,k)));
@@ -38,12 +39,12 @@
   const p=row.payload||{},fields=fieldsOf(row),out=copy(state)||{};
   if(fields.has('added')){
    const label=['label','exit'].includes(p.noteType);Object.assign(out,{id:'community-'+row.id,community:true,name:p.name,note:p.note||'',x:Math.round(p.x),y:Math.round(p.y),...(row.level?{level:row.level}:{})});
-   if(label){Object.assign(out,{kind:p.noteType==='exit'?'exit':'building',priority:50,minZoom:0});if(p.noteType==='exit'){if(p.arrow)out.arrow=p.arrow;if(p.toMap)out.toMap=p.toMap;}}
+   if(label){Object.assign(out,{kind:p.kind||(p.noteType==='exit'?'exit':'building'),priority:typeof p.priority==='number'?p.priority:50,minZoom:0});if(p.noteType==='exit'){if(p.arrow)out.arrow=p.arrow;if(p.toMap)out.toMap=p.toMap;}}
    else{out.category=p.category;for(const k of [...keysFor(p).slice(1),'color','wiki','wikiId'])if(has(p,k)&&p[k])out[k]=copy(p[k]);if(!out.wiki){delete out.wiki;delete out.wikiId;}}for(const k of editKeys.filter(k=>!['name','note','color','kind','priority'].includes(k)))if(has(p,k))out[k]=copy(p[k]);out.removed=false;
   }
   else for(const f of fields){
    if(f==='removed')out.removed=true;
-   else if(f==='position'){[out.x,out.y]=p.to.map(Math.round);out.approximate=false;}
+   else if(f==='position'){[out.x,out.y]=(row.kind.startsWith('move-')?p.to:[p.x,p.y]).map(Math.round);out.approximate=false;}
    else if(f==='type'){if(has(p,'category'))for(const k of typeKeys)delete out[k];for(const k of keysFor(p))if(has(p,k)&&p[k]!==null&&p[k]!=='')out[k]=copy(p[k]);}
    else if(f==='wiki'){const changed=has(p,'wiki')&&p.wiki!==out.wiki;for(const k of ['wiki','wikiId'])if(has(p,k))out[k]=p[k];else if(k==='wikiId'&&changed)delete out[k];if(!out.wikiId)delete out.wikiId;if(!out.wiki){delete out.wiki;delete out.wikiId;}}
    else if(p[f]===null||p[f]==='')delete out[f];else out[f]=copy(p[f]);

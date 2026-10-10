@@ -65,7 +65,8 @@ function migratePreviousStorage(){
  }catch{status('Previous local settings could not be copied. Your saved data is still kept in this browser.',true);}
 }
 const slug=value=>value.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-function status(message,sticky=false){clearTimeout(statusTimer);$('status').textContent=message;$('status').hidden=false;if(!sticky)statusTimer=setTimeout(()=>$('status').hidden=true,4500);}
+function status(message,sticky=false){clearTimeout(statusTimer);$('status').textContent=message;const undo=window.atlasUndo;if(undo&&undo.expires>Date.now())$('status').append(undo.line);$('status').hidden=false;if(!sticky)statusTimer=setTimeout(()=>$('status').hidden=true,Math.max(4500,(undo?.expires||0)-Date.now()));}
+window.atlasKeepStatus=ms=>{clearTimeout(statusTimer);$('status').hidden=false;statusTimer=setTimeout(()=>$('status').hidden=true,ms);};
 function locationOf(m){return map.unproject([m.x,m.y],config.coordinateZoom);}
 function pixelsOf(latlng){const p=map.project(latlng,config.coordinateZoom);return [Math.round(p.x),Math.round(p.y)];}
 function bounded(x,y,z=map.getZoom()){return Number.isFinite(x)&&Number.isFinite(y)&&Number.isFinite(z)&&x>=0&&y>=0&&x<=config.width&&y<=config.height&&z>=config.minZoom&&z<=config.maxZoom;}
@@ -329,6 +330,7 @@ function setEditing(on){
  window.dispatchEvent(new CustomEvent('atlas:editing'));map.closePopup();disposeLabels();disposeLabels=setupPlaceLabels(labelData);drawMarkers();updateAlignmentStatus();
 }
 function enterEdit(){
+ if(window.atlasCommunity?.leaveReview?.()===false)return;
  if(alignmentMode||!map||singleMap)return;cancelPlacement();
  editSnapshot={positions:{...alignmentPositions},labels:{...alignmentLabelPositions},personal:personal.map(p=>({...p}))};
  setEditing(true);if(compact())setPanel(false);
@@ -580,17 +582,18 @@ function validateRegistry(data){
  for(const base of data.maps)for(const level of base.levels||[]){const c=levelConfig(base,level);if(![c.width,c.height,c.coordinateZoom,c.minZoom,c.maxZoom,c.maxNativeZoom,c.tileSize].every(Number.isFinite)||c.width<=0||c.height<=0||c.minZoom>c.maxNativeZoom||c.maxNativeZoom>c.maxZoom||!['markersFile','labelsFile','hiddenAreasFile'].every(k=>c[k]==null||localPath(c[k])))throw Error('Invalid level configuration');}
  return data;
 }
-async function loadMap(id,url=new URL(location.href),push=false){
- if(map&&window.atlasCommunity?.leaveReview?.()===false){const current=mapLink(config.id);if(config.levelId)current.searchParams.set('level',config.levelId);history.replaceState({map:config.id},'',current);return;}
+async function loadMap(id,url=new URL(location.href),push=false,reviewToken=null){
+ if(map&&window.atlasCommunity?.leaveReview?.(reviewToken)===false){const current=mapLink(config.id);if(config.levelId)current.searchParams.set('level',config.levelId);history.replaceState({map:config.id},'',current);return;}
  if(alignmentMode&&editChanged()){const current=mapLink(config.id);if(config.levelId)current.searchParams.set('level',config.levelId);history.replaceState({map:config.id},'',current);confirmDialog('edit-map-confirm','Save your moves before travelling?','Save these positions and choose which to send before opening another map.',[['Keep editing',()=>{}],['Discard and travel',()=>{finishEdit(false);loadMap(id,url,push);}],['Save and travel',()=>{finishEdit(true);const go=()=>loadMap(id,url,push);if(window.atlasCommunity?.afterPositions)window.atlasCommunity.afterPositions(go);else go();},'primary']]);return;}
 
- const serial=++loadSerial;clearTimeout(urlTimer);loading=true;document.body.dataset.ready='false';
+ // A newer card or a closed desk can cancel travel before it replaces the map.
+ const serial=++loadSerial,stale=()=>serial!==loadSerial||(reviewToken!==null&&window.atlasCommunity?.reviewCurrent?.(reviewToken)===false);clearTimeout(urlTimer);loading=true;document.body.dataset.ready='false';
  const requested=registry.maps.find(c=>c.id===id),base=requested||registry.maps.find(c=>c.id===registry.defaultMap);let next=base;
  if(push)url.searchParams.delete('level');
  for(const p of pickers)p.busy(true);
  try{
   let [markers,labels,hidden]=await Promise.all([fetchData(next.markersFile,[]),fetchData(next.labelsFile,{labels:[],trainers:[]}),fetchData(next.hiddenAreasFile,{areas:[],routes:[]})]);
-  if(serial!==loadSerial)return;
+  if(stale())return;
   if(!Array.isArray(markers)||!Array.isArray(labels.labels)||!Array.isArray(labels.trainers)||!Array.isArray(hidden.areas))throw Error('Invalid map feature data');
   const wanted=url.searchParams.get('place'),dest=[...markers,...labels.labels,...hidden.areas,...(hidden.additionalAreas||[]),...(hidden.destinations||[])].find(p=>wanted&&(p.id===wanted||p.slug===wanted||slug(p.name)===wanted));
   if(base.levels){const level=base.levels.find(l=>l.id===(!push&&dest?.level?dest.level:url.searchParams.get('level')))||base.levels.find(l=>l.id===base.defaultLevel);next=levelConfig(base,level);}
@@ -598,10 +601,10 @@ async function loadMap(id,url=new URL(location.href),push=false){
    next.markersFile===base.markersFile?markers:fetchData(next.markersFile,[]),
    next.labelsFile===base.labelsFile?labels:fetchData(next.labelsFile,{labels:[],trainers:[]}),
    next.hiddenAreasFile===base.hiddenAreasFile?hidden:fetchData(next.hiddenAreasFile,{areas:[],routes:[]})]);
-  if(serial!==loadSerial)return;
+  if(stale())return;
   if(!Array.isArray(markers)||!Array.isArray(labels.labels)||!Array.isArray(labels.trainers)||!Array.isArray(hidden.areas))throw Error('Invalid map feature data');
   const zonesData=next.zonesFile?await fetchData(next.zonesFile,{zones:[],borders:[]}):null;
-  if(serial!==loadSerial)return;
+  if(stale())return;
   const keepEditing=alignmentMode||(!map&&url.searchParams.has('align'));if(alignmentMode)saveEdits();alignmentMode=false;editSnapshot=null;
   disposeLabels();hiddenController?.dispose();disposeZones();disposeZones=()=>{};disposeBackdrop();disposeBackdrop=()=>{};map?.remove();pins.clear();map=null;
   config=next;categories={...allCategories,...(config.extraCategories||{})};originals=markers.map(normaliseMarker);labelData=labels;hiddenData=hidden;publishedPositions=new Map(originals.map(m=>[m.id,[m.x,m.y]]));publishedLabelPositions=new Map(labels.labels.map(r=>[r.id,[r.x,r.y]]));
@@ -613,7 +616,7 @@ async function loadMap(id,url=new URL(location.href),push=false){
   sheetTileLayer(config,config.frame||{x:0,y:0,width:config.width,height:config.height},config.tilePath+'?v='+encodeURIComponent(config.tileRevision),{tileSize:config.tileSize,minZoom:config.minZoom,maxZoom:config.maxZoom,maxNativeZoom:config.maxNativeZoom,noWrap:true,bounds,keepBuffer:1,attribution:text('span',config.attribution.map).outerHTML}).on('tileerror',()=>status('A map tile could not load. Please reload.')).addTo(map);
   const currentHidden={...hiddenData};for(const key of ['areas','additionalAreas','routes','connections','destinations','levelStacks'])if(Array.isArray(hiddenData[key]))currentHidden[key]=hiddenData[key].filter(atLevel);
   fitMap();wheelAfterClick();map.on('resize',()=>{limitZoomOut();updateZoom();});disposeBackdrop=setupSheetEdge(map,config,config.frame||{x:0,y:0,width:config.width,height:config.height});disposeLabels=setupPlaceLabels(labelData);hiddenController=setupHiddenAreas(map,config,currentHidden);if(zonesData)disposeZones=setupWorldZones(map,config,zonesData);
-  buildPlaceIndex();refreshSearch();setPanel(!compact()&&desktopPanelOpen&&!config.entry);$('hidden-controls').hidden=!config.hiddenAreasFile||!(currentHidden.areas.length||(currentHidden.additionalAreas||[]).length);$('alignment-tools').hidden=true;$('add').hidden=!takesNotes();if($('add-note'))$('add-note').hidden=!takesNotes();$('edit-positions').hidden=false;updateAlignmentStatus();
+  buildPlaceIndex();refreshSearch();setPanel(window.atlasCommunity?.reviewOpen?.()||!compact()&&desktopPanelOpen&&!config.entry);$('hidden-controls').hidden=!config.hiddenAreasFile||!(currentHidden.areas.length||(currentHidden.additionalAreas||[]).length);$('alignment-tools').hidden=true;$('add').hidden=!takesNotes();if($('add-note'))$('add-note').hidden=!takesNotes();$('edit-positions').hidden=false;updateAlignmentStatus();
   map.on('movestart',()=>{if(!applyingView){activePlace=null;sharedPin?.remove();sharedPin=null;}});
   map.on('moveend zoomend',()=>{updateZoom();scheduleUrl();});
   map.on('popupclose',()=>{if(!applyingView){activePlace=null;scheduleUrl();}});
@@ -623,8 +626,8 @@ async function loadMap(id,url=new URL(location.href),push=false){
   applyLocation(url);ownView=false;updateZoom();if(keepEditing)enterEdit();loading=false;document.body.dataset.ready='true';syncUrl();
   window.dispatchEvent(new CustomEvent('atlas:loaded'));
   if(!requested&&id)status('Unknown map; showing '+config.title+'.');
- }catch(e){if(serial!==loadSerial)return;loading=false;document.body.dataset.ready=map?'true':'false';status('The atlas could not load. '+e.message,true);if(map)syncUrl();}
- finally{if(serial===loadSerial){for(const p of pickers)p.busy(false);if(config)setPickerMap(config.id);}}
+ }catch(e){if(stale())return;loading=false;document.body.dataset.ready=map?'true':'false';status('The atlas could not load. '+e.message,true);if(map)syncUrl();}
+ finally{if(serial===loadSerial){if(reviewToken!==null&&stale()){loading=false;document.body.dataset.ready=map?'true':'false';}for(const p of pickers)p.busy(false);if(config)setPickerMap(config.id);}}
 }
 function updateZoom(){$('zoom-label').textContent=Math.round(2**(map.getZoom()-config.coordinateZoom)*100)+'% · '+config.title;$('zoom-in').disabled=map.getZoom()>=config.maxZoom;$('zoom-out').disabled=map.getZoom()<=map.getMinZoom()+.01;}
 // Saved data handed over from the atlas's previous address, by its moved page or as a downloaded file.
@@ -772,9 +775,9 @@ function setupControls(){
  $('search').oninput=refreshSearch;$('clear-search').onclick=()=>{$('search').value='';refreshSearch();$('search').focus();};
  $('zoom-in').onclick=()=>map.zoomIn();$('zoom-out').onclick=()=>map.zoomOut();$('fit').onclick=fitMap;
  $('hide-pins').onclick=()=>{showPins=!showPins;updateCategoryButtons();drawMarkers();};
- $('toggle-panel').onclick=()=>{const open=$('journal').classList.contains('closed');setPanel(open);if(open&&isEmbed)$('close-guide').focus();};
+ $('toggle-panel').onclick=()=>{const review=window.atlasCommunity?.closeReview?.();if(review!==undefined&&review!==null)return;const open=$('journal').classList.contains('closed');setPanel(open);if(open&&isEmbed)$('close-guide').focus();};
  $('close-guide').onclick=()=>{setPanel(false);$('toggle-panel').focus();};
- mobileLayout.addEventListener('change',()=>setPanel(compact()?false:desktopPanelOpen));
+ mobileLayout.addEventListener('change',()=>setPanel(window.atlasCommunity?.reviewOpen?.()||(!compact()&&desktopPanelOpen)));
  $('alignment-export').onclick=exportAlignment;
  $('edit-toggle').onclick=()=>alignmentMode?askFinishEdit():enterEdit();$('edit-positions').onclick=enterEdit;$('edit-done').onclick=()=>finishEdit(true);$('edit-cancel').onclick=()=>finishEdit(false);
  $('add').onclick=startPlacement;if($('add-note'))$('add-note').onclick=startPlacement;
@@ -787,7 +790,7 @@ function setupControls(){
  {const pick=$('vendor-filter-select');fillSelect(pick,[...vendorKindItems(true),{label:'Sells',options:sellTypes.map(t=>[t,'s:'+t])}]);pick.onchange=()=>{vendorGroup=pick.value;drawMarkers();};}
 
  for(const r of document.querySelectorAll('input[name="note-type"],input[name="pin-colour"]'))r.onchange=updateEditorFields;$('category').onchange=updateEditorFields;
- $('cancel-place').onclick=cancelPlacement;document.addEventListener('keydown',e=>{if(e.key==='Escape'){cancelPlacement();if(compact())setPanel(false);}});
+ $('cancel-place').onclick=cancelPlacement;document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!window.atlasCommunity?.reviewOpen?.()){cancelPlacement();if(compact())setPanel(false);}});
  // Closing the editor without saving also drops a new note's pin; a saved note has already ended placement.
  $('cancel-edit').onclick=closeEditor;$('editor').addEventListener('close',()=>{draft=null;cancelPlacement();});
  $('marker-form').onsubmit=e=>{e.preventDefault();if(!draft)return;
