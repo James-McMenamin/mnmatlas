@@ -819,7 +819,7 @@ function setupControls(){
 const updateInterval=15*60*1000;let updateStamp=null,updateCheckedAt=0;
 async function checkForUpdate(){
  if((document.hidden&&updateStamp!==null)||!$('update-notice').hidden)return;updateCheckedAt=Date.now();
- try{const r=await fetch('site.webmanifest',{method:'HEAD',cache:'no-store'}),stamp=r.ok&&(r.headers.get('last-modified')||r.headers.get('etag'));if(!stamp)return;if(updateStamp===null)updateStamp=stamp;else if(stamp!==updateStamp){updateStamp=stamp;$('update-notice').hidden=false;}}catch{}
+ try{const r=await fetch('site.webmanifest',{method:'HEAD',cache:'no-store'}),stamp=r.ok&&(r.headers.get('last-modified')||r.headers.get('etag'));window.dispatchEvent(new Event('atlas:edition-check'));if(!stamp)return;if(updateStamp===null)updateStamp=stamp;else if(stamp!==updateStamp){updateStamp=stamp;$('update-notice').hidden=false;}}catch{}
 }
 function watchForUpdates(){
  $('update-reload').onclick=()=>location.reload();$('update-dismiss').onclick=()=>$('update-notice').hidden=true;

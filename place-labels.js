@@ -81,7 +81,7 @@ function setupPlaceLabels(data){
    marker.on('dragstart',()=>{selectAlignment(row,'label');map.closePopup();});
    marker.on('dragend',()=>moveAlignedLabel(row.id,marker.getLatLng()));
   }
-  if(!alignmentMode&&!target&&!boat&&!singleMap){face.tabIndex=0;face.setAttribute('role','button');const open=()=>openPlace({...row,kind:'label'});face.addEventListener('click',open);face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});}
+  if(!alignmentMode&&!target&&!boat&&!singleMap){L.DomEvent.disableClickPropagation(face);face.tabIndex=0;face.setAttribute('role','button');const open=()=>openPlace({...row,kind:'label'});face.addEventListener('click',open);face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});}
   labelPins.set(row.id,marker);
   return {row,face,marker};
  });

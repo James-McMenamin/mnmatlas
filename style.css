@@ -550,3 +550,8 @@ dialog.moved::backdrop{background:#0000001f}
 }
 /* Floating cards stay inside the chart; their actions remain within reach. */
 .community-dialog.place-change{overflow:auto;max-width:calc(100vw - 24px)}.community-dialog.place-change .dialog-actions{position:sticky;bottom:-18px;z-index:2;padding:10px 0;background:var(--popover);margin-bottom:0}.community-preview{max-height:calc(100% - 24px);overflow:auto}.community-preview .dialog-actions{position:sticky;bottom:-12px;background:var(--popover);padding:8px 0;margin-bottom:0}.community-preview .community-check input{width:17px;margin-top:0;padding:0}.community-preview textarea{display:block;width:100%;padding:8px;background:var(--muted);color:var(--foreground);border:1px solid var(--border);border-radius:3px;font:12px var(--body)}
+
+.place-move-button,.place-move-bar{display:none}
+@media(max-width:760px){.place-change .place-move-button{display:block}.place-change.moving-place{padding:8px 12px;max-height:64px!important;overflow:hidden}.place-change.moving-place>:not(.place-move-bar){display:none}.place-change.moving-place .place-move-bar{display:flex;align-items:center;gap:12px}.place-move-bar strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}}
+
+.desk-mobile-name{white-space:pre-wrap}

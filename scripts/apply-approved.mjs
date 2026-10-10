@@ -24,7 +24,7 @@ function dataPath(path){
  const absolute=resolve(root,path),local=relative(root,absolute);if(local.startsWith('..'+sep)||local==='..')fail('Data file is outside the atlas.');return absolute;
 }
 async function file(path,empty){
- if(!files.has(path)){let original;try{original=await readFile(dataPath(path),'utf8');}catch(e){if(empty===undefined||e.code!=='ENOENT')throw e;original=JSON.stringify(empty,null,2)+'\n';}const spacing=original.match(/\r?\n([ \t]+)\S/);files.set(path,{data:parse(original),original,indent:spacing?spacing[1]:2,newline:original.includes('\r\n')?'\r\n':'\n',trailing:/\r?\n$/.test(original),changed:false});}
+ if(!files.has(path)){let original,missing=false;try{original=await readFile(dataPath(path),'utf8');}catch(e){if(empty===undefined||e.code!=='ENOENT')throw e;missing=true;original=JSON.stringify(empty,null,2)+'\n';}const spacing=original.match(/\r?\n([ \t]+)\S/);files.set(path,{data:parse(original),original,missing,indent:spacing?spacing[1]:2,newline:original.includes('\r\n')?'\r\n':'\n',trailing:/\r?\n$/.test(original),changed:false});}
  if(staged){if(!staged.has(path))staged.set(path,{...files.get(path),data:structuredClone(files.get(path).data)});return staged.get(path);}return files.get(path);
 }
 const registry=parse(await readFile(resolve(root,'data/maps.json'),'utf8'));
@@ -295,10 +295,16 @@ async function updateCredits(applied,log){
  for(const r of [...rows.values()].sort((a,b)=>Number(a.id)-Number(b.id))){
   if(r.kind==='report'||!maps.has(r.map))continue;const id=r.kind==='new-marker'?'community-'+r.id:r.target_id;if(!id)continue;
   const credit=names.get(String(r.id)),name=r.credit===true&&r.user_id&&credit?.user_id?clean(credit.name||'').slice(0,80)||null:null;
-  const map=maps.get(r.map),key=targetKind(r)+':'+id+(targetKind(r)==='label'&&r.level?'#'+r.level:'');if(!Object.hasOwn(map,key))Object.defineProperty(map,key,{value:[],enumerable:true});map[key].push({name,what:whatOf(r)});
+  const kind=await creditKind(r,id,[...rows.values()]),map=maps.get(r.map),key=kind+':'+id+(kind==='label'&&r.level?'#'+r.level:'');if(!Object.hasOwn(map,key))Object.defineProperty(map,key,{value:[],enumerable:true});map[key].push({name,what:whatOf(r)});
  }
- for(const [map,data] of maps){const f=await file('data/credits/'+map+'.json',{});if(JSON.stringify(f.data)!==JSON.stringify(data)){f.data=data;f.changed=true;}}
+ for(const [map,data] of maps){const f=await file('data/credits/'+map+'.json',{});if(f.missing||JSON.stringify(f.data)!==JSON.stringify(data)){f.data=data;f.changed=true;}}
 }
+async function creditKind(row,id,rows){
+ const map=registry.maps.find(m=>m.id===row.map),configs=map.levels?.length?map.levels.map(l=>({...map,...l})): [map];let marker=false,label=false;
+ for(const c of configs){if(c.markersFile){const f=await file(c.markersFile,[]);marker||=[...f.data,...parse(f.original)].some(m=>m.id===id);}if(c.labelsFile){const f=await file(c.labelsFile,{labels:[],trainers:[]}),was=parse(f.original);marker||=[...(f.data.trainers||[]),...(was.trainers||[])].some(m=>m.id===id);label||=[...(f.data.labels||[]),...(was.labels||[])].some(m=>m.id===id);}}
+ if(marker!==label)return marker?'marker':'label';const added=rows.find(r=>r.map===row.map&&r.kind==='new-marker'&&'community-'+r.id===id);return targetKind(added||row);
+}
+
 async function publishedSuggestions(){
  if(past)return past;const rows=[];let after='0';
  while(true){const page=await request('suggestions?status=eq.published&select=*&order=id.asc&id=gt.'+after+'&limit=1000');if(!Array.isArray(page))fail('Invalid published suggestions response.');rows.push(...page);if(page.length<1000)break;after=page.at(-1).id;}

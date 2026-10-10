@@ -114,7 +114,7 @@
   },'danger');
   actions.append(button('Cancel',()=>d.close()),go);d.append(actions);
  }
- function showDialog(title,floating=false){dialog.oncancel=dialog.onclose=null;dialog.classList.remove('place-change','suggest-sheet');for(const k of ['left','top','right','bottom','maxHeight','width'])dialog.style[k]='';dialog.replaceChildren();const heading=text('h2',title);heading.id='community-title';dialog.append(heading);if(!dialog.open){if(floating)dialog.show();else dialog.showModal();}if(floating)fitFloating(dialog);return dialog;}
+ function showDialog(title,floating=false){dialog.oncancel=dialog.onclose=null;dialog.classList.remove('place-change','suggest-sheet','moving-place');for(const k of ['left','top','right','bottom','maxHeight','width'])dialog.style[k]='';dialog.replaceChildren();const heading=text('h2',title);heading.id='community-title';dialog.append(heading);if(!dialog.open){if(floating)dialog.show();else dialog.showModal();}if(floating)fitFloating(dialog);return dialog;}
  function fitFloating(card,point){const r=$('map-frame').getBoundingClientRect(),margin=12,width=Math.min(330,r.width-2*margin),height=r.height-2*margin;card.style.maxHeight=height+'px';card.style.width=width+'px';card.style.left=Math.max(r.left+margin,Math.min(r.right-width-margin,r.left+(point?.x||0)+60))+'px';card.style.top=r.top+margin+'px';card.style.right=card.style.bottom='auto';}
  // A labelled field of a dialog.
  function field(d,label,id,el){const l=text('label',label);l.htmlFor=id;el.id=id;d.append(l,el);return el;}
@@ -144,7 +144,7 @@
   const actions=text('div','','dialog-actions'),send=sendButton('Send report',async()=>{
    const picked=reason.picked();if(!picked){status('Choose what is wrong.');return;}
    const [x,y]=publishedPositions.get(m.id)||[m.x,m.y];
-   const {data,error}=await client.from('suggestions').insert({user_id:user.id,author_name:displayName(user),map:config.id,level:m.level||config.levelId||null,kind:'report',target_id:m.id,payload:{name:m.name,reason:picked,x,y},comment:comment.value.trim()||null}).select('id').single();if(error)throw error;
+   const {data,error}=await client.from('suggestions').insert({user_id:user.id,author_name:displayName(user),map:config.id,level:m.level||config.levelId||null,kind:'report',target_id:m.id,payload:window.atlasFields.stored('report',{name:m.name,reason:picked,x,y}),comment:comment.value.trim()||null}).select('id').single();if(error)throw error;
    reportedNow.add(reportToken(m));d.close();await loadApproved();await sentUndo(data?.id);freshPopup();status('Thanks! Your report is waiting for review.');event('report-sent');
   },'The report could not be sent. Please try again.','reports');
   actions.append(button('Cancel',()=>d.close()),send);d.append(actions);
@@ -178,14 +178,14 @@
   const actions=text('div','','dialog-actions');actions.append(button('Cancel',()=>{try{if(leave())d.close();}catch{if(window.confirm('Leave without saving these changes?'))d.close();}}),sendButton('Save suggestion',async()=>{
    let payload=structuredClone(row.payload);if(fields){const now=fields.read();if(row.kind==='new-marker'){payload={...payload,...now};for(const k of ['trade','classes','vendor','sells','wikiId'])if(payload[k]===null)delete payload[k];}else{const delta=window.atlasFields.delta(now,value);delete delta.from;delete delta.name;if(now.name!==value.name)delta.name=now.name;Object.assign(payload,delta);}}
    if(position.every(Number.isFinite)){if(!bounded(...position,config.minZoom))throw Error('Keep the pin inside the map.');if(move)payload.to=position;else if(row.kind==='new-marker'||JSON.stringify(position)!==start){payload.x=position[0];payload.y=position[1];if(payload.from&&!Array.isArray(payload.from))payload.from={...base,...payload.from};}}
-   if(row.kind==='edit-label'&&Object.hasOwn(payload,'priority')){payload.labelPriority=payload.priority;delete payload.priority;}if(row.kind==='new-marker'&&['up','down'].includes(payload.arrow)){payload.travelArrow=payload.arrow;delete payload.arrow;}
+   payload=window.atlasFields.stored(row.kind,payload);
    const amendments=[...approvedRows,...pendingRows],newest=newestOnTarget(row,amendments);
-   if(row.kind==='report'||newest?.id===row.id){const {data,error}=await version(client.from('suggestions').update({payload,comment:why.value.trim()||null,...(admin?{status:'approved',reviewed_at:new Date().toISOString()}:{})}).eq('id',row.id).eq('user_id',user.id).eq('status','pending').is('reviewed_at',null),row).select('*');if(error||!data?.length)throw error||Error('Changed since opened');}
+   if(row.kind==='report'||newest?.id===row.id){const {data,error}=await version(client.from('suggestions').update({payload,comment:why.value.trim()||null,...(admin?{status:'approved',reviewed_at:new Date().toISOString()}:{})}).eq('id',row.id).eq('user_id',user.id).eq('status','pending').is('reviewed_at',null),row).select('*');if(error||!data?.length)throw error||Error('Changed since opened');window.atlasNotices?.sent(normaliseSuggestion(data[0]));}
    else{const now=fields?.read(),added=row.kind==='new-marker',kind=added?(t?.kind==='label'?'edit-label':'edit-marker'):row.kind,from=window.atlasChanges.nextFrom({effective:base.name?base:value},kind);payload=move?{...payload,from:[base.x,base.y]}:now?window.atlasFields.delta(now,from):{...payload,from};if(!move&&position.every(Number.isFinite)&&JSON.stringify(position)!==start){payload.x=position[0];payload.y=position[1];}await saveOwn({kind,target_id:added?'community-'+row.id:row.target_id,map:row.map,level:row.level,user_id:user.id,author_name:displayName(user),credit:row.credit,payload,comment:why.value.trim()||null},amendments);}
    d.close();await loadApproved();status(admin?'Saved for the next edition.':'Your suggestion is updated and waiting for review.');
   },'This suggestion changed or is already being reviewed. Open it again.'));d.append(actions);d.oncancel=e=>{e.preventDefault();try{if(leave())d.close();}catch{if(window.confirm('Leave without saving these changes?'))d.close();}};d.addEventListener('close',()=>{fields?.dispose();clearPreview();},{once:true});
  }
- async function sentUndo(id){if(id==null||!user)return;let found;try{found=await client.from('suggestions').select('*').eq('id',id).maybeSingle();}catch{return;}const {data,error}=found;if(error||!data)return;const row=normaliseSuggestion(data);window.atlasOfferUndo('Delete just-sent suggestion',async()=>{try{let q=version(client.from('suggestions').delete().eq('id',row.id).eq('user_id',user.id).eq('status',row.status),row);if(!admin)q=q.is('reviewed_at',null);const {data:done,error}=await q.select('id');if(error||!done?.length)throw error||Error();await loadApproved();status('Just-sent suggestion withdrawn.');}catch{status('This suggestion changed or was reviewed; it could not be withdrawn.');}});}
+ async function sentUndo(id){if(id==null||!user)return;let found;try{found=await client.from('suggestions').select('*').eq('id',id).maybeSingle();}catch{return;}const {data,error}=found;if(error||!data)return;const row=normaliseSuggestion(data);window.atlasNotices?.sent(row);window.atlasOfferUndo('Delete just-sent suggestion',async()=>{try{let q=version(client.from('suggestions').delete().eq('id',row.id).eq('user_id',user.id).eq('status',row.status),row);if(!admin)q=q.is('reviewed_at',null);const {data:done,error}=await q.select('id');if(error||!done?.length)throw error||Error();await loadApproved();status('Just-sent suggestion withdrawn.');}catch{status('This suggestion changed or was reviewed; it could not be withdrawn.');}});}
  // Wiki search (signed-in visitors): look a page up by name and fill the wiki link with it.
  // The search goes through the atlas's own backend function, which holds the wiki's partner key.
  // Only what can stand on the map as a marker is searched (NPCs, not items or quests), and only in this map's zone:
@@ -447,16 +447,16 @@
  // Contribution points (approved suggestions: 1, bounty 2, priority bounty 3), from the database; null when unavailable.
  async function myPoints(){if(!user)return null;try{const {data,error}=await client.rpc('my_contribution_points');if(error)throw error;const row=Array.isArray(data)?data[0]:data;return row&&Number.isFinite(row.points)?row:null;}catch{return null;}}
  async function editDialog(target,kind){
-  if(!user){signInDialog();return;}await loadApproved();const amendments=[...approvedRows,...pendingRows],state=targetState(target,kind),base=state?.effective||target,chip=state?.kind==='chip';
+  if(!user){signInDialog();return;}await loadApproved();const amendments=[...approvedRows,...pendingRows],state=targetState(target,kind),own=!admin&&amendments.filter(r=>r.user_id===user.id&&r.status==='pending'&&!r.reviewed_at&&r.kind===kind&&r.target_id===target.id&&r.map===config.id&&(kind!=='edit-label'||(r.level||null)===(target.level||config.levelId||null))).sort((a,b)=>Number(b.id)-Number(a.id))[0],base=own?window.atlasChanges.applyTo(state?.effective||target,own):state?.effective||target,chip=state?.kind==='chip';
   const d=showDialog('Change “'+base.name+'”',kind==='edit-label');if(kind==='edit-label')d.classList.add('place-change');
   const fields=window.atlasFields.build(d,{value:base,label:kind==='edit-label',chip,building:!!labelData.trainers?.some(t=>t.id===target.id),owner:admin,prefix:'edit',ids:{name:'edit-name',note:'edit-note',wiki:'edit-wiki',category:'edit-type',trade:'edit-trade',classes:'edit-class',vendor:'edit-vendor'},finder:(...args)=>{const f=wikiFinder(...args);d.addEventListener('close',()=>{f.reset();finders.delete(f);},{once:true});return f;}});
-  d.addEventListener('close',()=>{fields.dispose();d.classList.remove('place-change');},{once:true});
-  const why=field(d,'Why (optional)','edit-comment',textBox(2,500,'Tell the cartographers what changed.')),credit=creditBox(d);
+  d.addEventListener('close',()=>{fields.dispose();d.classList.remove('place-change','moving-place');},{once:true});
+  const why=field(d,'Why (optional)','edit-comment',textBox(2,500,'Tell the cartographers what changed.')),credit=creditBox(d);if(own){why.value=own.comment||'';credit.checked=own.credit===true;}
   let moved=null,movePin=null,start=base.x!==undefined?[base.x,base.y]:null;
   // A name stays on the map while its floating card is open, and can be dragged on touch screens too.
   if(kind==='edit-label'&&start){map.closePopup();const pin=labelPins.get(target.id);if(pin){movePin=pin;pin.dragging?.enable();pin.getElement?.()?.classList.add('change-selected');const drag=()=>{moved=pixelsOf(pin.getLatLng());};pin.on('dragend',drag);d.addEventListener('close',()=>{pin.off?.('dragend',drag);if(!alignmentMode)pin.dragging?.disable();pin.setLatLng?.(locationOf({...base,x:target.x,y:target.y}));pin.getElement?.()?.classList.remove('change-selected');},{once:true});}}
   if(kind==='edit-label')fitFloating(d,map.latLngToContainerPoint?.(locationOf(base)));
-  if(kind==='edit-label')d.append(text('p','Drag the name on the map to move it.','form-hint'));
+  if(kind==='edit-label'){d.append(text('p','Drag the name on the map to move it.','form-hint'));if(movePin){const bar=text('div','','place-move-bar'),name=text('strong',base.name),done=button('Done',()=>{d.classList.remove('moving-place');fields.controls.name.focus?.();});bar.append(name,done);d.append(button('Move on the map',()=>{name.textContent=fields.controls.name.value||base.name;d.classList.add('moving-place');map.closePopup();},'place-move-button'),bar);}}
   const actions=text('div','','dialog-actions'),send=sendButton(admin?'Save':'Send for review',async()=>{
    let now;try{now=fields.read();}catch(e){status(e.message);return;}let payload=window.atlasFields.delta(now,window.atlasChanges.nextFrom(state||{effective:base},kind));
    if(Object.keys(payload).length===2&&payload.name===base.name&&!moved){status('Change a field or move the name first.');return;}
@@ -481,7 +481,7 @@
  }
  function suggestSheet(target,kind){
   if(admin){editDialog(target,kind);return;}const d=showDialog('Suggest a change');d.classList.add('suggest-sheet');d.append(text('p',target.name+' · '+config.title,'form-hint'));
-  for(const [icon,title,hint,go] of [['✎','Fix the name or details','Name, type, description or wiki page',()=>editDialog(target,kind)],['⚒','It stands somewhere else','Drag it or tap the right spot on the map',()=>moveDialog(target,kind)],['✕','It should be removed','Not in the game any more, or marked twice',()=>removalDialog(target,kind)],['?','Something else','Tell the cartographers what is wrong',()=>reportDialog(target)]]){const b=button('',()=>{d.close();go();},'suggest-option');b.append(text('i',icon),text('strong',title),text('small',hint));d.append(b);}d.append(button('Cancel',()=>d.close()));d.addEventListener('close',()=>d.classList.remove('suggest-sheet'),{once:true});
+  for(const [icon,title,hint,go] of [['✎','Fix the name or details','Name, type, description or wiki page',()=>editDialog(target,kind)],['⚒','It stands somewhere else','Drag it or tap the right spot on the map',()=>moveDialog(target,kind)],['✕','It should be removed','Not in the game any more, or marked twice',()=>removalDialog(target,kind)],['?','Something else','Tell the cartographers what is wrong',()=>reportDialog(target)]]){const b=button('',()=>new Promise(resolve=>{d.addEventListener('close',()=>resolve(go()),{once:true});d.close();}),'suggest-option');b.append(text('i',icon),text('strong',title),text('small',hint));d.append(b);}d.append(button('Cancel',()=>d.close()));d.addEventListener('close',()=>d.classList.remove('suggest-sheet'),{once:true});
  }
  function moveDialog(target,kind){
   if(!user){signInDialog();return;}const amendments=[...approvedRows,...pendingRows],state=targetState(target,kind),base=state?.effective||target,from=[base.x,base.y];map.closePopup();clearPreview();reviewLayer=L.layerGroup().addTo(map);
@@ -490,11 +490,11 @@
  }
  // Repeated saves amend only this account's open row; the original base still protects earlier contributions.
  function newestOnTarget(row,rows){const rules=window.atlasReview;return rows.filter(r=>!r.sourceStatus&&['pending','approved'].includes(r.status)&&rules.target(r)===rules.target(row)&&rules.targetKind(r)===rules.targetKind(row)&&r.map===row.map&&(rules.targetKind(row)!=='label'||(r.level||null)===(row.level||null))).sort((a,b)=>Number(b.id)-Number(a.id))[0];}
- async function saveOwn(row,amendments=[...approvedRows,...pendingRows]){if(row.kind==='edit-label'&&Object.hasOwn(row.payload,'priority')){row.payload.labelPriority=row.payload.priority;delete row.payload.priority;}
+ async function saveOwn(row,amendments=[...approvedRows,...pendingRows]){
   const newest=row.target_id?newestOnTarget(row,amendments):null,old=newest&&newest.user_id===user.id&&newest.kind===row.kind&&(admin||newest.status==='pending'&&!newest.reviewed_at)?newest:null;
   if(!old)return submit(row);const delta={...row.payload};if(!row.kind.startsWith('move-')&&delta.remove!==true&&delta.name===delta.from?.name)delete delta.name;let payload={...old.payload,...delta,from:row.kind.startsWith('move-')?old.payload.from:{...row.payload.from,...old.payload.from}};
-  if(row.kind==='edit-label'&&Object.hasOwn(payload,'priority')){if(!Object.hasOwn(payload,'labelPriority'))payload.labelPriority=payload.priority;delete payload.priority;}if(row.payload.remove!==true){delete payload.remove;delete payload.reason;}if(payloadBytes(payload)>=4096)throw Object.assign(Error('Too long'),{code:'too-long'});
-  let q=client.from('suggestions').update({payload,status:admin?'approved':'pending',comment:row.comment??old.comment,credit:row.credit??old.credit,...(admin?{reviewed_at:new Date().toISOString()}:{})}).eq('id',old.id).eq('user_id',user.id).eq('status',old.status);if(!admin)q=q.is('reviewed_at',null);const {data,error}=await version(q,old).select('*');if(error||!data?.length)throw error||Error('Changed since opened');await loadApproved();return true;
+  payload=window.atlasFields.stored(row.kind,payload);if(row.payload.remove!==true){delete payload.remove;delete payload.reason;}if(payloadBytes(payload)>=4096)throw Object.assign(Error('Too long'),{code:'too-long'});
+  let q=client.from('suggestions').update({payload,status:admin?'approved':'pending',comment:row.comment??old.comment,credit:row.credit??old.credit,...(admin?{reviewed_at:new Date().toISOString()}:{})}).eq('id',old.id).eq('user_id',user.id).eq('status',old.status);if(!admin)q=q.is('reviewed_at',null);const {data,error}=await version(q,old).select('*');if(error||!data?.length)throw error||Error('Changed since opened');await loadApproved();window.atlasNotices?.sent(normaliseSuggestion(data[0]));return true;
  }
  const editButton=(target,kind)=>button('Change',()=>suggestSheet(target,kind),'community-edit','edit');
  const sharedToken=m=>scope()+':'+m.id;
@@ -524,11 +524,11 @@
  function ledger(target,kind,n){
   const t=targetState(target,kind),rows=t?.rows.filter(r=>['pending','approved'].includes(r.status)&&!approvedLive(r))||[],box=text('div','','change-ledger');
   if(rows.length){box.append(text('h4','Changes on their way'));for(const r of rows){const fields=[...r.fields].map(k=>({position:'moved',name:'renamed',note:'description updated',removed:'removal',type:'type changed',added:'charted'}[k]||k+' changed')),line=text('div','','ledger-change');line.append(text('i',r.fields.has('position')?'⚒':r.fields.has('removed')?'✕':'✎'),text('strong',fields.join(' · ')||'Details checked'),text('small','by '+(r.author_name||'a traveller')+' · '+new Date(r.created_at||r.reviewed_at||Date.now()).toLocaleString()));line.append(text('span',r.status==='approved'?'approved':'waiting for review','change-state '+r.status));box.append(line);}}
-  const key=(kind==='edit-label'?'label':'marker')+':'+target.id,published=mapCredits[key+(kind==='edit-label'&&target.level?'#'+target.level:'')]||mapCredits[key]||[];
+  const key=(kind==='edit-label'?'label':'marker')+':'+target.id,published=mapCredits[key+(kind==='edit-label'&&(target.level||config.levelId)?'#'+(target.level||config.levelId):'')]||mapCredits[key]||[];
   if(published.length)box.append(text('p',creditWords(published)+'.','contributors-line'));
   const actions=text('div','','change-actions');actions.append(editButton(target,kind));const row=rows.find(r=>r.status==='pending')||rows[0];if(admin&&row&&!row.sourceStatus)actions.append(button('Review '+(row.fields.has('position')?'move':row.fields.has('removed')?'removal':'details'),()=>preview(row,loadApproved,loadApproved,null,true)));actions.append(button('✕ Remove',()=>removalDialog(target,kind),'community-remove'));box.append(actions);n.append(box);
  }
- function creditWords(rows){const groups=new Map();for(const c of rows){const verb=c.what==='added'?'charted':c.what==='moved'?'moved':'improved';if(!groups.has(verb))groups.set(verb,[]);groups.get(verb).push(c.name||null);}return [...groups].map(([verb,names],i)=>{const known=[...new Set(names.filter(Boolean))],unknown=names.filter(n=>!n).length,who=known.length>2?known.slice(0,2).join(', ')+' and '+(known.length-2)+' travellers':known.join(' and ');return (i?verb:verb[0].toUpperCase()+verb.slice(1))+' by '+who+(unknown?(who?' and ':'')+(unknown>1?'other travellers':'a traveller'):'');}).join(' · ');}
+ function creditWords(rows){const groups=new Map();for(const c of rows){const verb=c.what==='added'?'charted':c.what==='moved'?'moved':'improved';if(!groups.has(verb))groups.set(verb,[]);groups.get(verb).push(c.name||null);}return [...groups].map(([verb,names],i)=>{const known=[...new Set(names.filter(Boolean))],unknown=names.filter(n=>!n).length,who=known.length>2?known.slice(0,2).join(', ')+' and '+(known.length===3?'a traveller':(known.length-2)+' travellers'):known.join(' and ');return (i?verb:verb[0].toUpperCase()+verb.slice(1))+' by '+who+(unknown?(who?' and ':'')+(unknown>1?'other travellers':'a traveller'):'');}).join(' · ');}
  window.atlasCommunity={deleteNotice,change(target,kind){if(!user)return false;editDialog(target,kind);return true;},isAdmin:()=>admin,reviewOpen:()=>desk.opened,reviewCurrent:token=>desk.currentPreview(token),reviewLabel:()=>desk.opened&&desk.selected?.kind.endsWith('label')?desk.selected.target_id:null,leaveReview:token=>desk.leaveMap(token)&&allowLeave(),closeReview:()=>desk.opened?desk.close():null,afterPositions:go=>{if(dialog.open)dialog.addEventListener('close',go,{once:true});else go();},report:reportDialog,fields:window.atlasFields,refresh:loadApproved,popup(m,n){
   if(m.atlasLabel){ledger(m,'edit-label',n);return;}if(m.id.startsWith('personal-')){if(alignmentMode)return;const shared=readSet(sharedKey).has(sharedToken(m));if(!config.zonesFile)n.append(shared?text('p','Shared for review','moved-note'):button('Share with everyone',()=>shareNote(m),'','share'));return;}ledger(m,'edit-marker',n);
  },placePopup(p,n){if(!['label','exit','building','district'].includes(p.kind))return;const target=labelData.labels.find(l=>l.id===p.id)||changeSet().get('label:'+p.id)?.published||p;ledger(target,'edit-label',n);},chipPopup(p,n){ledger(p,'edit-marker',n);}};
@@ -563,7 +563,7 @@
  async function submit(row){return (await submitRow(row)).published;}
  // The publishing job refuses a suggestion of 4 KB or more (in UTF-8): refused here first, with a clear message.
  const payloadBytes=v=>encodeURIComponent(JSON.stringify(v)).replace(/%[0-9A-F]{2}/g,'x').length;
- async function submitRow(row){if(row.kind==='new-marker'&&['up','down'].includes(row.payload.arrow)){row={...row,payload:{...row.payload,travelArrow:row.payload.arrow}};delete row.payload.arrow;}
+ async function submitRow(row){row={...row,payload:window.atlasFields.stored(row.kind,row.payload)};
   if(payloadBytes(row.payload)>=4096)throw Object.assign(Error('Too long'),{code:'too-long'});
   const {data,error}=await client.from('suggestions').insert(row).select('id').single();if(error)throw error;
   const id=data?.id??null;if(!admin||id==null){await loadApproved();await sentUndo(id);return {id,published:false};}
@@ -680,8 +680,8 @@
    if(row?.status==='pending'){
     // Its author may change it only until it has been looked at (the database's rule; an admin always may). After that
     // the change stays in the note: sending it again would only make a duplicate.
-    if(admin||(!row.reviewed_at&&!row.review_note)){const {data:done,error:refused}=await client.from('suggestions').update({payload}).eq('id',rec.id).eq('status','pending').select('id');
-     if(!refused&&done?.length){keep();status('Saved, and your suggestion was updated.');loadApproved();return;}}
+    if(admin||(!row.reviewed_at&&!row.review_note)){const {data:done,error:refused}=await client.from('suggestions').update({payload:window.atlasFields.stored('new-marker',payload),...(admin?{status:'approved',reviewed_at:new Date().toISOString()}:{})}).eq('id',rec.id).eq('status','pending').select('*');
+     if(!refused&&done?.length){window.atlasNotices?.sent(normaliseSuggestion(done[0]));keep();status('Saved, and your suggestion was updated.');loadApproved();return;}}
     status('Saved to your field notes. Your suggestion is already being reviewed, so this change was not added to it.',true);return;
    }
    if(row?.status==='approved'||row?.status==='published'){
@@ -763,7 +763,7 @@
  // as possible duplicates, with a jump between them.
  let approvedLayer=null,approvedRows=[],pendingRows=[],rejectedRows=[],approvedSerial=0,mapCredits={},publishedMapLabels=[],loadedSignature='';const suggestionPins=new Map(),creditsCache=new Map();
  function zoomApproved(){if(changeSet().targets().some(t=>t.kind==='label'))drawApproved();}
- async function creditsForMap(){const key=config.id,edition=loadSerial;let entry=creditsCache.get(key);if(!entry||entry.edition!==edition){entry={edition,read:fetch('data/credits/'+key+'.json').then(r=>r.ok?r.json():{}).catch(()=>({}))};creditsCache.set(key,entry);}return entry.read;}
+ async function creditsForMap(){const key=config.id,edition=loadSerial;let entry=creditsCache.get(key);if(!entry||!entry.missing&&entry.edition!==edition){entry={edition,missing:false};entry.read=fetch('data/credits/'+key+'.json').then(r=>{if(r.status===404){entry.missing=true;return {};}return r.ok?r.json():{};}).catch(()=>({}));creditsCache.set(key,entry);}return entry.read;}
  const approvedKey='mnmaps-show-approved',pendingKey='mnmaps-show-pending',rejectedKey='mnmaps-show-rejected';
  // Rejected suggestions stay in the database and never go live; admins see the ones rejected since the site was last
  // published, crossed out, until the next update. The published time is the site files' Last-Modified (as the update
@@ -802,7 +802,7 @@
  async function loadApproved(){
   const serial=++approvedSerial;let approved=[],pending=[],rejected=[],published=[];
   if(user&&config&&!config.zonesFile){
-   const read=async(state,since)=>{let q=client.from('suggestions').select('*').eq('status',state).eq('map',config.id);if(since)q=q.gte('reviewed_at',since).order('reviewed_at',{ascending:false}).order('id',{ascending:false});const {data,error}=await q.limit(500);if(error)throw error;return Array.isArray(data)?data.map(normaliseSuggestion):[];};
+   const read=async(state,since)=>{let q=client.from('suggestions').select('*').eq('status',state).eq('map',config.id);if(since)q=q.gte(state==='published'?'updated_at':'reviewed_at',since).order(state==='published'?'updated_at':'reviewed_at',{ascending:false}).order('id',{ascending:false});let {data,error}=await q.limit(500);if(error&&state==='published'&&since&&/updated_at/.test(error.message||error.details||'')){({data,error}=await client.from('suggestions').select('*').eq('status',state).eq('map',config.id).gte('reviewed_at',since).order('reviewed_at',{ascending:false}).order('id',{ascending:false}).limit(500));}if(error)throw error;return Array.isArray(data)?data.map(normaliseSuggestion):[];};
    try{const since=await publishedSince();approved=await read('approved');pending=await read('pending');published=await read('published',since);}catch{}
    if(admin)try{rejected=await read('rejected',await publishedSince());}catch{}}
   let labels=[];try{const source=(config.levels||[]).filter(l=>l.labelsFile&&l.labelsFile!==config.labelsFile);labels=(await Promise.all(source.map(async l=>{const data=await fetchData(l.labelsFile,{labels:[]});return (data.labels||[]).map(p=>({...p,level:p.level||l.id}));}))).flat();}catch{}
