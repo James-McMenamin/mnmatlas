@@ -21,6 +21,6 @@ window.atlasReview=(()=>{
  const stamp=r=>r.updated_at||r.reviewed_at||r.created_at||'';
  const ownRows=(rows,uid)=>rows.filter(r=>uid&&r.user_id===uid).slice().sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||''))||Number(b.id)-Number(a.id));
  const unread=(rows,seen,key=r=>String(r.id),version=stamp)=>rows.filter(r=>seen[key(r)]!==version(r));
- const state=r=>({published:'Inked into the atlas',approved:'Approved · next edition',pending:'Waiting for review',rejected:'Set aside',resolved:'Inked into the atlas'}[r.status]||'Waiting for review');
+ const state=r=>({published:'On the map',approved:'Approved · next edition',pending:'Waiting for review',rejected:'Set aside',resolved:'Fixed'}[r.status]||'Waiting for review');
  return {group,target,targetKind,point,keyAction,stamp,ownRows,unread,state};
 })();
