@@ -41,19 +41,23 @@
       "what": "moved"
     }
   ],
-  "label:wiki-quartermaster#lower": [
+  "marker:wiki-quartermaster": [
     {
       "name": null,
       "what": "moved"
     }
   ],
-  "label:wiki-marshall-harding#lower": [
+  "marker:wiki-marshall-harding": [
     {
       "name": null,
       "what": "moved"
+    },
+    {
+      "name": null,
+      "what": "edited"
     }
   ],
-  "label:wiki-paymaster-elara-venn#lower": [
+  "marker:wiki-paymaster-elara-venn": [
     {
       "name": null,
       "what": "moved"
@@ -94,12 +98,6 @@
     }
   ],
   "marker:class-archer-warrior-ranger": [
-    {
-      "name": null,
-      "what": "edited"
-    }
-  ],
-  "marker:wiki-marshall-harding": [
     {
       "name": null,
       "what": "edited"
