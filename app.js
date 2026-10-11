@@ -212,7 +212,7 @@ function openPlace(p,zoom=config.defaultView.placeZoom){
  // A boat dock opens its departures-and-stops card here too.
  else if(p.kind==='label'&&Array.isArray(p.route)&&p.route.length>1)boatCard(p);
  else {if(p.kind==='hidden')hiddenController?.show(p.id);L.popup({autoPan:true,autoPanPaddingTopLeft:[24,compact()?155:150],autoPanPaddingBottomRight:[70,40],maxHeight:Math.max(120,($('map')?.clientHeight||600)-200)}).setLatLng(locationOf(p)).setContent(placePopup(p)).openOn(map);}
- activePlace=p;applyingView=false;if(compact())setPanel(false);scheduleUrl();
+ activePlace=p;applyingView=false;if(compact()&&!window.atlasCommunity?.reviewOpen?.())setPanel(false);scheduleUrl();
 }
 function pinIcon(m){
  // Personal area labels and zone exits are lettering, drawn like the map's own names.
@@ -251,7 +251,7 @@ function drawMarkers(){
   // A marker that stands for another published map (a dungeon entrance on the world map) opens that map.
   // Personal zone exits keep their popup (Go to, Edit note) instead.
   const opens=!own&&!alignmentMode&&typeof m.toMap==='string'&&!m.toPlace&&registry.maps.find(c=>c.id===m.toMap);
-  pin.on('click',()=>opens?openMap(opens.id):m.switchOnClick&&!alignmentMode?switchAt(m):alignmentMode&&!own?window.atlasCommunity?.change?.(m,'edit-marker')||choose(m):choose(m));pin.on('contextmenu',()=>choose(m));
+  pin.on('click',()=>window.atlasCommunity?.reviewOpen?.()?choose(m):opens?openMap(opens.id):m.switchOnClick&&!alignmentMode?switchAt(m):alignmentMode&&!own?window.atlasCommunity?.change?.(m,'edit-marker')||choose(m):choose(m));pin.on('contextmenu',()=>choose(m));
   if(alignmentMode){pin.on('dragstart',()=>{map.closePopup();if(!own)selectAlignment(m,'marker');});pin.on('dragend',()=>(own?movePersonal:moveAlignedMarker)(m.id,pin.getLatLng()));}
   if(!m.noteType)pin.bindTooltip(()=>text('span',markerTitle(m)),{direction:'top',offset:[0,-23]});if(showPins)pin.addTo(map);pins.set(m.id,pin);
   list.append(resultRow(markerTitle(m),markerDetail(m,own?'Personal note':''),()=>choose(m),m));

@@ -73,7 +73,7 @@ function setupPlaceLabels(data){
    const url=mapLink(target.id);if(row.toPlace)url.searchParams.set('place',row.toPlace);
    face.href=url.href;face.title='Open the '+target.title+' map';if(singleMap){face.target='_blank';face.rel='noopener';face.title+=' in MnM Atlas';}
    L.DomEvent.disableClickPropagation(face);
-   face.addEventListener('click',e=>{if(singleMap||e.button||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();goToMap(target.id,url);});
+   face.addEventListener('click',e=>{if(singleMap||e.button||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();if(window.atlasCommunity?.reviewOpen?.())openPlace({...row,kind:'label'});else goToMap(target.id,url);});
   }
   const icon=L.divIcon({className:'place-name-anchor',html:face,iconSize:[0,0],iconAnchor:[0,0]});
   const marker=L.marker(locationOf(row),{icon,pane:'placeNames',alt:row.name,interactive:!singleMap,keyboard:!singleMap,draggable:alignmentMode,bubblingMouseEvents:false});

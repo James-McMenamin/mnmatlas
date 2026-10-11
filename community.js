@@ -822,7 +822,7 @@
    const rows=t.rows.filter(r=>visible.has(String(r.id)));if(!rows.length||rows.some(r=>desk.hides(r)))continue;const proposed=t.proposed;if(config.levels&&proposed.level&&proposed.level!==config.levelId)continue;if(!Number.isFinite(proposed.x)||!Number.isFinite(proposed.y))continue;
    const at=locationOf(proposed),look={...proposed,id:t.id,...(t.kind==='label'?{category:'Personal',atlasLabel:true,noteType:proposed.kind==='exit'?'exit':'label'}:{})},waiting=rows.filter(r=>r.status==='pending').length,words=[...t.changed].map(k=>({position:'moved',name:'renamed',note:'details',removed:'removal',type:'type changed',added:'new'}[k]||k)).join(' · '),plate=[words,waiting?waiting+' waiting':'approved'].filter(Boolean).join(' · ');
    if(t.published&&t.changed.has('position'))approvedLayer.addLayer(L.polyline([locationOf(t.published),at],{color:'#e2b46a',weight:2,dashArray:'3 6',interactive:false}));
-   const ownPopup=()=>{const real=originals.find(m=>m.id===t.id),n=t.kind==='label'&&typeof placePopup==='function'?placePopup({...t.published||proposed,id:t.id}):popup(real||look);const dup=duplicateList(rows[0],jumpTo);if(dup)n.append(dup);return n;};
+   const ownPopup=()=>suggestionPopup(rows[0],look);
    // A pending pin standing on its own spot (a new marker or a move) opens like a marker; one sitting on the live marker leaves its clicks to it.
    const apart=!t.published||t.changed.has('position')||t.changed.has('added');
    const pin=L.marker(at,{icon:pinIcon(look),zIndexOffset:-500,interactive:apart,keyboard:apart,label:plate+' ('+(waiting?'waiting for review':'approved, not live yet')+'): '+proposed.name}).bindPopup(ownPopup);pin.on('add',()=>{const el=pin.getElement();el?.classList.add('combined-ghost');if(apart)el?.classList.add('apart');});approvedLayer.addLayer(pin);
@@ -832,6 +832,7 @@
   if(shownSetting(rejectedKey))for(const row of rejected){if(desk.hides(row))continue;const at=suggestionAt(row)||[row.payload.x,row.payload.y];if(!at.every(Number.isFinite))continue;const pin=L.marker(locationOf({x:at[0],y:at[1]}),{icon:pinIcon({...row.payload,category:row.payload.category||'Personal'}),zIndexOffset:-600,label:'Set aside (rejected): '+row.payload.name}).bindPopup(()=>approvedPopup(row,'Set aside'));pin.on('add',()=>pin.getElement()?.classList.add('rejected-pin'));approvedLayer.addLayer(pin);suggestionPins.set(row.id,pin);}
   desk.drawPins();
  }
+ function suggestionPopup(row,look){const t=changeSet().forRow(row.id),real=originals.find(m=>m.id===(t?.id||look.id)),n=t?.kind==='label'&&typeof placePopup==='function'?placePopup({...t.published||look,id:t.id}):popup(real||look);const dup=duplicateList(row,jumpTo);if(dup)n.append(dup);return n;}
  function approvedPopup(row,tag){
   const p=row.payload||{},waiting=row.status==='pending',refused=row.status==='rejected',n=text('div','');n.append(text('div',tag+' · '+(refused?'rejected':waiting?'waiting for review':'approved, not live yet'),'tag'),text('h3',p.name||''));if(p.note&&row.kind!=='move-marker'&&p.remove!==true)n.append(text('p',p.note));
   if(p.remove===true)n.append(text('p','Removal'+(removalReasons[p.reason]?': '+removalReasons[p.reason]:'')+(row.comment?'. “'+row.comment+'”':''),'reported-reason'));
@@ -889,7 +890,7 @@
  function version(q,row){return row.updated_at?q.eq('updated_at',row.updated_at):q;}
  async function reviewAction(row,state,note,card,payload,done){if(await desk.decideRow(row,state,note))done?.();}
  async function preview(row){return desk.open(row);}
- desk=window.createReviewDesk({client,isAdmin:()=>admin,getUser:()=>user,normalise:normaliseSuggestion,target:reviewTarget,locations:reviewLocations,places:reviewPlaces,loadApproved,countWaiting,publishButton,bannedList,banDialog,wikiFinder,finders,version,payloadBytes,reasons,removalReasons,nextSerial:()=>++reviewSerial,drawApproved});
+ desk=window.createReviewDesk({client,isAdmin:()=>admin,getUser:()=>user,normalise:normaliseSuggestion,target:reviewTarget,locations:reviewLocations,places:reviewPlaces,loadApproved,countWaiting,publishButton,bannedList,banDialog,wikiFinder,finders,version,payloadBytes,reasons,removalReasons,nextSerial:()=>++reviewSerial,drawApproved,popup:suggestionPopup});
  connectNotices();accountUI();client.auth.onAuthStateChange((eventName,session)=>{setTimeout(()=>authChanged(session).catch(()=>status('Account could not refresh. Your local notes are safe.')),0);});
  client.auth.getSession().then(({data,error})=>{if(error)throw error;return authChanged(data.session);}).catch(()=>status('Account could not load. Your local notes are safe.'));
  window.addEventListener('atlas:loaded',()=>{for(const f of finders)f.reset();onMap().catch(()=>status('Community data could not load.'));});
