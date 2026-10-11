@@ -1,8 +1,12 @@
 [
  {
   "id": "vhaleth-halkareth",
-  "name": "Vhaleth Hal'kareth (level 60)",
+  "name": "Vhaleth Hal'kareth",
   "category": "Named mob",
+  "levels": [
+   60,
+   60
+  ],
   "approximate": true,
   "minZoom": 3,
   "note": "Deep elf wizard, near the wizard tower.",

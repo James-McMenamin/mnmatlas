@@ -165,8 +165,12 @@
  },
  {
   "id": "thoren-blackwood",
-  "name": "Thoren Blackwood (level 25)",
+  "name": "Thoren Blackwood",
   "category": "Named mob",
+  "levels": [
+   25,
+   25
+  ],
   "x": 2009,
   "y": 5307,
   "minZoom": 3,
@@ -246,8 +250,12 @@
  },
  {
   "id": "redpaw",
-  "name": "Redpaw (level 25)",
+  "name": "Redpaw",
   "category": "Named mob",
+  "levels": [
+   25,
+   25
+  ],
   "x": 3832,
   "y": 4592,
   "minZoom": 3,
@@ -318,8 +326,12 @@
  },
  {
   "id": "widow-vethra",
-  "name": "Widow Vethra (level 16)",
+  "name": "Widow Vethra",
   "category": "Named mob",
+  "levels": [
+   16,
+   16
+  ],
   "x": 2345,
   "y": 1302,
   "minZoom": 3,
@@ -344,8 +356,12 @@
  },
  {
   "id": "brakzul",
-  "name": "Brak'zul Bonecarver (level 28)",
+  "name": "Brak'zul Bonecarver",
   "category": "Named mob",
+  "levels": [
+   28,
+   28
+  ],
   "x": 2374,
   "y": 6358,
   "minZoom": 3,
@@ -356,8 +372,12 @@
  },
  {
   "id": "orc-cave-named",
-  "name": "Belthakar Dunecaller (level 26)",
+  "name": "Belthakar Dunecaller",
   "category": "Named mob",
+  "levels": [
+   26,
+   26
+  ],
   "x": 2706,
   "y": 6574,
   "minZoom": 3,
@@ -368,8 +388,12 @@
  },
  {
   "id": "orc-cave-named-rarthan-wartide",
-  "name": "Rarthan Wartide (level 26)",
+  "name": "Rarthan Wartide",
   "category": "Named mob",
+  "levels": [
+   26,
+   26
+  ],
   "x": 2728,
   "y": 6574,
   "minZoom": 3,
@@ -380,8 +404,12 @@
  },
  {
   "id": "brukk-goldgut",
-  "name": "Brukk Goldgut (level 46), hill giant bandits (level 45)",
+  "name": "Brukk Goldgut (level 46), hill giant bandits",
   "category": "Named mob",
+  "levels": [
+   45,
+   45
+  ],
   "x": 3605,
   "y": 7333,
   "minZoom": 3,

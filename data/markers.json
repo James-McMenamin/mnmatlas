@@ -826,8 +826,12 @@
   {
     "id": "community-161",
     "community": true,
-    "name": "Night Terror (level 8)",
+    "name": "Night Terror",
     "category": "Named mob",
+    "levels": [
+      8,
+      8
+    ],
     "note": "",
     "x": 1441,
     "y": 1021,

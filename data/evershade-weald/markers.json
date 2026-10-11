@@ -163,8 +163,12 @@
  },
  {
   "id": "taeresh-deathcharmer",
-  "name": "Taeresh Deathcharmer (level 14)",
+  "name": "Taeresh Deathcharmer",
   "category": "Named mob",
+  "levels": [
+   14,
+   14
+  ],
   "x": 3354,
   "y": 2977,
   "approximate": true,
@@ -243,8 +247,12 @@
  {
   "id": "community-130",
   "community": true,
-  "name": "Kyros Emeraldscale (level 8)",
+  "name": "Kyros Emeraldscale",
   "category": "Named mob",
+  "levels": [
+   8,
+   8
+  ],
   "note": "",
   "x": 1477,
   "y": 2128,

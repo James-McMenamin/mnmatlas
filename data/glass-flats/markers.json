@@ -15,8 +15,12 @@
  },
  {
   "id": "baron-bigtent",
-  "name": "Baron Bigtent (level 20)",
+  "name": "Baron Bigtent",
   "category": "Named mob",
+  "levels": [
+   20,
+   20
+  ],
   "x": 7116,
   "y": 7369,
   "approximate": true,
@@ -124,8 +128,12 @@
  },
  {
   "id": "yealaroth",
-  "name": "Yealaroth the Consumed (level 40)",
+  "name": "Yealaroth the Consumed",
   "category": "Named mob",
+  "levels": [
+   40,
+   40
+  ],
   "x": 9190,
   "y": 5055,
   "approximate": true,
@@ -159,8 +167,12 @@
  },
  {
   "id": "shattershriek",
-  "name": "Shattershriek (level 35)",
+  "name": "Shattershriek",
   "category": "Named mob",
+  "levels": [
+   35,
+   35
+  ],
   "x": 8086,
   "y": 4235,
   "approximate": true,
@@ -209,8 +221,12 @@
  },
  {
   "id": "malik",
-  "name": "Malik the Glass Viper (level 44)",
+  "name": "Malik the Glass Viper",
   "category": "Named mob",
+  "levels": [
+   44,
+   44
+  ],
   "x": 3030,
   "y": 6533,
   "approximate": true,
@@ -247,8 +263,12 @@
  },
  {
   "id": "selene",
-  "name": "Selene Brightmantle (level 45)",
+  "name": "Selene Brightmantle",
   "category": "Named mob",
+  "levels": [
+   45,
+   45
+  ],
   "x": 3376,
   "y": 4844,
   "approximate": true,
@@ -259,8 +279,12 @@
  },
  {
   "id": "bishop-aybram",
-  "name": "Bishop Aybram (level 50)",
+  "name": "Bishop Aybram",
   "category": "Named mob",
+  "levels": [
+   50,
+   50
+  ],
   "x": 3366,
   "y": 4994,
   "approximate": true,
@@ -271,8 +295,12 @@
  },
  {
   "id": "seneschal-kazmer",
-  "name": "Seneschal Kazmer (level 45)",
+  "name": "Seneschal Kazmer",
   "category": "Named mob",
+  "levels": [
+   45,
+   45
+  ],
   "x": 3136,
   "y": 4994,
   "approximate": true,
@@ -283,8 +311,12 @@
  },
  {
   "id": "quartermaster-girault",
-  "name": "Quartermaster Girault (level 50)",
+  "name": "Quartermaster Girault",
   "category": "Named mob",
+  "levels": [
+   50,
+   50
+  ],
   "x": 3126,
   "y": 4864,
   "approximate": true,
@@ -295,8 +327,12 @@
  },
  {
   "id": "hovarth-ezzadel",
-  "name": "Hovarth Ezzadel (level 51)",
+  "name": "Hovarth Ezzadel",
   "category": "Named mob",
+  "levels": [
+   51,
+   51
+  ],
   "x": 3256,
   "y": 5074,
   "approximate": true,
@@ -333,8 +369,12 @@
  },
  {
   "id": "fenrix-lightfoot",
-  "name": "Fenrix Lightfoot (level 50)",
+  "name": "Fenrix Lightfoot",
   "category": "Named mob",
+  "levels": [
+   50,
+   50
+  ],
   "x": 3030,
   "y": 5194,
   "approximate": true,

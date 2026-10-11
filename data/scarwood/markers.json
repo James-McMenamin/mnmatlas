@@ -38,8 +38,12 @@
  },
  {
   "id": "grinholdt",
-  "name": "Garran Grinholdt (level 28)",
+  "name": "Garran Grinholdt",
   "category": "Named mob",
+  "levels": [
+   28,
+   28
+  ],
   "x": 5258,
   "y": 3234,
   "approximate": true,
@@ -50,8 +54,12 @@
  },
  {
   "id": "grinholdt-thorne-grinholdt",
-  "name": "Thorne Grinholdt (level 28)",
+  "name": "Thorne Grinholdt",
   "category": "Named mob",
+  "levels": [
+   28,
+   28
+  ],
   "x": 5280,
   "y": 3234,
   "approximate": true,
@@ -76,8 +84,12 @@
  },
  {
   "id": "krev-thistlehook",
-  "name": "Krev Thistlehook (level 36)",
+  "name": "Krev Thistlehook",
   "category": "Named mob",
+  "levels": [
+   36,
+   36
+  ],
   "x": 2111,
   "y": 510,
   "approximate": true,
@@ -147,8 +159,12 @@
  },
  {
   "id": "yurl-rootrender",
-  "name": "Yurl Rootrender (level 45)",
+  "name": "Yurl Rootrender",
   "category": "Named mob",
+  "levels": [
+   45,
+   45
+  ],
   "x": 6256,
   "y": 1451,
   "approximate": true,
