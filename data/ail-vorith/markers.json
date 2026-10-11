@@ -1055,5 +1055,28 @@
     "note": "",
     "x": 2720,
     "y": 6514
+  },
+  {
+    "id": "community-401",
+    "community": true,
+    "name": "Runaways",
+    "category": "Mob camp",
+    "note": "",
+    "x": 3480,
+    "y": 5044,
+    "levels": [
+      15,
+      20
+    ],
+    "mobs": []
+  },
+  {
+    "id": "community-402",
+    "community": true,
+    "name": "Runaway entrance",
+    "category": "Passage",
+    "note": "Entrance to runaways hideout.",
+    "x": 3404,
+    "y": 5009
   }
 ]
