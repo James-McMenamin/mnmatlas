@@ -199,8 +199,19 @@
  },
  {
   "id": "poachers-28-30-1",
-  "name": "Poachers (levels 28–30)",
+  "name": "Poachers",
   "category": "Mob camp",
+  "levels": [
+   28,
+   30
+  ],
+  "mobs": [
+   {
+    "name": "Poachers",
+    "wikiId": "npc-a-poacher",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-poacher"
+   }
+  ],
   "x": 5474,
   "y": 4123,
   "minZoom": 3,
@@ -319,8 +330,12 @@
  },
  {
   "id": "blacktide-23-25-1",
-  "name": "Blacktide crew and slavers (levels 23–25)",
+  "name": "Blacktide crew and slavers",
   "category": "Mob camp",
+  "levels": [
+   23,
+   25
+  ],
   "x": 2135,
   "y": 6483,
   "minZoom": 3,

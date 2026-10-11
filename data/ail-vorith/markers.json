@@ -472,8 +472,19 @@
   {
     "id": "community-64",
     "community": true,
-    "name": "A Deepgulp explorer (levels 5–7)",
+    "name": "A Deepgulp explorer",
     "category": "Mob camp",
+    "levels": [
+      5,
+      7
+    ],
+    "mobs": [
+      {
+        "name": "A Deepgulp explorer",
+        "wikiId": "npc-a-deepgulp-explorer",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-deepgulp-explorer"
+      }
+    ],
     "note": "",
     "x": 6264,
     "y": 1939,
@@ -485,6 +496,13 @@
     "community": true,
     "name": "An angry cultist",
     "category": "Mob camp",
+    "mobs": [
+      {
+        "name": "An angry cultist",
+        "wikiId": "npc-an-angry-cultist",
+        "wiki": "https://monstersandmemories.wiki/npcs/an-angry-cultist"
+      }
+    ],
     "note": "",
     "x": 4839,
     "y": 5521,

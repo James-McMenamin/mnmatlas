@@ -1,8 +1,12 @@
 [
  {
   "id": "goblins-17-22-1",
-  "name": "Muggrah goblins (levels 17–22)",
+  "name": "Muggrah goblins",
   "category": "Mob camp",
+  "levels": [
+   17,
+   22
+  ],
   "x": 7026,
   "y": 7429,
   "approximate": true,
@@ -23,8 +27,12 @@
  },
  {
   "id": "pyrmos-30-1",
-  "name": "Pyrmos mercenaries and salt gatherers (level 30)",
+  "name": "Pyrmos mercenaries and salt gatherers",
   "category": "Mob camp",
+  "levels": [
+   30,
+   30
+  ],
   "x": 6056,
   "y": 6767,
   "approximate": true,
@@ -33,8 +41,19 @@
  },
  {
   "id": "salt-elementals-30-36-1",
-  "name": "Salt elementals (levels 30–36)",
+  "name": "Salt elementals",
   "category": "Mob camp",
+  "levels": [
+   30,
+   36
+  ],
+  "mobs": [
+   {
+    "name": "Salt elementals",
+    "wikiId": "npc-a-salt-elemental",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-salt-elemental"
+   }
+  ],
   "x": 6456,
   "y": 5450,
   "approximate": true,
@@ -45,8 +64,12 @@
  },
  {
   "id": "wildlife-20-31-1",
-  "name": "Desert creatures (levels 20–31)",
+  "name": "Desert creatures",
   "category": "Mob camp",
+  "levels": [
+   20,
+   31
+  ],
   "x": 5406,
   "y": 1784,
   "approximate": true,
@@ -55,8 +78,19 @@
  },
  {
   "id": "crystallized-35-39-1",
-  "name": "Crystallized skeletons (levels 35–39)",
+  "name": "Crystallized skeletons",
   "category": "Mob camp",
+  "levels": [
+   35,
+   39
+  ],
+  "mobs": [
+   {
+    "name": "Crystallized skeletons",
+    "wikiId": "npc-a-crystallized-skeleton",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-crystallized-skeleton"
+   }
+  ],
   "x": 6758,
   "y": 2054,
   "approximate": true,
@@ -67,8 +101,19 @@
  },
  {
   "id": "crystallized-35-39-2",
-  "name": "Crystallized skeletons (levels 35–39)",
+  "name": "Crystallized skeletons",
   "category": "Mob camp",
+  "levels": [
+   35,
+   39
+  ],
+  "mobs": [
+   {
+    "name": "Crystallized skeletons",
+    "wikiId": "npc-a-crystallized-skeleton",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-crystallized-skeleton"
+   }
+  ],
   "x": 7568,
   "y": 4714,
   "approximate": true,
@@ -91,8 +136,19 @@
  },
  {
   "id": "shard-bats-33-35-1",
-  "name": "Shard bats (levels 33–35)",
+  "name": "Shard bats",
   "category": "Mob camp",
+  "levels": [
+   33,
+   35
+  ],
+  "mobs": [
+   {
+    "name": "Shard bats",
+    "wikiId": "npc-a-shard-bat",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-shard-bat"
+   }
+  ],
   "x": 7976,
   "y": 4305,
   "approximate": true,
@@ -115,8 +171,12 @@
  },
  {
   "id": "highwaymen-36-44-1",
-  "name": "Highwaymen (levels 36–44)",
+  "name": "Highwaymen",
   "category": "Mob camp",
+  "levels": [
+   36,
+   44
+  ],
   "x": 3030,
   "y": 6423,
   "approximate": true,
@@ -161,8 +221,12 @@
  },
  {
   "id": "undead-45-53-1",
-  "name": "Undead (levels 45–53)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   45,
+   53
+  ],
   "x": 3256,
   "y": 4904,
   "approximate": true,
@@ -255,8 +319,12 @@
  },
  {
   "id": "charred-45-48-1",
-  "name": "Charred grovekeepers and rangers (levels 45–48)",
+  "name": "Charred grovekeepers and rangers",
   "category": "Mob camp",
+  "levels": [
+   45,
+   48
+  ],
   "x": 3120,
   "y": 5274,
   "approximate": true,
@@ -301,8 +369,19 @@
  },
  {
   "id": "cultists-43-53-1",
-  "name": "Cultists (levels 43–53)",
+  "name": "Cultists",
   "category": "Mob camp",
+  "levels": [
+   43,
+   53
+  ],
+  "mobs": [
+   {
+    "name": "Cultists",
+    "wikiId": "npc-a-cultist",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-cultist"
+   }
+  ],
   "x": 1122,
   "y": 5665,
   "approximate": true,

@@ -1,8 +1,12 @@
 [
  {
   "id": "bears-wolves-25-1",
-  "name": "Grizzly bears and timber wolves (level 25)",
+  "name": "Grizzly bears and timber wolves",
   "category": "Mob camp",
+  "levels": [
+   25,
+   25
+  ],
   "x": 1756,
   "y": 2840,
   "approximate": true,
@@ -11,8 +15,19 @@
  },
  {
   "id": "bandits-26-1",
-  "name": "Bandits (level 26)",
+  "name": "Bandits",
   "category": "Mob camp",
+  "levels": [
+   26,
+   26
+  ],
+  "mobs": [
+   {
+    "name": "Bandits",
+    "wikiId": "npc-a-bandit",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-bandit"
+   }
+  ],
   "x": 5148,
   "y": 3304,
   "approximate": true,
@@ -47,8 +62,12 @@
  },
  {
   "id": "poachers-34-35-1",
-  "name": "Poachers (levels 34–35)",
+  "name": "Poachers",
   "category": "Mob camp",
+  "levels": [
+   34,
+   35
+  ],
   "x": 2001,
   "y": 580,
   "approximate": true,
@@ -69,8 +88,12 @@
  },
  {
   "id": "lake-goblins-34-1",
-  "name": "Lake goblins (level 34)",
+  "name": "Lake goblins",
   "category": "Mob camp",
+  "levels": [
+   34,
+   34
+  ],
   "x": 4756,
   "y": 5429,
   "approximate": true,
@@ -89,8 +112,19 @@
  },
  {
   "id": "corrupted-giants-44-47-1",
-  "name": "Corrupted hill giants (levels 44–47)",
+  "name": "Corrupted hill giants",
   "category": "Mob camp",
+  "levels": [
+   44,
+   47
+  ],
+  "mobs": [
+   {
+    "name": "Corrupted hill giants",
+    "wikiId": "npc-a-corrupted-hill-giant",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-corrupted-hill-giant"
+   }
+  ],
   "x": 5188,
   "y": 1433,
   "approximate": true,

@@ -255,6 +255,13 @@
   "id": "tomb-burrowers-1",
   "name": "Tomb burrowers",
   "category": "Mob camp",
+  "mobs": [
+   {
+    "name": "Tomb burrowers",
+    "wikiId": "npc-a-tomb-burrower",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-tomb-burrower"
+   }
+  ],
   "x": 2280,
   "y": 7745,
   "approximate": true,

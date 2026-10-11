@@ -3,6 +3,10 @@
   "id": "undead-31-40-1",
   "name": "Plagueborn Drakes",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 2119,
   "y": 725,
   "approximate": true,
@@ -12,8 +16,12 @@
  },
  {
   "id": "giant-31-40-1",
-  "name": "Giant (levels 31–40)",
+  "name": "Giant",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 1282,
   "y": 632,
   "approximate": true,
@@ -24,6 +32,10 @@
   "id": "undead-31-40-2",
   "name": "Plagueborn Drakes",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 1562,
   "y": 1111,
   "approximate": true,
@@ -34,8 +46,12 @@
  },
  {
   "id": "ratkin-31-40-1",
-  "name": "Ratkin (levels 31–40)",
+  "name": "Ratkin",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 1791,
   "y": 1167,
   "approximate": true,
@@ -65,8 +81,12 @@
  },
  {
   "id": "ratkin-31-40-2",
-  "name": "Ratkin (levels 31–40)",
+  "name": "Ratkin",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 1737,
   "y": 1481,
   "approximate": true,
@@ -75,8 +95,12 @@
  },
  {
   "id": "undead-31-40-3",
-  "name": "Undead (levels 31–40)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 2055,
   "y": 1555,
   "approximate": true,
@@ -85,8 +109,12 @@
  },
  {
   "id": "undead-40plus-1",
-  "name": "Undead (level 40+)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   40,
+   null
+  ],
   "x": 811,
   "y": 1492,
   "approximate": true,
@@ -95,8 +123,12 @@
  },
  {
   "id": "ratkin-31-40-3",
-  "name": "Ratkin (levels 31–40)",
+  "name": "Ratkin",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 1305,
   "y": 1628,
   "approximate": true,
@@ -105,8 +137,12 @@
  },
  {
   "id": "undead-lt20-1",
-  "name": "Undead (below level 20)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   1,
+   19
+  ],
   "x": 2663,
   "y": 915,
   "approximate": true,
@@ -115,8 +151,12 @@
  },
  {
   "id": "bugs-21-25-1",
-  "name": "Beetles (levels 21–25)",
+  "name": "Beetles",
   "category": "Mob camp",
+  "levels": [
+   21,
+   25
+  ],
   "x": 2438,
   "y": 1125,
   "approximate": true,
@@ -125,8 +165,12 @@
  },
  {
   "id": "undead-21-25-1",
-  "name": "Undead (levels 21–25)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   21,
+   25
+  ],
   "x": 2359,
   "y": 1441,
   "approximate": true,
@@ -135,8 +179,12 @@
  },
  {
   "id": "undead-31-40-4",
-  "name": "Undead (levels 31–40)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 2782,
   "y": 1509,
   "approximate": true,
@@ -145,8 +193,12 @@
  },
  {
   "id": "undead-lt20-2",
-  "name": "Undead (below level 20)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   1,
+   19
+  ],
   "x": 3026,
   "y": 810,
   "approximate": true,
@@ -155,8 +207,12 @@
  },
  {
   "id": "bugs-21-25-2",
-  "name": "Beetles (levels 21–25)",
+  "name": "Beetles",
   "category": "Mob camp",
+  "levels": [
+   21,
+   25
+  ],
   "x": 3299,
   "y": 674,
   "approximate": true,
@@ -175,8 +231,12 @@
  },
  {
   "id": "bugs-21-25-3",
-  "name": "Beetles (levels 21–25)",
+  "name": "Beetles",
   "category": "Mob camp",
+  "levels": [
+   21,
+   25
+  ],
   "x": 3321,
   "y": 1257,
   "approximate": true,
@@ -185,8 +245,12 @@
  },
  {
   "id": "undead-lt20-3",
-  "name": "Undead (below level 20)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   1,
+   19
+  ],
   "x": 3143,
   "y": 1352,
   "approximate": true,
@@ -195,8 +259,12 @@
  },
  {
   "id": "undead-31-40-5",
-  "name": "Undead (levels 31–40)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 3411,
   "y": 1690,
   "approximate": true,
@@ -205,8 +273,12 @@
  },
  {
   "id": "undead-31-40-6",
-  "name": "Undead (levels 31–40)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 1146,
   "y": 1962,
   "approximate": true,
@@ -215,8 +287,12 @@
  },
  {
   "id": "ratkin-31-40-4",
-  "name": "Ratkin (levels 31–40)",
+  "name": "Ratkin",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 1904,
   "y": 1867,
   "approximate": true,
@@ -225,8 +301,12 @@
  },
  {
   "id": "ratkin-31-40-5",
-  "name": "Ratkin (levels 31–40)",
+  "name": "Ratkin",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 1509,
   "y": 2246,
   "approximate": true,
@@ -235,8 +315,12 @@
  },
  {
   "id": "ratkin-31-40-6",
-  "name": "Ratkin (levels 31–40)",
+  "name": "Ratkin",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 1935,
   "y": 2585,
   "approximate": true,
@@ -245,8 +329,12 @@
  },
  {
   "id": "ratkin-31-40-7",
-  "name": "Ratkin (levels 31–40)",
+  "name": "Ratkin",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 2200,
   "y": 1790,
   "approximate": true,
@@ -255,8 +343,12 @@
  },
  {
   "id": "undead-31-40-7",
-  "name": "Undead (levels 31–40)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 2450,
   "y": 1837,
   "approximate": true,
@@ -265,8 +357,12 @@
  },
  {
   "id": "ratkin-31-40-8",
-  "name": "Ratkin (levels 31–40)",
+  "name": "Ratkin",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 2211,
   "y": 2047,
   "approximate": true,
@@ -275,8 +371,12 @@
  },
  {
   "id": "undead-40plus-2",
-  "name": "Undead (level 40+)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   40,
+   null
+  ],
   "x": 2868,
   "y": 2081,
   "approximate": true,
@@ -285,8 +385,12 @@
  },
  {
   "id": "undead-40plus-3",
-  "name": "Undead (level 40+)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   40,
+   null
+  ],
   "x": 2343,
   "y": 2381,
   "approximate": true,
@@ -295,8 +399,12 @@
  },
  {
   "id": "undead-40plus-4",
-  "name": "Undead (level 40+)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   40,
+   null
+  ],
   "x": 2830,
   "y": 2582,
   "approximate": true,
@@ -305,8 +413,12 @@
  },
  {
   "id": "humanoid-31-40-1",
-  "name": "Humanoids (levels 31–40)",
+  "name": "Humanoids",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 1901,
   "y": 3155,
   "approximate": true,
@@ -315,8 +427,12 @@
  },
  {
   "id": "humanoid-31-40-2",
-  "name": "Humanoids (levels 31–40)",
+  "name": "Humanoids",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 2340,
   "y": 2990,
   "approximate": true,
@@ -325,8 +441,12 @@
  },
  {
   "id": "humanoid-31-40-3",
-  "name": "Humanoids (levels 31–40)",
+  "name": "Humanoids",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 2557,
   "y": 3426,
   "approximate": true,
@@ -335,8 +455,12 @@
  },
  {
   "id": "undead-31-40-8",
-  "name": "Undead (levels 31–40)",
+  "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   31,
+   40
+  ],
   "x": 3508,
   "y": 3345,
   "approximate": true,

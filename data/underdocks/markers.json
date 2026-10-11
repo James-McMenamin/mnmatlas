@@ -403,8 +403,12 @@
   {
     "id": "community-36",
     "community": true,
-    "name": "Deepcut bandit camps (10-16)",
+    "name": "Deepcut bandit camps",
     "category": "Mob camp",
+    "levels": [
+      10,
+      16
+    ],
     "note": "",
     "x": 4167,
     "y": 1190,

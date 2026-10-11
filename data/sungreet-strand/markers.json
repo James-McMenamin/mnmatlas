@@ -1,8 +1,12 @@
 [
  {
   "id": "goblin-20plus-1",
-  "name": "Goblins (level 20+)",
+  "name": "Goblins",
   "category": "Mob camp",
+  "levels": [
+   20,
+   null
+  ],
   "x": 2043,
   "y": 829,
   "approximate": true,
@@ -11,8 +15,12 @@
  },
  {
   "id": "goblin-11-15-1",
-  "name": "Goblins (levels 11–15)",
+  "name": "Goblins",
   "category": "Mob camp",
+  "levels": [
+   11,
+   15
+  ],
   "x": 2996,
   "y": 1514,
   "approximate": true,
@@ -21,8 +29,12 @@
  },
  {
   "id": "goblin-11-15-2",
-  "name": "Goblins (levels 11–15)",
+  "name": "Goblins",
   "category": "Mob camp",
+  "levels": [
+   11,
+   15
+  ],
   "x": 2912,
   "y": 2135,
   "approximate": true,
@@ -41,8 +53,12 @@
  },
  {
   "id": "goblin-6-10-1",
-  "name": "Goblins (levels 6–10)",
+  "name": "Goblins",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 1352,
   "y": 2650,
   "approximate": true,
@@ -51,8 +67,12 @@
  },
  {
   "id": "humanoid-20plus-1",
-  "name": "Humanoids (level 20+)",
+  "name": "Humanoids",
   "category": "Mob camp",
+  "levels": [
+   20,
+   null
+  ],
   "x": 2440,
   "y": 3059,
   "approximate": true,
@@ -61,8 +81,12 @@
  },
  {
   "id": "generic-6-10-1",
-  "name": "Creatures (levels 6–10)",
+  "name": "Creatures",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 3195,
   "y": 1744,
   "approximate": true,
@@ -71,8 +95,12 @@
  },
  {
   "id": "ashira-20plus-1",
-  "name": "Ashira (level 20+)",
+  "name": "Ashira",
   "category": "Mob camp",
+  "levels": [
+   20,
+   null
+  ],
   "x": 4029,
   "y": 2058,
   "approximate": true,
@@ -81,8 +109,12 @@
  },
  {
   "id": "ashira-20plus-2",
-  "name": "Ashira (level 20+)",
+  "name": "Ashira",
   "category": "Mob camp",
+  "levels": [
+   20,
+   null
+  ],
   "x": 4636,
   "y": 2408,
   "approximate": true,
@@ -91,8 +123,12 @@
  },
  {
   "id": "generic-20plus-1",
-  "name": "Creatures (level 20+)",
+  "name": "Creatures",
   "category": "Mob camp",
+  "levels": [
+   20,
+   null
+  ],
   "x": 3753,
   "y": 1913,
   "approximate": true,
@@ -112,8 +148,12 @@
  },
  {
   "id": "generic-6-10-2",
-  "name": "Creatures (levels 6–10)",
+  "name": "Creatures",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 4099,
   "y": 3244,
   "approximate": true,
@@ -122,8 +162,12 @@
  },
  {
   "id": "generic-20plus-2",
-  "name": "Creatures (level 20+)",
+  "name": "Creatures",
   "category": "Mob camp",
+  "levels": [
+   20,
+   null
+  ],
   "x": 4780,
   "y": 3555,
   "approximate": true,
@@ -142,8 +186,12 @@
  },
  {
   "id": "goblin-20plus-2",
-  "name": "Goblins (level 20+)",
+  "name": "Goblins",
   "category": "Mob camp",
+  "levels": [
+   20,
+   null
+  ],
   "x": 2393,
   "y": 3764,
   "approximate": true,
@@ -152,8 +200,12 @@
  },
  {
   "id": "bugs-11-15-1",
-  "name": "Bugs (levels 11–15)",
+  "name": "Bugs",
   "category": "Mob camp",
+  "levels": [
+   11,
+   15
+  ],
   "x": 2215,
   "y": 4236,
   "approximate": true,
@@ -162,8 +214,12 @@
  },
  {
   "id": "goblin-15-20-1",
-  "name": "Goblins (levels 15–20)",
+  "name": "Goblins",
   "category": "Mob camp",
+  "levels": [
+   15,
+   20
+  ],
   "x": 2622,
   "y": 4227,
   "approximate": true,
@@ -172,8 +228,12 @@
  },
  {
   "id": "humanoid-11-15-1",
-  "name": "Humanoids (levels 11–15)",
+  "name": "Humanoids",
   "category": "Mob camp",
+  "levels": [
+   11,
+   15
+  ],
   "x": 2664,
   "y": 4520,
   "approximate": true,
@@ -182,8 +242,12 @@
  },
  {
   "id": "humanoid-11-15-2",
-  "name": "Humanoids (levels 11–15)",
+  "name": "Humanoids",
   "category": "Mob camp",
+  "levels": [
+   11,
+   15
+  ],
   "x": 3048,
   "y": 5119,
   "approximate": true,
@@ -192,8 +256,12 @@
  },
  {
   "id": "generic-6-10-3",
-  "name": "Creatures (levels 6–10)",
+  "name": "Creatures",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 3504,
   "y": 4513,
   "approximate": true,
@@ -202,8 +270,12 @@
  },
  {
   "id": "generic-6-10-4",
-  "name": "Creatures (levels 6–10)",
+  "name": "Creatures",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 2525,
   "y": 5621,
   "approximate": true,
@@ -233,8 +305,12 @@
  },
  {
   "id": "humanoid-15-20-1",
-  "name": "Humanoids (levels 15–20)",
+  "name": "Humanoids",
   "category": "Mob camp",
+  "levels": [
+   15,
+   20
+  ],
   "x": 4128,
   "y": 4011,
   "approximate": true,
@@ -243,8 +319,12 @@
  },
  {
   "id": "humanoid-11-15-3",
-  "name": "Humanoids (levels 11–15)",
+  "name": "Humanoids",
   "category": "Mob camp",
+  "levels": [
+   11,
+   15
+  ],
   "x": 3757,
   "y": 4674,
   "approximate": true,
@@ -253,8 +333,12 @@
  },
  {
   "id": "generic-6-10-5",
-  "name": "Creatures (levels 6–10)",
+  "name": "Creatures",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 5034,
   "y": 4568,
   "approximate": true,
@@ -263,8 +347,12 @@
  },
  {
   "id": "humanoid-20plus-2",
-  "name": "Humanoids (level 20+)",
+  "name": "Humanoids",
   "category": "Mob camp",
+  "levels": [
+   20,
+   null
+  ],
   "x": 4723,
   "y": 4944,
   "approximate": true,
@@ -273,8 +361,12 @@
  },
  {
   "id": "generic-6-10-6",
-  "name": "Creatures (levels 6–10)",
+  "name": "Creatures",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 4763,
   "y": 5332,
   "approximate": true,
@@ -283,8 +375,19 @@
  },
  {
   "id": "crocodiles-6-10-1",
-  "name": "Crocodiles (levels 6–10)",
+  "name": "Crocodiles",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
+  "mobs": [
+   {
+    "name": "Crocodiles",
+    "wikiId": "npc-a-crocodile",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-crocodile"
+   }
+  ],
   "x": 5944,
   "y": 5770,
   "approximate": true,
@@ -297,6 +400,10 @@
   "id": "undead-11-15-1",
   "name": "Humanoid (levels 11–15)",
   "category": "Mob camp",
+  "levels": [
+   11,
+   15
+  ],
   "x": 3280,
   "y": 5604,
   "approximate": true,
@@ -306,8 +413,12 @@
  },
  {
   "id": "humanoid-11-15-4",
-  "name": "Humanoids (levels 11–15)",
+  "name": "Humanoids",
   "category": "Mob camp",
+  "levels": [
+   11,
+   15
+  ],
   "x": 4021,
   "y": 5516,
   "approximate": true,
@@ -326,8 +437,12 @@
  },
  {
   "id": "ashira-1-5-2",
-  "name": "Ashira (levels 1–5)",
+  "name": "Ashira",
   "category": "Mob camp",
+  "levels": [
+   1,
+   5
+  ],
   "x": 3278,
   "y": 8602,
   "approximate": true,
@@ -336,8 +451,12 @@
  },
  {
   "id": "generic-6-10-7",
-  "name": "Ashira (levels 6–10)",
+  "name": "Ashira",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 3446,
   "y": 7500,
   "approximate": true,
@@ -347,8 +466,12 @@
  },
  {
   "id": "generic-6-10-8",
-  "name": "Creatures (levels 6–10)",
+  "name": "Creatures",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 5077,
   "y": 6514,
   "approximate": true,
@@ -357,8 +480,12 @@
  },
  {
   "id": "humanoid-6-10-1",
-  "name": "Humanoids (levels 6–10)",
+  "name": "Humanoids",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 4186,
   "y": 6844,
   "approximate": true,
@@ -367,8 +494,12 @@
  },
  {
   "id": "generic-6-10-9",
-  "name": "Creatures (levels 6–10)",
+  "name": "Creatures",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 4739,
   "y": 7763,
   "approximate": true,
@@ -377,8 +508,12 @@
  },
  {
   "id": "generic-1-5-1",
-  "name": "Ashira (levels 6-10)",
+  "name": "Ashira",
   "category": "Mob camp",
+  "levels": [
+   6,
+   10
+  ],
   "x": 3490,
   "y": 7911,
   "approximate": true,
@@ -388,8 +523,19 @@
  },
  {
   "id": "crocodiles-1-5-1",
-  "name": "Crocodiles (levels 1–5)",
+  "name": "Crocodiles",
   "category": "Mob camp",
+  "levels": [
+   1,
+   5
+  ],
+  "mobs": [
+   {
+    "name": "Crocodiles",
+    "wikiId": "npc-a-crocodile",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-crocodile"
+   }
+  ],
   "x": 5771,
   "y": 8370,
   "approximate": true,
@@ -400,8 +546,12 @@
  },
  {
   "id": "ashira-1-5-3",
-  "name": "Ashira (levels 1–5)",
+  "name": "Ashira",
   "category": "Mob camp",
+  "levels": [
+   1,
+   5
+  ],
   "x": 4089,
   "y": 8202,
   "approximate": true,
@@ -410,8 +560,19 @@
  },
  {
   "id": "crocodiles-8-12-1",
-  "name": "Crocodiles (levels 8–12)",
+  "name": "Crocodiles",
   "category": "Mob camp",
+  "levels": [
+   8,
+   12
+  ],
+  "mobs": [
+   {
+    "name": "Crocodiles",
+    "wikiId": "npc-a-crocodile",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-crocodile"
+   }
+  ],
   "x": 5947,
   "y": 4824,
   "approximate": true,
@@ -422,8 +583,12 @@
  },
  {
   "id": "tunnels-bugs",
-  "name": "Bugs in the tunnels (levels 15–20)",
+  "name": "Bugs in the tunnels",
   "category": "Mob camp",
+  "levels": [
+   15,
+   20
+  ],
   "x": 1122,
   "y": 4278,
   "approximate": true,
