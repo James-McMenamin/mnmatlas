@@ -559,3 +559,4 @@ dialog.moved::backdrop{background:#0000001f}
 @media(min-width:761px){.notices-panel{width:400px}}.notices-row>strong{font-size:13px}.notices-row>small{font-size:12px;line-height:1.45}.notice-state{font-size:11px}.notices-row blockquote{font-size:12px}.notice-links button,.notices-footer button,.notices-footer{font-size:12px}.notices-count{font-size:10px}
 
 .combined-ghost.apart{pointer-events:auto!important;cursor:pointer}.combined-ghost.apart:hover{opacity:.9}
+.next-name span{font-style:italic;color:var(--primary)}.next-name small{color:var(--muted-foreground);font-size:11px}
