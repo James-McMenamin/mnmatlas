@@ -423,11 +423,11 @@
   {
     "id": "community-40",
     "community": true,
-    "name": "Leatherworker",
+    "name": "a leatherworking trainer",
     "category": "Tradeskill",
     "note": "",
-    "x": 4362,
-    "y": 2333,
+    "x": 4436,
+    "y": 2493,
     "trade": "Leatherworking"
   },
   {
@@ -509,8 +509,8 @@
     "name": "an ith'vayen toxicologist",
     "category": "Vendor",
     "note": "toxicologist, alchemy materials",
-    "x": 4347,
-    "y": 2385,
+    "x": 4371,
+    "y": 2443,
     "vendor": "Alchemy vendor"
   },
   {
@@ -519,8 +519,8 @@
     "name": "a reagent vendor",
     "category": "Vendor",
     "note": "",
-    "x": 4375,
-    "y": 2354,
+    "x": 4431,
+    "y": 2395,
     "vendor": "Reagent vendor",
     "sells": [
       "Bags",
@@ -534,8 +534,8 @@
     "name": "an enchanting scribe",
     "category": "Tradeskill",
     "note": "",
-    "x": 4371,
-    "y": 2373,
+    "x": 4441,
+    "y": 2422,
     "trade": "(Dis)Enchanting"
   },
   {
@@ -596,18 +596,6 @@
     "y": 2878,
     "classes": [
       "Monk"
-    ]
-  },
-  {
-    "id": "community-82",
-    "community": true,
-    "name": "Cleric Spells",
-    "category": "Class trainer",
-    "note": "",
-    "x": 3490,
-    "y": 2737,
-    "classes": [
-      "Cleric"
     ]
   },
   {
@@ -764,5 +752,272 @@
     "x": 4024,
     "y": 2553,
     "vendor": "Fishing vendor"
+  },
+  {
+    "id": "community-236",
+    "community": true,
+    "name": "Alarys Drezzorith",
+    "category": "Vendor",
+    "note": "",
+    "x": 3588,
+    "y": 2934,
+    "wiki": "https://monstersandmemories.wiki/npcs/alarys-drezzorith",
+    "wikiId": "npc-alarys-drezzorith"
+  },
+  {
+    "id": "community-239",
+    "community": true,
+    "name": "Ruzzuna",
+    "category": "Vendor",
+    "note": "",
+    "x": 4707,
+    "y": 4423,
+    "vendor": "Cloth armorer",
+    "wiki": "https://monstersandmemories.wiki/npcs/ruzzuna",
+    "wikiId": "npc-ruzzuna"
+  },
+  {
+    "id": "community-249",
+    "community": true,
+    "name": "Tal Drezzorith",
+    "category": "Vendor",
+    "note": "",
+    "x": 3580,
+    "y": 2924,
+    "wiki": "https://monstersandmemories.wiki/npcs/tal-drezzorith",
+    "wikiId": "npc-tal-drezzorith"
+  },
+  {
+    "id": "community-254",
+    "community": true,
+    "name": "Tanning Trainer",
+    "category": "Tradeskill",
+    "note": "",
+    "x": 4449,
+    "y": 2474,
+    "trade": "Skinning / Tanning"
+  },
+  {
+    "id": "community-269",
+    "community": true,
+    "name": "Vhas Ith'vayen",
+    "category": "Class trainer",
+    "note": "",
+    "x": 4407,
+    "y": 2433,
+    "classes": [
+      "Enchanter"
+    ]
+  },
+  {
+    "id": "community-273",
+    "community": true,
+    "name": "Kelnir",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 3792,
+    "y": 2238
+  },
+  {
+    "id": "community-276",
+    "community": true,
+    "name": "teleporter",
+    "category": "Teleporter",
+    "note": "Goes to the top of the tower with spell caster trainers.",
+    "x": 3835,
+    "y": 3352
+  },
+  {
+    "id": "community-278",
+    "community": true,
+    "name": "a blacksmiting supplier",
+    "category": "Vendor",
+    "note": "",
+    "x": 3305,
+    "y": 3022,
+    "vendor": "Blacksmithing vendor"
+  },
+  {
+    "id": "community-279",
+    "community": true,
+    "name": "a pattern vendor",
+    "category": "Vendor",
+    "note": "",
+    "x": 3312,
+    "y": 3041,
+    "vendor": "Blacksmithing vendor",
+    "sells": [
+      "Recipes"
+    ]
+  },
+  {
+    "id": "community-280",
+    "community": true,
+    "name": "Alarys Drezzorith",
+    "category": "Notable NPC",
+    "note": "Alarys Drezzorith is located in a building in the main city of Ail'Vorith, 4th floor, south side... just southeast of the high level Paladin and Cleric trainers.",
+    "x": 3569,
+    "y": 2960,
+    "wiki": "https://monstersandmemories.wiki/npcs/alarys-drezzorith",
+    "wikiId": "npc-alarys-drezzorith"
+  },
+  {
+    "id": "community-281",
+    "community": true,
+    "name": "Marveta Drezzorith",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 3675,
+    "y": 2739
+  },
+  {
+    "id": "community-282",
+    "community": true,
+    "name": "a paladin instructor",
+    "category": "Class trainer",
+    "note": "",
+    "x": 3711,
+    "y": 2729,
+    "classes": [
+      "Paladin"
+    ]
+  },
+  {
+    "id": "community-283",
+    "community": true,
+    "name": "a cleric scribe",
+    "category": "Class trainer",
+    "note": "",
+    "x": 3602,
+    "y": 2586,
+    "classes": [
+      "Cleric"
+    ]
+  },
+  {
+    "id": "community-285",
+    "community": true,
+    "name": "Tal Drezzorith",
+    "category": "Notable NPC",
+    "note": "Up the last floor of the city, up stair in the building.",
+    "x": 3456,
+    "y": 2737,
+    "wiki": "https://monstersandmemories.wiki/npcs/tal-drezzorith",
+    "wikiId": "npc-tal-drezzorith"
+  },
+  {
+    "id": "community-293",
+    "community": true,
+    "name": "a spellblade instructor",
+    "category": "Class trainer",
+    "note": "",
+    "x": 3705,
+    "y": 3375,
+    "classes": [
+      "Spellblade"
+    ]
+  },
+  {
+    "id": "community-294",
+    "community": true,
+    "name": "a wizard scribe",
+    "category": "Class trainer",
+    "note": "",
+    "x": 3723,
+    "y": 3311,
+    "classes": [
+      "Wizard"
+    ]
+  },
+  {
+    "id": "community-295",
+    "community": true,
+    "name": "a necromancer scribe",
+    "category": "Class trainer",
+    "note": "",
+    "x": 3696,
+    "y": 3330,
+    "classes": [
+      "Necromancer"
+    ]
+  },
+  {
+    "id": "community-296",
+    "community": true,
+    "name": "an enchanter scribe",
+    "category": "Class trainer",
+    "note": "",
+    "x": 3744,
+    "y": 3383,
+    "classes": [
+      "Enchanter"
+    ]
+  },
+  {
+    "id": "community-297",
+    "community": true,
+    "name": "an elementalist scribe",
+    "category": "Class trainer",
+    "note": "",
+    "x": 3769,
+    "y": 3365,
+    "classes": [
+      "Elementalist"
+    ]
+  },
+  {
+    "id": "community-298",
+    "community": true,
+    "name": "Vespera Varros",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 3817,
+    "y": 3341
+  },
+  {
+    "id": "community-299",
+    "community": true,
+    "name": "Zarok Hal'kareth",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 3833,
+    "y": 3342
+  },
+  {
+    "id": "community-300",
+    "community": true,
+    "name": "Lyraeth Hal'kareth",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 3839,
+    "y": 3326
+  },
+  {
+    "id": "community-301",
+    "community": true,
+    "name": "Nyxar Ith'vayen",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 3827,
+    "y": 3315
+  },
+  {
+    "id": "community-302",
+    "community": true,
+    "name": "Aelith Varros",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 3813,
+    "y": 3325
+  },
+  {
+    "id": "community-303",
+    "community": true,
+    "name": "a woodworking trainer",
+    "category": "Tradeskill",
+    "note": "",
+    "x": 3272,
+    "y": 2974,
+    "trade": "Carpentry / Woodworking"
   }
 ]

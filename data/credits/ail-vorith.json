@@ -53,6 +53,14 @@
     {
       "name": "satoukurotama",
       "what": "added"
+    },
+    {
+      "name": null,
+      "what": "moved"
+    },
+    {
+      "name": null,
+      "what": "edited"
     }
   ],
   "marker:community-41": [
@@ -121,18 +129,30 @@
     {
       "name": "satoukurotama",
       "what": "added"
+    },
+    {
+      "name": null,
+      "what": "moved"
     }
   ],
   "marker:community-71": [
     {
       "name": "satoukurotama",
       "what": "added"
+    },
+    {
+      "name": null,
+      "what": "moved"
     }
   ],
   "marker:community-72": [
     {
       "name": "satoukurotama",
       "what": "added"
+    },
+    {
+      "name": null,
+      "what": "moved"
     }
   ],
   "marker:community-73": [
@@ -181,6 +201,10 @@
     {
       "name": null,
       "what": "added"
+    },
+    {
+      "name": "darkhayn",
+      "what": "removed"
     }
   ],
   "marker:community-84": [
@@ -270,6 +294,156 @@
   "marker:community-232": [
     {
       "name": "satoukurotama",
+      "what": "added"
+    }
+  ],
+  "marker:community-236": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-239": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-249": [
+    {
+      "name": "salmonella00",
+      "what": "added"
+    }
+  ],
+  "marker:community-254": [
+    {
+      "name": "andrewd0450",
+      "what": "added"
+    }
+  ],
+  "marker:community-269": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-273": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-276": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-278": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-279": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-280": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-281": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-282": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-283": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-285": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-293": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-294": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-295": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-296": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-297": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-298": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-299": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-300": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-301": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-302": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-303": [
+    {
+      "name": "darkhayn",
       "what": "added"
     }
   ]
