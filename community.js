@@ -470,9 +470,12 @@
  function guardClose(d,fields,base,moved=null){let changed;try{const p=window.atlasFields.delta(fields.read(),base);changed=Object.keys(p).length>2||p.name!==base.name||!!moved&&(moved[0]!==base.x||moved[1]!==base.y);}catch{changed=true;}if(!changed||window.confirm('Leave without saving these changes?'))d.close();}
  const removalReasons={duplicate:'A duplicate of another marker',missing:'Not in the game (or no longer)',other:'Something else'};
  function removalDialog(target,kind='edit-marker'){
-  if(!user){signInDialog();return;}const amendments=[...approvedRows,...pendingRows],state=targetState(target,kind),base=state?.effective||target;
+  if(!user){signInDialog();return;}const amendments=[...approvedRows,...pendingRows],state=targetState(target,kind),base=state?.effective?.name?state.effective:state?.proposed?.name?state.proposed:target;
+  // A marker that only exists as a suggestion is not on the map yet: dropping it sets that suggestion aside (or withdraws the author's own).
+  const fresh=!state?.published&&state?.rows?.find(r=>r.kind==='new-marker'&&['pending','approved'].includes(r.status));
+  if(fresh&&(admin||fresh.user_id===user.id&&fresh.status==='pending'&&!fresh.reviewed_at)){confirmDialog('drop-confirm','Drop “'+(base.name||'this marker')+'”?','It is not on the map yet, so this '+(admin&&fresh.user_id!==user.id?'sets the suggestion aside.':'withdraws the suggestion.'),[['Cancel',()=>{}],['Drop it',async()=>{map.closePopup?.();if(admin){await desk.decideRow(fresh,'rejected','Dropped before publishing');}else{const {error}=await client.from('suggestions').delete().eq('id',fresh.id).eq('status','pending');status(error?'It could not be withdrawn. Please try again.':'Suggestion withdrawn.');}await loadApproved();freshPopup();},'danger']]);return;}
   const d=showDialog('It should be removed'),choice=choiceList(d,'removal-reason',removalReasons),why=field(d,'Details','removal-details',textBox(3,500,'Not in the game any more, or marked twice')),credit=creditBox(d);
-  d.append(text('p',base.name+' · Not in the game any more, or marked twice','form-hint'));
+  d.append(text('p',(base.name||target.name||'This marker')+' · '+config.title,'form-hint'));
   const actions=text('div','','dialog-actions'),send=sendButton(admin?'Approve removal':'Send for review',async()=>{
    const reason=choice.picked(),details=why.value.trim();if(!reason){status('Choose a reason.');return;}if(reason==='other'&&!details){status('Tell us why it should go.');return;}
    await saveOwn({user_id:user.id,author_name:displayName(user),map:config.id,level:target.level||config.levelId||null,kind,target_id:target.id,payload:{name:base.name,remove:true,reason,from:window.atlasChanges.nextFrom(state||{effective:base},kind)},comment:details||null,credit:credit.checked},amendments);
