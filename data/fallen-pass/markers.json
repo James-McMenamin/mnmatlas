@@ -4,8 +4,15 @@
   "name": "Plagueborn Drakes",
   "category": "Mob camp",
   "levels": [
-   31,
-   40
+   36,
+   38
+  ],
+  "mobs": [
+   {
+    "name": "A Plagueborn drake",
+    "wikiId": "npc-a-plagueborn-drake",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-plagueborn-drake"
+   }
   ],
   "x": 2119,
   "y": 725,
@@ -34,8 +41,15 @@
   "name": "Plagueborn Drake",
   "category": "Mob camp",
   "levels": [
-   31,
-   40
+   36,
+   39
+  ],
+  "mobs": [
+   {
+    "name": "A Plagueborn drake",
+    "wikiId": "npc-a-plagueborn-drake",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-plagueborn-drake"
+   }
   ],
   "x": 1562,
   "y": 1111,

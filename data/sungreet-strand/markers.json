@@ -400,6 +400,38 @@
   "id": "undead-11-15-1",
   "name": "Humanoid",
   "category": "Mob camp",
+  "mobs": [
+   {
+    "name": "A grim farmhand",
+    "wikiId": "npc-a-grim-farmhand",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-grim-farmhand"
+   },
+   {
+    "name": "A gruff farmhand",
+    "wikiId": "npc-a-gruff-farmhand",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-gruff-farmhand"
+   },
+   {
+    "name": "A sly farmhand",
+    "wikiId": "npc-a-sly-farmhand",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sly-farmhand"
+   },
+   {
+    "name": "A sullen farmhand",
+    "wikiId": "npc-a-sullen-farmhand",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sullen-farmhand"
+   },
+   {
+    "name": "A watchful farmhand",
+    "wikiId": "npc-a-watchful-farmhand",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-watchful-farmhand"
+   },
+   {
+    "name": "A weary farmhand",
+    "wikiId": "npc-a-weary-farmhand",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-weary-farmhand"
+   }
+  ],
   "levels": [
    11,
    15
@@ -721,6 +753,10 @@
   "community": true,
   "name": "Undead",
   "category": "Mob camp",
+  "levels": [
+   11,
+   15
+  ],
   "note": "Only spawn at night.",
   "x": 3930,
   "y": 6428

@@ -323,6 +323,10 @@
   "community": true,
   "name": "Orc Camp",
   "category": "Mob camp",
+  "levels": [
+   28,
+   30
+  ],
   "note": "Lvl 28+ orcs",
   "x": 3657,
   "y": 6204

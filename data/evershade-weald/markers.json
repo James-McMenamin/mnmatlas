@@ -139,8 +139,15 @@
   "name": "Beguiled wolves",
   "category": "Mob camp",
   "levels": [
-   1,
+   8,
    10
+  ],
+  "mobs": [
+   {
+    "name": "A beguiled wolf",
+    "wikiId": "npc-a-beguiled-wolf",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-beguiled-wolf"
+   }
   ],
   "x": 533,
   "y": 3208,
@@ -533,6 +540,17 @@
   "community": true,
   "name": "Rabid Wolves",
   "category": "Mob camp",
+  "levels": [
+   4,
+   6
+  ],
+  "mobs": [
+   {
+    "name": "A rabid wolf",
+    "wikiId": "npc-a-rabid-wolf",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-rabid-wolf"
+   }
+  ],
   "note": "Good place to farm early coin via diseased wolf pelts.",
   "x": 3010,
   "y": 3453,

@@ -396,6 +396,10 @@
     "community": true,
     "name": "A Bloodynose hag",
     "category": "Named mob",
+    "levels": [
+      15,
+      15
+    ],
     "note": "",
     "x": 3677,
     "y": 1624,
