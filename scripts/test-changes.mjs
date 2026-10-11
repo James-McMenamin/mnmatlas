@@ -94,3 +94,13 @@ const page=await readFile(new URL('../index.html',import.meta.url),'utf8');for(c
  input.rows=[row(701,'edit-marker',{name:'Bank',x:30,y:40,from:{name:'Bank',x:10,y:20}})];assert.equal(buildChanges(input).forRow(701).effective.approximate,true);
 }
 console.log('Change ledger checks passed: published positions, composition, conflicts, removals, shared places, labels, chips, floors, history, credits, word diffs, R17 approximate moves and pure inputs.');
+
+// Levels and mobs compose independently, and stale changes conflict only on their own field.
+{
+ const mobs=[{name:'Goblin',wikiId:'npc-goblin',wiki:'https://monstersandmemories.wiki/npcs/goblin'}],camp={...marker,category:'Mob camp',levels:[11,15],mobs};
+ const a=row(701,'edit-marker',{name:camp.name,levels:[12,16],from:camp}),b=row(702,'edit-marker',{name:camp.name,mobs:[],from:camp}),d=row(703,'edit-marker',{name:camp.name,levels:[13,17],from:camp});
+ assert.deepEqual(fields(a),['levels']);assert.deepEqual(fields(b),['mobs']);const t=buildChanges({...fixture([]),markers:[camp],rows:[a,b,d]}).forRow(701);assert.deepEqual(plain(t.rows.map(r=>r.conflictsWith)),[[],[],[701]]);assert.deepEqual(plain(t.effective.levels),[12,16]);assert.deepEqual(plain(t.effective.mobs),[]);
+ const fresh=row(704,'edit-marker',{name:camp.name,levels:[20,null],from:{name:camp.name,levels:null}});assert(context.atlasChanges.matchesFrom(fresh,{name:camp.name},'levels'));
+ const switched=context.atlasChanges.applyTo(camp,row(705,'edit-marker',{name:camp.name,category:'Vendor',from:camp}));assert(!Object.hasOwn(switched,'mobs')&&!Object.hasOwn(switched,'levels'));
+ console.log('Camp conflict checks passed: independent fields, stale levels, blank bases and changing type.');
+}

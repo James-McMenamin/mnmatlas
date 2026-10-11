@@ -21,11 +21,11 @@ const rate=v=>typeof v==='number'&&Number.isFinite(v)&&v>0&&v<=100?Math.round(v*
 // About 85 requests a minute at most, leaving room for visitors' wiki searches on the same key.
 const pace=700,fresh=24*3600000,site=process.env.CARDS_FROM||'https://www.mnmatlas.com/';
 let last=0;
-async function npc(id,secret){
- const wait=last+pace-Date.now();if(wait>0)await new Promise(r=>setTimeout(r,wait));last=Date.now();
+async function npc(id,secret,{fetcher=fetch,sleep=ms=>new Promise(r=>setTimeout(r,ms))}={}){
+ const wait=last+pace-Date.now();if(wait>0)await sleep(wait);last=Date.now();
  for(let attempt=0;;attempt++){
-  const r=await fetch(api+'npc/'+encodeURIComponent(id),{headers:{Authorization:'Bearer '+secret,Accept:'application/json'}});
-  if(r.status===429&&attempt<2){await new Promise(res=>setTimeout(res,30000));continue;}
+  const r=await fetcher(api+'npc/'+encodeURIComponent(id),{headers:{Authorization:'Bearer '+secret,Accept:'application/json'}});
+  if(r.status===429&&attempt<2){await sleep(30000);continue;}
   if(!r.ok)return null;const body=await r.json().catch(()=>null);return body?.npc||body;
  }
 }
@@ -40,8 +40,9 @@ export function card(n){
  return c;
 }
 
-async function main(){
- let secret;try{secret=await key();}catch{console.log('No wiki key: the NPC cards are not built this time.');return;}
+export function markerNpcIds(markers){const ids=new Set();for(const m of Array.isArray(markers)?markers:[])for(const entry of [m,...(m?.category==='Mob camp'&&Array.isArray(m.mobs)?m.mobs:[])])if(typeof entry?.wikiId==='string'&&/^npc-[a-z0-9-]{1,150}$/.test(entry.wikiId))ids.add(entry.wikiId);return ids;}
+export async function buildCards({root:folder=root,secret,fetcher=fetch,sleep,site:source=site}={}){
+ const root=folder;
  const registry=JSON.parse(await readFile(resolve(root,'data/maps.json'),'utf8'));let built=0,asked=0;
  await mkdir(resolve(root,'npc-cards'),{recursive:true});
  for(const c of registry.maps){
@@ -49,18 +50,19 @@ async function main(){
   const ids=new Set();
   for(const f of new Set([c,...(c.levels||[])].map(l=>l.markersFile).filter(Boolean))){
    let markers=[];try{markers=JSON.parse(await readFile(resolve(root,f),'utf8'));}catch{}
-   for(const m of Array.isArray(markers)?markers:[])if(typeof m?.wikiId==='string'&&/^npc-[a-z0-9-]{1,150}$/.test(m.wikiId))ids.add(m.wikiId);}
+   for(const id of markerNpcIds(markers))ids.add(id);}
   if(!ids.size)continue;
   // The cards the published atlas has now, each with the time it was asked for.
-  let before={};try{const r=await fetch(site+'npc-cards/'+encodeURIComponent(c.id)+'.json',{headers:{Accept:'application/json'}});if(r.ok){const b=await r.json();if(b&&b.cards&&typeof b.cards==='object')before=b.cards;}}catch{}
+  let before={};try{const r=await fetcher(source+'npc-cards/'+encodeURIComponent(c.id)+'.json',{headers:{Accept:'application/json'}});if(r.ok){const b=await r.json();if(b&&b.cards&&typeof b.cards==='object')before=b.cards;}}catch{}
   const cards={};let failed=0,kept=0;
   for(const id of ids){
    const old=before[id];if(old&&typeof old==='object'&&Number.isFinite(old.at)&&Date.now()-old.at<fresh&&card({...old,loot:[]})){cards[id]=old;kept++;continue;}
-   asked++;try{const n=await npc(id,secret),one=n&&card(n);if(one)cards[id]={...one,at:Date.now()};else if(old&&card({...old,loot:[]}))cards[id]=old;else failed++;}catch{if(old)cards[id]=old;else failed++;}}
+   asked++;try{const n=await npc(id,secret,{fetcher,sleep}),one=n&&card(n);if(one)cards[id]={...one,at:Date.now()};else if(old&&card({...old,loot:[]}))cards[id]=old;else failed++;}catch{if(old)cards[id]=old;else failed++;}}
   if(!Object.keys(cards).length){console.log(c.id+': no cards ('+failed+' lookups failed).');continue;}
   await writeFile(resolve(root,'npc-cards',c.id+'.json'),JSON.stringify({map:c.id,site:'mnm-wiki',built:new Date().toISOString(),cards})+'\n');
   built++;console.log(c.id+': '+Object.keys(cards).length+' cards ('+kept+' kept'+(failed?', '+failed+' not found':'')+').');
  }
  console.log('Wrote '+built+' NPC card files to npc-cards/ ('+asked+' wiki requests).');
 }
+async function main(){let secret;try{secret=await key();}catch{console.log('No wiki key: the NPC cards are not built this time.');return;}await buildCards({secret});}
 if(process.argv[1]===fileURLToPath(import.meta.url))main().catch(e=>{console.log('NPC cards skipped: '+e.message);});

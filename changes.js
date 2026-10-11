@@ -4,8 +4,8 @@
  const copy=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v)),has=(v,k)=>Object.prototype.hasOwnProperty.call(v||{},k);
  const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b),typeKeys=['category','trade','classes','vendor','sells'];
  const keysFor=p=>['category',...(p.category===undefined?['trade','classes','vendor','sells']:p.category==='Tradeskill'?['trade']:p.category==='Class trainer'?['classes']:p.category==='Vendor'?['vendor','sells']:[])];
- const editKeys=['name','note','color','level','kind','travel','arrow','toMap','toPlace','toLevel','toMarker','direction','switchOnClick','minZoom','approximate','tier','priority','building'];
- const value=(p,k)=>['name','note','wiki','wikiId'].includes(k)?p?.[k]||'':p?.[k];
+ const editKeys=['name','note','color','level','kind','travel','arrow','toMap','toPlace','toLevel','toMarker','direction','switchOnClick','minZoom','approximate','tier','priority','building','levels','mobs'];
+ const value=(p,k)=>k==='levels'?p?.levels??null:k==='mobs'?(p?.mobs?.length?p.mobs:null):['name','note','wiki','wikiId'].includes(k)?p?.[k]||'':p?.[k];
  function fieldsOf(row){
   const p=row.payload||{},f=p.from||{},out=new Set();
   if(row.kind==='new-marker')return new Set(['added']);
@@ -49,6 +49,7 @@
    else if(f==='wiki'){const changed=has(p,'wiki')&&p.wiki!==out.wiki;for(const k of ['wiki','wikiId'])if(has(p,k))out[k]=p[k];else if(k==='wikiId'&&changed)delete out[k];if(!out.wikiId)delete out.wikiId;if(!out.wiki){delete out.wiki;delete out.wikiId;}}
    else if(p[f]===null||p[f]==='')delete out[f];else out[f]=copy(p[f]);
   }
+  if(out.category!=='Mob camp'){delete out.levels;delete out.mobs;}
   if(fields.size&&!fields.has('removed'))out.community=true;
   return out;
  }
