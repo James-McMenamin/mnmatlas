@@ -404,7 +404,7 @@
  },
  {
   "id": "brukk-goldgut",
-  "name": "Brukk Goldgut (level 46), hill giant bandits",
+  "name": "Brukk Goldgut",
   "category": "Named mob",
   "levels": [
    45,
@@ -414,7 +414,7 @@
   "y": 7333,
   "minZoom": 3,
   "approximate": true,
-  "note": "At the giants’ fire near the road to the Vale of Zintar.",
+  "note": "Hill giant bandits. At the giants’ fire near the road to the Vale of Zintar.",
   "wiki": "https://monstersandmemories.wiki/npcs/brukk-goldgut",
   "wikiId": "npc-brukk-goldgut"
  },
@@ -453,8 +453,12 @@
  {
   "id": "community-380",
   "community": true,
-  "name": "Mirella Nighthorn (levels 25–26)",
+  "name": "Mirella Nighthorn",
   "category": "Named mob",
+  "levels": [
+   25,
+   25
+  ],
   "note": "Large northern Sangrel camp, Multiple PHs",
   "x": 2165,
   "y": 769,
