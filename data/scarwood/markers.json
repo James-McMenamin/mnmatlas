@@ -198,5 +198,19 @@
   "minZoom": 3,
   "wiki": "https://monstersandmemories.wiki/npcs/krothun-veincarver",
   "wikiId": "npc-krothun-veincarver"
+ },
+ {
+  "id": "community-403",
+  "community": true,
+  "name": "Bandit Cave",
+  "category": "Mob camp",
+  "note": "",
+  "x": 5005,
+  "y": 2935,
+  "levels": [
+   25,
+   26
+  ],
+  "mobs": []
  }
 ]
