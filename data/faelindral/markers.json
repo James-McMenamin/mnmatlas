@@ -380,15 +380,6 @@
   "note": "Notable NPC symbol on Maggot's Faelindral map. The map does not give the NPC's name."
  },
  {
-  "id": "vendors-lower-tier",
-  "name": "Vendors — Lower Tier",
-  "category": "Vendor",
-  "x": 1360,
-  "y": 2188,
-  "approximate": true,
-  "note": "Grocer; butcher; scrap metal; cook (at inn); barkeep (by stage). Listed for this district on Maggot's map; individual stall positions are not marked."
- },
- {
   "id": "lift-traveler-s-down",
   "name": "Traveler's Lift — down to Evershade Weald",
   "category": "Lift",
@@ -619,5 +610,15 @@
   "vendor": "Grocer",
   "wiki": "https://monstersandmemories.wiki/npcs/drogo-the-grocer",
   "wikiId": "npc-drogo-the-grocer"
+ },
+ {
+  "id": "community-386",
+  "community": true,
+  "name": "Moon Dances",
+  "category": "Notable NPC",
+  "note": "Near the shaman trainer.",
+  "x": 1781,
+  "y": 1567,
+  "wiki": "https://monstersandmemories.wiki/npcs/moon-dances"
  }
 ]

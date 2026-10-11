@@ -299,6 +299,10 @@
     {
       "name": "orthok",
       "what": "added"
+    },
+    {
+      "name": null,
+      "what": "moved"
     }
   ],
   "marker:community-190": [
@@ -430,6 +434,104 @@
   "marker:community-324": [
     {
       "name": ".tque",
+      "what": "added"
+    }
+  ],
+  "marker:community-325": [
+    {
+      "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-326": [
+    {
+      "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-327": [
+    {
+      "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-328": [
+    {
+      "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-329": [
+    {
+      "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-330": [
+    {
+      "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-331": [
+    {
+      "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-362": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:wiki-15": [
+    {
+      "name": null,
+      "what": "moved"
+    }
+  ],
+  "marker:wiki-53": [
+    {
+      "name": null,
+      "what": "moved"
+    }
+  ],
+  "marker:wiki-36": [
+    {
+      "name": null,
+      "what": "edited"
+    },
+    {
+      "name": null,
+      "what": "moved"
+    }
+  ],
+  "marker:wiki-35": [
+    {
+      "name": null,
+      "what": "moved"
+    },
+    {
+      "name": null,
+      "what": "removed"
+    }
+  ],
+  "marker:community-382": [
+    {
+      "name": ".tque",
+      "what": "added"
+    }
+  ],
+  "marker:community-383": [
+    {
+      "name": ".tque",
+      "what": "added"
+    }
+  ],
+  "marker:community-384": [
+    {
+      "name": null,
       "what": "added"
     }
   ]

@@ -310,5 +310,14 @@
   "minZoom": 3,
   "wiki": "https://monstersandmemories.wiki/npcs/a-merchant-traveler",
   "wikiId": "npc-a-merchant-traveler"
+ },
+ {
+  "id": "community-379",
+  "community": true,
+  "name": "Orc Camp",
+  "category": "Mob camp",
+  "note": "Lvl 28+ orcs",
+  "x": 3657,
+  "y": 6204
  }
 ]

@@ -346,18 +346,6 @@
     ]
   },
   {
-    "id": "class-shaman",
-    "name": "Shaman trainer",
-    "x": 3764,
-    "y": 5966,
-    "level": "lower",
-    "note": "In the cave beneath the southern rock.",
-    "category": "Class trainer",
-    "classes": [
-      "Shaman"
-    ]
-  },
-  {
     "id": "class-rogue",
     "name": "Rogue trainer",
     "x": 2549,
@@ -838,5 +826,106 @@
     "level": "lower",
     "wiki": "https://monstersandmemories.wiki/npcs/mikra-velrane",
     "wikiId": "npc-1790076530368-aqgfb"
+  },
+  {
+    "id": "community-233",
+    "community": true,
+    "name": "Guard Darek",
+    "category": "Quest",
+    "note": "Appears at either the west or east gates.",
+    "x": 2722,
+    "y": 3750,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/guard-darek",
+    "wikiId": "npc-1790076527283-02clj"
+  },
+  {
+    "id": "community-234",
+    "community": true,
+    "name": "Senior Apprentice Syrsil",
+    "category": "Quest",
+    "note": "Found in the tavern, can be given Vharkith's Order (from Belot, named Deepcut Bandit) for some exp and faction with a deep elf house.",
+    "x": 3841,
+    "y": 4651,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.miraheze.org/wiki/Syrsil%27s_Stolen_Package"
+  },
+  {
+    "id": "community-244",
+    "community": true,
+    "name": "Picci Manifold",
+    "category": "Class trainer",
+    "note": "",
+    "x": 3760,
+    "y": 5973,
+    "level": "lower",
+    "classes": [
+      "Shaman"
+    ],
+    "wiki": "https://monstersandmemories.wiki/npcs/picci-manifold",
+    "wikiId": "npc-1790076531813-wyfjf"
+  },
+  {
+    "id": "community-245",
+    "community": true,
+    "name": "Shew Toadwater",
+    "category": "Class trainer",
+    "note": "",
+    "x": 3807,
+    "y": 6035,
+    "level": "lower",
+    "classes": [
+      "Shaman"
+    ],
+    "wiki": "https://monstersandmemories.wiki/npcs/shew-toadwater",
+    "wikiId": "npc-1790076533284-k1izh"
+  },
+  {
+    "id": "community-246",
+    "community": true,
+    "name": "Ma'lady",
+    "category": "Vendor",
+    "note": "",
+    "x": 3846,
+    "y": 5996,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/malady",
+    "wikiId": "npc-1790076529811-nnuts"
+  },
+  {
+    "id": "community-337",
+    "community": true,
+    "name": "Luskmit",
+    "category": "Quest",
+    "note": "Druid starter quest npc",
+    "x": 3358,
+    "y": 5675,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/luskmit",
+    "wikiId": "npc-1790076529811-qt88v"
+  },
+  {
+    "id": "community-338",
+    "community": true,
+    "name": "Lady Valhassen",
+    "category": "Quest",
+    "note": "",
+    "x": 3853,
+    "y": 4555,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/lady-valhassen",
+    "wikiId": "npc-1790076529300-1l231"
+  },
+  {
+    "id": "community-377",
+    "community": true,
+    "name": "Jumbe Odol",
+    "category": "Quest",
+    "note": "",
+    "x": 4060,
+    "y": 4297,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/jumbe-odol",
+    "wikiId": "npc-1790076528773-33ord"
   }
 ]

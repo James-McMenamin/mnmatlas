@@ -358,5 +358,33 @@
   "minZoom": 3,
   "wiki": "https://monstersandmemories.wiki/npcs/esaneq",
   "wikiId": "npc-esaneq"
+ },
+ {
+  "id": "community-357",
+  "community": true,
+  "name": "Master Tracker Lark (level 45)",
+  "category": "Class trainer",
+  "note": "",
+  "x": 3743,
+  "y": 5429,
+  "classes": [
+   "Beastmaster"
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/master-tracker-lark",
+  "wikiId": "npc-master-tracker-lark"
+ },
+ {
+  "id": "community-358",
+  "community": true,
+  "name": "Adept Kossco (levels ~51–52)",
+  "category": "Class trainer",
+  "note": "near a scorched medic",
+  "x": 3250,
+  "y": 4993,
+  "classes": [
+   "Monk"
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/adept-kossco",
+  "wikiId": "npc-adept-kossco"
  }
 ]

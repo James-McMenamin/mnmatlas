@@ -168,8 +168,9 @@
   "x": 1707,
   "y": 2646,
   "approximate": true,
-  "note": "",
-  "minZoom": 3.25
+  "note": "In between the caravans, near the lift.",
+  "minZoom": 3.25,
+  "community": true
  },
  {
   "id": "shady-merchant-east",
@@ -422,5 +423,26 @@
   "y": 1590,
   "wiki": "https://monstersandmemories.wiki/npcs/polietta-two-tone",
   "wikiId": "npc-polietta-two-tone"
+ },
+ {
+  "id": "community-359",
+  "community": true,
+  "name": "a miner",
+  "category": "Vendor",
+  "note": "",
+  "x": 2669,
+  "y": 2052,
+  "vendor": "Mining vendor",
+  "wiki": "https://monstersandmemories.wiki/npcs/a-miner"
+ },
+ {
+  "id": "community-365",
+  "community": true,
+  "name": "Rabid Wolves",
+  "category": "Mob camp",
+  "note": "Good place to farm early coin via diseased wolf pelts.",
+  "x": 3010,
+  "y": 3453,
+  "wiki": "https://monstersandmemories.wiki/npcs/npc-a-rabid-wolf"
  }
 ]

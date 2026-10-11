@@ -396,5 +396,26 @@
   "y": 3152,
   "wiki": "https://monstersandmemories.wiki/npcs/captain-hale",
   "wikiId": "npc-captain-hale"
+ },
+ {
+  "id": "community-378",
+  "community": true,
+  "name": "Shady Merchant",
+  "category": "Vendor",
+  "note": "",
+  "x": 3608,
+  "y": 5852,
+  "vendor": "Shady merchant"
+ },
+ {
+  "id": "community-380",
+  "community": true,
+  "name": "Mirella Nighthorn (levels 25–26)",
+  "category": "Named mob",
+  "note": "Large northern Sangrel camp, Multiple PHs",
+  "x": 2165,
+  "y": 769,
+  "wiki": "https://monstersandmemories.wiki/npcs/mirella-nighthorn",
+  "wikiId": "npc-mirella-nighthorn"
  }
 ]

@@ -390,5 +390,29 @@
     "direction": "down",
     "name": "Down to Tunnels",
     "switchOnClick": true
+  },
+  {
+    "id": "community-360",
+    "community": true,
+    "name": "A Bloodynose hag",
+    "category": "Named mob",
+    "note": "",
+    "x": 3677,
+    "y": 1624,
+    "level": "floor-1",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-bloodynose-hag",
+    "wikiId": "npc-a-bloodynose-hag"
+  },
+  {
+    "id": "community-361",
+    "community": true,
+    "name": "A Bloodynose trainer",
+    "category": "Named mob",
+    "note": "",
+    "x": 3526,
+    "y": 2142,
+    "level": "floor-1",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-bloodynose-trainer",
+    "wikiId": "npc-a-bloodynose-trainer"
   }
 ]

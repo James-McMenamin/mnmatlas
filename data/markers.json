@@ -122,9 +122,10 @@
     "name": "Shady merchant — North Gate",
     "category": "Vendor",
     "vendor": "Shady merchant",
-    "x": 1861,
-    "y": 1089,
-    "note": ""
+    "x": 1840,
+    "y": 1081,
+    "note": "",
+    "community": true
   },
   {
     "id": "wiki-16",
@@ -242,20 +243,14 @@
     "community": true
   },
   {
-    "id": "wiki-35",
-    "name": "Tailoring — Night Market",
-    "category": "Tradeskill",
-    "x": 1131,
-    "y": 1553,
-    "note": ""
-  },
-  {
     "id": "wiki-36",
     "name": "Blacksmithing / Smelting — Night Market",
-    "category": "Tradeskill",
-    "x": 1178,
-    "y": 1559,
-    "note": ""
+    "category": "Vendor",
+    "x": 1173,
+    "y": 1566,
+    "note": "",
+    "vendor": "Weaponsmith",
+    "community": true
   },
   {
     "id": "wiki-37",
@@ -391,9 +386,10 @@
     "id": "wiki-53",
     "name": "Cartography — eastern island",
     "category": "Tradeskill",
-    "x": 2633,
-    "y": 1953,
-    "note": ""
+    "x": 2652,
+    "y": 2022,
+    "note": "",
+    "community": true
   },
   {
     "id": "class-1",
@@ -892,8 +888,8 @@
     "name": "Tailor Darya",
     "category": "Vendor",
     "note": "",
-    "x": 1141,
-    "y": 1551,
+    "x": 1135,
+    "y": 1562,
     "vendor": "Tailoring vendor",
     "wiki": "https://monstersandmemories.wiki/npcs/tailor-darya",
     "wikiId": "npc-tailor-darya"
@@ -1139,5 +1135,132 @@
     "y": 1113,
     "wiki": "https://monstersandmemories.wiki/npcs/assistant-researcher-farland",
     "wikiId": "npc-assistant-researcher-farland"
+  },
+  {
+    "id": "community-325",
+    "community": true,
+    "name": "A chain armorer",
+    "category": "Vendor",
+    "note": "",
+    "x": 1126,
+    "y": 1568,
+    "vendor": "Chain armorer",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-chain-armorer",
+    "wikiId": "npc-a-chain-armorer"
+  },
+  {
+    "id": "community-326",
+    "community": true,
+    "name": "A plate armorer",
+    "category": "Vendor",
+    "note": "",
+    "x": 1141,
+    "y": 1569,
+    "vendor": "Plate armorer",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-plate-armorer",
+    "wikiId": "npc-a-plate-armorer"
+  },
+  {
+    "id": "community-327",
+    "community": true,
+    "name": "Mafeed the Butcher",
+    "category": "Vendor",
+    "note": "",
+    "x": 1134,
+    "y": 1610,
+    "vendor": "Butcher",
+    "wiki": "https://monstersandmemories.wiki/npcs/mafeed-the-butcher",
+    "wikiId": "npc-mafeed-the-butcher"
+  },
+  {
+    "id": "community-328",
+    "community": true,
+    "name": "A cobbler",
+    "category": "Vendor",
+    "note": "",
+    "x": 1236,
+    "y": 1516,
+    "vendor": "Cobbler",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-cobbler",
+    "wikiId": "npc-a-cobbler"
+  },
+  {
+    "id": "community-329",
+    "community": true,
+    "name": "A spicemonger",
+    "category": "Vendor",
+    "note": "",
+    "x": 1212,
+    "y": 1516,
+    "vendor": "Spice merchant",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-spicemonger",
+    "wikiId": "npc-a-spicemonger"
+  },
+  {
+    "id": "community-330",
+    "community": true,
+    "name": "A jewelcrafter",
+    "category": "Vendor",
+    "note": "",
+    "x": 1174,
+    "y": 1483,
+    "vendor": "Jewelcrafting vendor",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-jewelcrafter",
+    "wikiId": "npc-a-jewelcrafter"
+  },
+  {
+    "id": "community-331",
+    "community": true,
+    "name": "A survivalist",
+    "category": "Vendor",
+    "note": "",
+    "x": 1972,
+    "y": 1101,
+    "vendor": "Survival vendor",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-survivalist",
+    "wikiId": "npc-a-survivalist"
+  },
+  {
+    "id": "community-362",
+    "community": true,
+    "name": "Shady Merchant",
+    "category": "Vendor",
+    "note": "Only shows up at night",
+    "x": 1176,
+    "y": 1609,
+    "vendor": "Shady merchant"
+  },
+  {
+    "id": "community-382",
+    "community": true,
+    "name": "Cordellius Hollmion",
+    "category": "Quest",
+    "note": "Take the teleport to Spellbinder Spire from the wizard's guild, then go inside the doorway and down the hall",
+    "x": 2205,
+    "y": 989,
+    "wiki": "https://monstersandmemories.wiki/npcs/cordellius-hollmion",
+    "wikiId": "npc-cordellius-hollmion"
+  },
+  {
+    "id": "community-383",
+    "community": true,
+    "name": "Guard Jeskal",
+    "category": "Quest",
+    "note": "",
+    "x": 1906,
+    "y": 1050,
+    "wiki": "https://monstersandmemories.wiki/npcs/guard-jeskal",
+    "wikiId": "npc-guard-jeskal"
+  },
+  {
+    "id": "community-384",
+    "community": true,
+    "name": "Hult Beetlewrangler",
+    "category": "Quest",
+    "note": "",
+    "x": 866,
+    "y": 1127,
+    "wiki": "https://monstersandmemories.wiki/npcs/hult-beetlewrangler",
+    "wikiId": "npc-hult-beetlewrangler"
   }
 ]

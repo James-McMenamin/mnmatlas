@@ -295,13 +295,14 @@
  },
  {
   "id": "undead-11-15-1",
-  "name": "Undead (levels 11–15)",
+  "name": "Humanoid (levels 11–15)",
   "category": "Mob camp",
   "x": 3280,
   "y": 5604,
   "approximate": true,
-  "note": "",
-  "minZoom": 3
+  "note": "Skintaker Camp",
+  "minZoom": 3,
+  "community": true
  },
  {
   "id": "humanoid-11-15-4",
@@ -538,5 +539,25 @@
   "y": 4688,
   "wiki": "https://monstersandmemories.wiki/npcs/tust-brookturner",
   "wikiId": "npc-tust-brookturner"
+ },
+ {
+  "id": "community-287",
+  "community": true,
+  "name": "Zahkir Dunewake",
+  "category": "Named mob",
+  "note": "",
+  "x": 4490,
+  "y": 7881,
+  "wiki": "https://monstersandmemories.wiki/npcs/zahkir-dunewake",
+  "wikiId": "npc-zahkir-dunewake"
+ },
+ {
+  "id": "community-319",
+  "community": true,
+  "name": "Undead",
+  "category": "Mob camp",
+  "note": "Only spawn at night.",
+  "x": 3930,
+  "y": 6428
  }
 ]

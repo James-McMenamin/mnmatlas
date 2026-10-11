@@ -1028,5 +1028,14 @@
     "note": "",
     "x": 3426,
     "y": 2762
+  },
+  {
+    "id": "community-381",
+    "community": true,
+    "name": "Bonescraper Zekkir",
+    "category": "Named mob",
+    "note": "",
+    "x": 2720,
+    "y": 6514
   }
 ]

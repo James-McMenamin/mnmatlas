@@ -265,10 +265,64 @@
       "what": "edited"
     }
   ],
+  "marker:community-233": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-234": [
+    {
+      "name": "baradad",
+      "what": "added"
+    }
+  ],
+  "marker:community-244": [
+    {
+      "name": "heshballantine",
+      "what": "added"
+    }
+  ],
+  "marker:community-245": [
+    {
+      "name": "heshballantine",
+      "what": "added"
+    }
+  ],
+  "marker:community-246": [
+    {
+      "name": "heshballantine",
+      "what": "added"
+    }
+  ],
   "marker:community-247": [
     {
       "name": "heshballantine",
       "what": "added"
+    }
+  ],
+  "marker:community-337": [
+    {
+      "name": "sekai777",
+      "what": "added"
+    }
+  ],
+  "marker:community-338": [
+    {
+      "name": "skegar",
+      "what": "added"
+    }
+  ],
+  "marker:community-377": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:class-shaman": [
+    {
+      "name": null,
+      "what": "removed"
     }
   ]
 }

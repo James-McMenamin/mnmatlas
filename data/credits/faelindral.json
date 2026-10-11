@@ -64,5 +64,17 @@
       "name": "karnix91",
       "what": "added"
     }
+  ],
+  "marker:community-386": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:vendors-lower-tier": [
+    {
+      "name": "karnix91",
+      "what": "removed"
+    }
   ]
 }

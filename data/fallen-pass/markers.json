@@ -1,13 +1,14 @@
 [
  {
   "id": "undead-31-40-1",
-  "name": "Undead (levels 31–40)",
+  "name": "Plagueborn Drakes",
   "category": "Mob camp",
   "x": 2119,
   "y": 725,
   "approximate": true,
-  "note": "",
-  "minZoom": 2
+  "note": "Normal movement, No spellcasters.",
+  "minZoom": 2,
+  "community": true
  },
  {
   "id": "giant-31-40-1",
@@ -21,13 +22,15 @@
  },
  {
   "id": "undead-31-40-2",
-  "name": "Undead (levels 31–40)",
+  "name": "Plagueborn Drakes",
   "category": "Mob camp",
   "x": 1562,
   "y": 1111,
   "approximate": true,
-  "note": "",
-  "minZoom": 2
+  "note": "One wandering Drake that patrols outside of the room.",
+  "minZoom": 2,
+  "wiki": "https://monstersandmemories.miraheze.org/wiki/A_Plagueborn_drake",
+  "community": true
  },
  {
   "id": "ratkin-31-40-1",

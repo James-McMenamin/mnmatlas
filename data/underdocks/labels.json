@@ -234,19 +234,6 @@
       "level": "lower"
     },
     {
-      "id": "class-shaman",
-      "abbreviations": [
-        "SHM"
-      ],
-      "classes": [
-        "Shaman"
-      ],
-      "building": "Shaman trainer",
-      "x": 3764,
-      "y": 5966,
-      "level": "lower"
-    },
-    {
       "id": "class-rogue",
       "abbreviations": [
         "ROG"
