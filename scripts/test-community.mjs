@@ -696,5 +696,12 @@ await case2c('named-mob-change-suggestion',async()=>{
  }
  {const {e,c}=await setup();c.console={...console,error(){}};e.failSuggestions=true;await openDesk(e);assert(e.statuses.includes('Suggestions could not load. Try again.'));e.failSuggestions=false;await c.$('review-desk').querySelectorAll('button').find(b=>b.textContent==='Try again').onclick();await settle();await selectRow(e,243);assert(c.$('review-card'));}
  {const {e,c}=await setup();c.labelData.labels=[{id:'exit',name:'to Sewers',kind:'exit',x:2340,y:1005},{id:'hall',name:'Hall',kind:'building',x:2350,y:1005}];await openDesk(e);assert(c.$('review-desk').querySelectorAll('.desk-place').some(n=>n.textContent.startsWith('Near Hall')));}
+ {const {e,c}=await setup('sungreet-strand');const base={user_id:'u-other',author_name:'Traveller Z',created_at:'2026-10-11T10:00:00Z',updated_at:'2026-10-11T10:00:00Z',map:'sungreet-strand',level:null,status:'pending',comment:null,review_note:'Not published: The published text changed after this was sent; check it again.',credit:true};
+  e.suggestions.push({...base,id:9001,kind:'edit-marker',target_id:'goblin-11-15-1',payload:{from:{name:'Goblins (levels 11–15)',note:'old'},name:'Goblin raiders',note:'old'}},{...base,id:9002,kind:'move-marker',target_id:'goblin-11-15-2',payload:{from:[1,1],to:[2900,2100],name:'Goblins'}});
+  await openDesk(e);for(const id of [9001,9002]){await selectRow(e,id);await cardAction(e,'Approve');}
+  const C=c.window.atlasChanges,one=e.suggestions.find(r=>r.id===9001),two=e.suggestions.find(r=>r.id===9002),m1={name:'Goblins',note:'',category:'Mob camp',x:2996,y:1514},m2={name:'Goblins',note:'',category:'Mob camp',x:2912,y:2135};
+  assert.equal(one.status,'approved');assert.equal(one.payload.from.name,'Goblins','Approving takes the name on the map now as the before value');assert.equal(one.payload.from.note,'old','Untouched fields keep their before value');assert.equal(one.payload.name,'Goblin raiders');
+  assert.deepEqual([...two.payload.from],[m2.x,m2.y],'Approving a move takes the position on the map now as its start');for(const [r,m] of [[one,m1],[two,m2]])for(const f of C.fieldsOf(r))assert(C.matchesFrom(r,m,f),'The job accepts #'+r.id+' '+f);
+  console.log('PASS approve-rebases-before-values');}
  console.log('Desk failure checks passed: row errors, fetch retry and nearest place headings.');
 }
