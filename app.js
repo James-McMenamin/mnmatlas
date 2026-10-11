@@ -81,7 +81,9 @@ const squash=v=>String(v).toLocaleLowerCase().replace(/[^a-z]/g,'');
 // A vendor with a kind reads kind first ("Used weapons dealer"), like a trainer reads class first, unless its name
 // already is just that kind ("A bag merchant", "Butchers").
 const vendorNamed=m=>{const kind=vendorKindNow(m.vendor),bare=String(m.name).toLowerCase().replace(/[^a-z ]+/g,' ').trim().replace(/^(a|an|the) /,'').replace(/s$/,''),forms=vendorKinds[vendorGroupOf(kind)]?.[kind]||[];return squash(bare)===squash(kind)||forms.some(f=>squash(f)===squash(bare));};
-function markerTitle(m){const kind=vendorKindNow(m.vendor);if(m.category==='Vendor'&&kind&&!vendorNamed(m))return kind;const c=classesOf(m);if(!c.length||c.every(x=>squash(m.name).includes(squash(x))))return m.name;return c.join(' / ')+(c.length>1?' trainers':' trainer');}
+function markerTitle(m){const kind=vendorKindNow(m.vendor);if(m.category==='Vendor'&&kind&&!vendorNamed(m))return kind;
+ // A tradeskill trainer reads like a vendor: the trade on top, the NPC's own name under it (unless the name already says the trade).
+ if(m.category==='Tradeskill'&&typeof m.trade==='string'&&m.trade&&!squash(m.name).includes(squash(m.trade).slice(0,6)))return m.trade;const c=classesOf(m);if(!c.length||c.every(x=>squash(m.name).includes(squash(x))))return m.name;return c.join(' / ')+(c.length>1?' trainers':' trainer');}
 // The name under a class-first (or kind-first) title; nothing when the name is only class abbreviations ("NEC").
 function markerSubtitle(m){
  return markerTitle(m)!==m.name&&!/^[A-Z]{2,4}(\s*[\/·,]\s*[A-Z]{2,4})*$/.test(m.name.trim())?m.name:'';}
