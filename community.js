@@ -493,11 +493,12 @@
  }
  // Repeated saves amend only this account's open row; the original base still protects earlier contributions.
  function newestOnTarget(row,rows){const rules=window.atlasReview;return rows.filter(r=>!r.sourceStatus&&['pending','approved'].includes(r.status)&&rules.target(r)===rules.target(row)&&rules.targetKind(r)===rules.targetKind(row)&&r.map===row.map&&(rules.targetKind(row)!=='label'||(r.level||null)===(row.level||null))).sort((a,b)=>Number(b.id)-Number(a.id))[0];}
- async function saveOwn(row,amendments=[...approvedRows,...pendingRows]){
+ // A desk receipt pairs the saved version with its decision's undo; amendments retain their earlier contents.
+ async function saveOwn(row,amendments=[...approvedRows,...pendingRows],{receipt=false}={}){
   const newest=row.target_id?newestOnTarget(row,amendments):null,old=newest&&newest.user_id===user.id&&newest.kind===row.kind&&(admin||newest.status==='pending'&&!newest.reviewed_at)?newest:null;
-  if(!old)return submit(row);const delta={...row.payload};if(!row.kind.startsWith('move-')&&delta.remove!==true&&delta.name===delta.from?.name)delete delta.name;let payload={...old.payload,...delta,from:row.kind.startsWith('move-')?old.payload.from:{...row.payload.from,...old.payload.from}};
+  if(!old)return receipt?submitRow(row,{receipt}):submit(row);const delta={...row.payload};if(!row.kind.startsWith('move-')&&delta.remove!==true&&delta.name===delta.from?.name)delete delta.name;let payload={...old.payload,...delta,from:row.kind.startsWith('move-')?old.payload.from:{...row.payload.from,...old.payload.from}};
   payload=window.atlasFields.stored(row.kind,payload);if(row.payload.remove!==true){delete payload.remove;delete payload.reason;}if(payloadBytes(payload)>=4096)throw Object.assign(Error('Too long'),{code:'too-long'});
-  let q=client.from('suggestions').update({payload,status:admin?'approved':'pending',comment:row.comment??old.comment,credit:row.credit??old.credit,...(admin?{reviewed_at:new Date().toISOString()}:{})}).eq('id',old.id).eq('user_id',user.id).eq('status',old.status);if(!admin)q=q.is('reviewed_at',null);const {data,error}=await version(q,old).select('*');if(error||!data?.length)throw error||Error('Changed since opened');await loadApproved();window.atlasNotices?.sent(normaliseSuggestion(data[0]));return true;
+  let q=client.from('suggestions').update({payload,status:admin?'approved':'pending',comment:row.comment??old.comment,credit:row.credit??old.credit,...(admin?{reviewed_at:new Date().toISOString()}:{})}).eq('id',old.id).eq('user_id',user.id).eq('status',old.status);if(!admin)q=q.is('reviewed_at',null);const {data,error}=await version(q,old).select('*');if(error||!data?.length)throw error||Error('Changed since opened');await loadApproved();const saved=normaliseSuggestion(data[0]);window.atlasNotices?.sent(saved);return receipt?{row:saved,before:old,published:admin}:true;
  }
  const editButton=(target,kind)=>button('Change',()=>suggestSheet(target,kind),'community-edit','edit');
  const sharedToken=m=>scope()+':'+m.id;
@@ -568,13 +569,13 @@
  async function submit(row){return (await submitRow(row)).published;}
  // The publishing job refuses a suggestion of 4 KB or more (in UTF-8): refused here first, with a clear message.
  const payloadBytes=v=>encodeURIComponent(JSON.stringify(v)).replace(/%[0-9A-F]{2}/g,'x').length;
- async function submitRow(row){row={...row,payload:window.atlasFields.stored(row.kind,row.payload)};
+ async function submitRow(row,{receipt=false}={}){row={...row,payload:window.atlasFields.stored(row.kind,row.payload)};
   if(payloadBytes(row.payload)>=4096)throw Object.assign(Error('Too long'),{code:'too-long'});
-  const {data,error}=await client.from('suggestions').insert(row).select('id').single();if(error)throw error;
-  const id=data?.id??null;if(!admin||id==null){await loadApproved();await sentUndo(id);return {id,published:false};}
-  const {data:done,error:fail}=await client.from('suggestions').update({status:'approved',reviewed_at:new Date().toISOString(),review_note:'Approved on sending (admin)'}).eq('id',data.id).eq('status','pending').select('id');
-  if(fail||!done?.length){status('Saved, but it could not be approved here; approve it at the Review desk.');await loadApproved();await sentUndo(id);return {id,published:false};}
-  await loadApproved();await sentUndo(id);return {id,published:true};
+  const {data,error}=await client.from('suggestions').insert(row).select(receipt?'*':'id').single();if(error)throw error;
+  const id=data?.id??null,inserted=receipt&&data?normaliseSuggestion(data):null,finish=async(published,saved=inserted)=>{await loadApproved();if(receipt)window.atlasNotices?.sent(saved);else await sentUndo(id);return {id,published,...(receipt?{row:saved}:{})};};if(!admin||id==null)return finish(false);
+  let q=client.from('suggestions').update({status:'approved',reviewed_at:new Date().toISOString(),review_note:'Approved on sending (admin)'}).eq('id',data.id).eq('status','pending');if(receipt)q=version(q,inserted);const {data:done,error:fail}=await q.select(receipt?'*':'id');
+  if(fail||!done?.length){status('Saved, but it could not be approved here; approve it at the Review desk.');return finish(false);}
+  return finish(true,receipt?normaliseSuggestion(done[0]):null);
  }
  const sentLine=published=>published?'Approved: it goes live with the next publishing run.':null;
  // The note form can suggest a note for the public map as it is saved, through the same path as Share with everyone:
@@ -890,7 +891,7 @@
  function version(q,row){return row.updated_at?q.eq('updated_at',row.updated_at):q;}
  async function reviewAction(row,state,note,card,payload,done){if(await desk.decideRow(row,state,note))done?.();}
  async function preview(row){return desk.open(row);}
- desk=window.createReviewDesk({client,isAdmin:()=>admin,getUser:()=>user,normalise:normaliseSuggestion,target:reviewTarget,locations:reviewLocations,places:reviewPlaces,loadApproved,countWaiting,publishButton,bannedList,banDialog,wikiFinder,finders,version,payloadBytes,reasons,removalReasons,nextSerial:()=>++reviewSerial,drawApproved,popup:suggestionPopup});
+ desk=window.createReviewDesk({client,isAdmin:()=>admin,getUser:()=>user,normalise:normaliseSuggestion,target:reviewTarget,locations:reviewLocations,places:reviewPlaces,loadApproved,countWaiting,publishButton,bannedList,banDialog,wikiFinder,finders,version,payloadBytes,reasons,removalReasons,nextSerial:()=>++reviewSerial,drawApproved,popup:suggestionPopup,ownEdit:(row,payload,amendments)=>{let credit=false;try{credit=localStorage.getItem(creditKey)==='true';}catch{}return saveOwn({kind:row.kind.endsWith('label')?'edit-label':'edit-marker',target_id:window.atlasReview.target(row),map:row.map,level:row.level||null,user_id:user.id,author_name:displayName(user),credit,payload},amendments,{receipt:true});}});
  connectNotices();accountUI();client.auth.onAuthStateChange((eventName,session)=>{setTimeout(()=>authChanged(session).catch(()=>status('Account could not refresh. Your local notes are safe.')),0);});
  client.auth.getSession().then(({data,error})=>{if(error)throw error;return authChanged(data.session);}).catch(()=>status('Account could not load. Your local notes are safe.'));
  window.addEventListener('atlas:loaded',()=>{for(const f of finders)f.reset();onMap().catch(()=>status('Community data could not load.'));});
