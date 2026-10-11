@@ -104,6 +104,25 @@ function flashPin(id){const el=pins.get(id)?.getElement();if(!el)return;el.class
 // A marker's wiki page opens in a new tab; an embed on another site may hide it (wiki-links.js).
 function wikiButton(m){const link=wikiLinkFor(m);return link?externalLink('Read on '+link.name+' ↗',link.href,'wiki-link'):null;}
 const noteKind=m=>m.noteType==='label'?'Area label':m.noteType==='exit'?'Zone exit':m.category;
+const markerHover=matchMedia('(hover: hover) and (pointer: fine)');
+let markerPopupOpen=false;
+// Shared with the popup so a merchant's stock reads the same in either view.
+function markerSells(m){return m.category!=='Vendor'?'':m.vendor==='Shady merchant'?'Buys anything; sells what players have sold to it.':Array.isArray(m.sells)&&m.sells.length?'Sells: '+sellTypes.filter(t=>m.sells.includes(t)).join(' · '):'';}
+function markerHoverCard(m,state){
+ const n=text('div','','marker-hover'),who=markerSubtitle(m),detail=m.category==='Tradeskill'?m.trade:m.category==='Class trainer'?classesOf(m).join(' / '):markerSells(m);
+ n.append(text('div',noteKind(m)+(m.id.startsWith('personal-')?' · Your note':''),'tag'),text('h3',markerTitle(m)));if(who)n.append(text('div',who,'marker-who'));if(detail)n.append(text('div',detail,'hover-detail'));
+ const first=String(m.note||'').split(/\r?\n/,1)[0].trim();if(first)n.append(text('p',first.length>120?first.slice(0,119).trimEnd()+'…':first,'hover-note'));
+ const rows=state?.rows||[],waiting=rows.filter(r=>r.status==='pending'),approved=rows.filter(r=>r.status==='approved'),rejected=rows.filter(r=>r.status==='rejected'),words=(count,end)=>count+' change'+(count===1?'':'s')+' '+end;
+ const line=[waiting.length&&words(waiting.length,'waiting'),approved.length&&words(approved.length,'approved, not live yet'),rejected.length&&words(rejected.length,'set aside')].filter(Boolean).join(' · '),next=state?.proposed?.name;
+ if(line)n.append(text('div',line+(waiting.some(r=>r.fields?.has('name'))&&next&&next!==m.name?' · Coming name: '+next:''),'hover-state'));return n;
+}
+// Leaflet supplies focus/blur as well as hover. No card DOM or change lookup is made while drawing pins.
+function bindMarkerTooltip(pin,m,state,offset,focusNode){
+ if(!m.noteType){offset||=[0,markerHover.matches&&m.category==='Class trainer'?-32:-23];pin.bindTooltip(()=>{const rich=markerHover.matches;pin.getTooltip?.()?.getElement?.()?.classList.toggle('marker-card-tooltip',rich);return rich?markerHoverCard(m,state?state():window.atlasCommunity?.hoverState(m)):text('span',markerTitle(m));},{direction:'top',offset,className:markerHover.matches?'marker-card-tooltip':''});
+  // Offset plates contain their own button, which can receive focus before the marker's outer element.
+  if(focusNode){focusNode.onfocus=()=>pin.openTooltip();focusNode.onblur=()=>pin.closeTooltip();}}
+ return pin;
+}
 // NPC wiki cards (npc-cards/<map>.json, built when publishing): read once per map, when its first wiki-linked NPC pin is
 // drawn; those pins' popups then get their card. Only where this page may link to the wiki (embed rules).
 let npcCards={map:null,cards:null,loading:false};
@@ -175,8 +194,7 @@ function npcCard(c,m){
 }
 function popup(m){const n=text('div',''),card=npcCardFor(m),title=text('h3',card?'':markerTitle(m));if(card)title.append(externalLink(titleLevel(markerTitle(m)).name,card.url,'npc-name'));n.append(text('div',noteKind(m)+(m.id.startsWith('personal-')?' · Your note':''),'tag'),title);{const who=markerSubtitle(m);if(who)n.append(text('p',who,'marker-who'));}
  // A shady merchant buys anything and sells back whatever players sold it, so its stock has no fixed types.
- if(m.category==='Vendor'&&m.vendor==='Shady merchant')n.append(text('p','Buys anything; sells what players have sold to it.','marker-sells'));
- else if(m.category==='Vendor'&&Array.isArray(m.sells)&&m.sells.length)n.append(text('p','Sells: '+sellTypes.filter(t=>m.sells.includes(t)).join(' · '),'marker-sells'));
+ {const sells=markerSells(m);if(sells)n.append(text('p',sells,'marker-sells'));}
  // With a wiki card the wiki comes first; the atlas's own note and actions follow.
  if(card)n.append(npcCard(card,m));if(m.note){if(card){const ours=text('section','','npc-section npc-ours');ours.append(text('h4','Atlas note','npc-heading'),text('p',m.note));n.append(ours);}else n.append(text('p',m.note));}const wiki=!card&&wikiButton(m);if(wiki)n.append(wiki);n.append(copyButton(m));if(m.toLevel){const floor=config.levels?.find(l=>l.id===m.toLevel);n.append(button((m.direction==='up'?'Go up to ':'Go down to ')+(floor?.title||floor?.name||m.toLevel),()=>switchAt(m),'level-link'));}
  // A lift to a linked map (Evershade Weald and Faelindral) goes to the matching lift there.
@@ -246,14 +264,14 @@ function drawMarkers(){
   const own=m.id.startsWith('personal-');
   const pin=L.marker(locationOf(m),{icon:pinIcon(m),alt:[markerTitle(m),markerSubtitle(m)].filter(Boolean).join(', '),keyboard:true,riseOnHover:true,draggable:alignmentMode}).bindPopup(()=>popup(m),{autoPan:false});
   pin.atlasMinZoom=m.minZoom;
-  // The hover tooltip shows the name; an aria-label (not a title) keeps it accessible without a second browser tooltip.
+  // An aria-label keeps the pin accessible without a second browser tooltip.
   pin.on('add',()=>pin.getElement()?.setAttribute('aria-label',[markerTitle(m),markerSubtitle(m)].filter(Boolean).join(', ')));
   // A marker that stands for another published map (a dungeon entrance on the world map) opens that map.
   // Personal zone exits keep their popup (Go to, Edit note) instead.
   const opens=!own&&!alignmentMode&&typeof m.toMap==='string'&&!m.toPlace&&registry.maps.find(c=>c.id===m.toMap);
   pin.on('click',()=>window.atlasCommunity?.reviewOpen?.()?choose(m):opens?openMap(opens.id):m.switchOnClick&&!alignmentMode?switchAt(m):alignmentMode&&!own?window.atlasCommunity?.change?.(m,'edit-marker')||choose(m):choose(m));pin.on('contextmenu',()=>choose(m));
   if(alignmentMode){pin.on('dragstart',()=>{map.closePopup();if(!own)selectAlignment(m,'marker');});pin.on('dragend',()=>(own?movePersonal:moveAlignedMarker)(m.id,pin.getLatLng()));}
-  if(!m.noteType)pin.bindTooltip(()=>text('span',markerTitle(m)),{direction:'top',offset:[0,-23]});if(showPins)pin.addTo(map);pins.set(m.id,pin);
+  bindMarkerTooltip(pin,m);if(showPins)pin.addTo(map);pins.set(m.id,pin);
   list.append(resultRow(markerTitle(m),markerDetail(m,own?'Personal note':''),()=>choose(m),m));
  }
  // Place names and hidden areas can be found even when their visual layer hides.
@@ -613,7 +631,10 @@ async function loadMap(id,url=new URL(location.href),push=false,reviewToken=null
   activePlace=null;sharedPin=null;cancelPlacement();if($('editor').open)closeEditor();$('search').value='';enabled=new Set(Object.keys(categories));showPins=true;updateCategoryButtons();
   document.body.classList.remove('aligning');$('edit-bar').hidden=true;restoreStorage();setupCategoryControls();updateTitles();
   map=L.map('map',{crs:L.CRS.Simple,minZoom:config.minZoom,maxZoom:config.maxZoom,zoomSnap:0,zoomDelta:.5,zoomControl:false,attributionControl:true,maxBoundsViscosity:1});
-  map.on('popupopen',()=>requestAnimationFrame(fitCardPopup));
+  markerPopupOpen=false;
+  map.on('popupopen',()=>{markerPopupOpen=true;map.eachLayer(layer=>{if(layer instanceof L.Tooltip)map.closeTooltip(layer);});requestAnimationFrame(fitCardPopup);});
+  map.on('popupclose',()=>{markerPopupOpen=false;});
+  map.on('tooltipopen',e=>{if(markerPopupOpen)map.closeTooltip(e.tooltip);});
   const bounds=mapBounds();map.setMaxBounds(bounds);
   sheetTileLayer(config,config.frame||{x:0,y:0,width:config.width,height:config.height},config.tilePath+'?v='+encodeURIComponent(config.tileRevision),{tileSize:config.tileSize,minZoom:config.minZoom,maxZoom:config.maxZoom,maxNativeZoom:config.maxNativeZoom,noWrap:true,bounds,keepBuffer:1,attribution:text('span',config.attribution.map).outerHTML}).on('tileerror',()=>status('A map tile could not load. Please reload.')).addTo(map);
   const currentHidden={...hiddenData};for(const key of ['areas','additionalAreas','routes','connections','destinations','levelStacks'])if(Array.isArray(hiddenData[key]))currentHidden[key]=hiddenData[key].filter(atLevel);
