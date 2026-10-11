@@ -12,7 +12,8 @@
   "approximate": true,
   "note": "Normal movement, No spellcasters.",
   "minZoom": 2,
-  "community": true
+  "community": true,
+  "wiki": "https://monstersandmemories.miraheze.org/wiki/A_Plagueborn_drake"
  },
  {
   "id": "giant-31-40-1",
@@ -30,7 +31,7 @@
  },
  {
   "id": "undead-31-40-2",
-  "name": "Plagueborn Drakes",
+  "name": "Plagueborn Drake",
   "category": "Mob camp",
   "levels": [
    31,
@@ -39,7 +40,7 @@
   "x": 1562,
   "y": 1111,
   "approximate": true,
-  "note": "One wandering Drake that patrols outside of the room.",
+  "note": "One patrolling Drake that starts inside the room and moves outside.",
   "minZoom": 2,
   "wiki": "https://monstersandmemories.miraheze.org/wiki/A_Plagueborn_drake",
   "community": true

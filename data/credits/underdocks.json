@@ -33,6 +33,10 @@
     {
       "name": null,
       "what": "added"
+    },
+    {
+      "name": "thimoca",
+      "what": "removed"
     }
   ],
   "marker:trade-lumberjacking": [
@@ -321,6 +325,12 @@
     {
       "name": null,
       "what": "removed"
+    }
+  ],
+  "marker:community-405": [
+    {
+      "name": "thimoca",
+      "what": "added"
     }
   ]
 }

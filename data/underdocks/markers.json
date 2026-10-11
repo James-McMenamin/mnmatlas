@@ -388,19 +388,6 @@
     "community": true
   },
   {
-    "id": "community-30",
-    "community": true,
-    "name": "NEC",
-    "category": "Class trainer",
-    "note": "",
-    "x": 4880,
-    "y": 4552,
-    "level": "lower",
-    "classes": [
-      "Necromancer"
-    ]
-  },
-  {
     "id": "community-36",
     "community": true,
     "name": "Deepcut bandit camps",
@@ -931,5 +918,18 @@
     "level": "lower",
     "wiki": "https://monstersandmemories.wiki/npcs/jumbe-odol",
     "wikiId": "npc-1790076528773-33ord"
+  },
+  {
+    "id": "community-405",
+    "community": true,
+    "name": "Zalex Mortaine",
+    "category": "Class trainer",
+    "note": "Inside the library",
+    "x": 5404,
+    "y": 4216,
+    "level": "lower",
+    "classes": [
+      "Necromancer"
+    ]
   }
 ]

@@ -208,19 +208,6 @@
       "level": "lower"
     },
     {
-      "id": "community-30",
-      "abbreviations": [
-        "NEC"
-      ],
-      "classes": [
-        "Necromancer"
-      ],
-      "building": "Necromancer trainer",
-      "x": 4880,
-      "y": 4552,
-      "level": "lower"
-    },
-    {
       "id": "class-druid",
       "abbreviations": [
         "DRU"
