@@ -277,7 +277,7 @@ async function acknowledge(applied){
   if(!/^\d+$/.test(String(a.id))||!/^[a-f0-9]{64}$/.test(a.payloadHash))fail('Invalid applied entry.');
   try{
    const row=(await request('suggestions?id=eq.'+a.id+'&select=*'))?.[0];if(!row||row.status==='published')continue;versionWarning(row);
-   const version=a.version?{...row,...a.version}:await recoverVersion(row,a),corrections=await correctionRows(row,version,a.payloadHash),same=hash(row.payload)===a.payloadHash&&row.updated_at===(a.updated_at??a.updatedAt??undefined)&&row.status==='approved',body={status:'published'};
+   const version=a.version?{...row,...a.version}:await recoverVersion(row,a),corrections=await correctionRows(row,version,a.payloadHash),same=hash(row.payload)===a.payloadHash&&row.updated_at===(a.updated_at??a.updatedAt??undefined)&&row.status==='approved',body={status:'published',...(/^Not published:/.test(row.review_note||'')?{review_note:null}:{})};
    if(!same){
     body.review_note='Published as approved on '+(a.appliedAt||new Date().toISOString())+'; a later change was not included.'+(corrections.length?' The correction returns to the review queue.':'');
    }

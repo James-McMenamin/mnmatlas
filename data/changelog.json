@@ -1,6 +1,18 @@
 {
  "entries": [
   {
+   "date": "2026-10-12",
+   "title": "Camp levels and mobs restored",
+   "text": "A few camps lost the levels and mob lists travellers had given them; they are back, and changes that were sent back for a second look can now be accepted again.",
+   "maps": [
+    "fallen-pass",
+    "sungreet-strand",
+    "evershade-weald",
+    "tel-ekir",
+    "vale-of-zintar"
+   ]
+  },
+  {
    "date": "2026-10-11",
    "title": "Suggesting changes, made simpler",
    "text": "Every marker and sign has one Change form with the same fields, the changes on their way show under its name, and the bell at the top lists what's new on the atlas and where your own suggestions stand.",
