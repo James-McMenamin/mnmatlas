@@ -703,5 +703,9 @@ await case2c('named-mob-change-suggestion',async()=>{
   assert.equal(one.status,'approved');assert.equal(one.payload.from.name,'Goblins','Approving takes the name on the map now as the before value');assert.equal(one.payload.from.note,'old','Untouched fields keep their before value');assert.equal(one.payload.name,'Goblin raiders');
   assert.deepEqual([...two.payload.from],[m2.x,m2.y],'Approving a move takes the position on the map now as its start');for(const [r,m] of [[one,m1],[two,m2]])for(const f of C.fieldsOf(r))assert(C.matchesFrom(r,m,f),'The job accepts #'+r.id+' '+f);
   console.log('PASS approve-rebases-before-values');}
+ {const {e,c}=await setup('sungreet-strand');const base={user_id:'u-other',author_name:'Traveller Z',created_at:'2026-10-11T10:00:00Z',updated_at:'2026-10-11T10:00:00Z',map:'sungreet-strand',level:null,comment:null,credit:true,kind:'edit-marker',target_id:'goblin-11-15-1'};
+  // A published change whose fields never reached the map comes back as approved with sourceStatus 'published'; it must not block the new starting point.
+  e.suggestions.push({...base,id:9010,status:'published',reviewed_at:'2026-10-11T11:00:00Z',payload:{from:{name:'Goblins (levels 11–15)',levels:[11,15]},name:'Goblins',levels:[12,14]}},{...base,id:9011,status:'pending',review_note:'Not published: x',payload:{from:{name:'Goblins (levels 11–15)',levels:[11,15]},name:'Goblin raiders',levels:[12,14]}});
+  await openDesk(e);await selectRow(e,9011);await cardAction(e,'Approve');const r=e.suggestions.find(r=>r.id===9011);assert.equal(r.payload.from.name,'Goblins','Published rows still on their way do not block the new starting point');console.log('PASS approve-rebases-past-published');}
  console.log('Desk failure checks passed: row errors, fetch retry and nearest place headings.');
 }
