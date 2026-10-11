@@ -147,8 +147,12 @@
  },
  {
   "id": "dregath-warwake",
-  "name": "Dregath Warwake (levels 46–47)",
+  "name": "Dregath Warwake",
   "category": "Named mob",
+  "levels": [
+   46,
+   46
+  ],
   "x": 5308,
   "y": 1363,
   "approximate": true,

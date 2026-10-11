@@ -197,8 +197,12 @@
  },
  {
   "id": "tarakhan",
-  "name": "Tarakhan the Boulder (levels 40–41)",
+  "name": "Tarakhan the Boulder",
   "category": "Named mob",
+  "levels": [
+   40,
+   40
+  ],
   "x": 3140,
   "y": 6343,
   "approximate": true,
@@ -209,8 +213,12 @@
  },
  {
   "id": "soraya",
-  "name": "Soraya the Mirage (levels 40–41)",
+  "name": "Soraya the Mirage",
   "category": "Named mob",
+  "levels": [
+   40,
+   40
+  ],
   "x": 2920,
   "y": 6343,
   "approximate": true,
@@ -251,12 +259,16 @@
  },
  {
   "id": "guillome",
-  "name": "Guillome the Accursed (level 60, raid)",
+  "name": "Guillome the Accursed",
   "category": "Named mob",
+  "levels": [
+   60,
+   60
+  ],
   "x": 3256,
   "y": 4784,
   "approximate": true,
-  "note": "Top of the blue-flamed undead tower.",
+  "note": "Raid. Top of the blue-flamed undead tower.",
   "minZoom": 3,
   "wiki": "https://monstersandmemories.wiki/npcs/guillome-the-accursed",
   "wikiId": "npc-guillome-the-accursed"
@@ -343,8 +355,12 @@
  },
  {
   "id": "stormcaller-tabigan",
-  "name": "Stormcaller Tabigan (levels 51–52)",
+  "name": "Stormcaller Tabigan",
   "category": "Named mob",
+  "levels": [
+   51,
+   51
+  ],
   "x": 3260,
   "y": 5254,
   "approximate": true,
@@ -385,8 +401,12 @@
  },
  {
   "id": "chaim-nephidna",
-  "name": "Chaim the Herald (levels 55–56)",
+  "name": "Chaim the Herald",
   "category": "Named mob",
+  "levels": [
+   55,
+   55
+  ],
   "x": 3408,
   "y": 5420,
   "approximate": true,
@@ -397,8 +417,12 @@
  },
  {
   "id": "chaim-nephidna-mistress-nephidna",
-  "name": "Mistress Nephidna (levels 55–56)",
+  "name": "Mistress Nephidna",
   "category": "Named mob",
+  "levels": [
+   55,
+   55
+  ],
   "x": 3430,
   "y": 5420,
   "approximate": true,
@@ -432,8 +456,12 @@
  },
  {
   "id": "cult-leaders",
-  "name": "Ebon Scholar Myrddin (levels 51–53)",
+  "name": "Ebon Scholar Myrddin",
   "category": "Named mob",
+  "levels": [
+   51,
+   51
+  ],
   "x": 1232,
   "y": 5595,
   "approximate": true,
@@ -444,8 +472,12 @@
  },
  {
   "id": "cult-leaders-high-wyrmseer-valthrun",
-  "name": "High Wyrmseer Valthrun (levels 51–53)",
+  "name": "High Wyrmseer Valthrun",
   "category": "Named mob",
+  "levels": [
+   51,
+   51
+  ],
   "x": 1254,
   "y": 5595,
   "approximate": true,
@@ -456,8 +488,12 @@
  },
  {
   "id": "cult-leaders-emissary-irina",
-  "name": "Emissary Irina (levels 51–53)",
+  "name": "Emissary Irina",
   "category": "Named mob",
+  "levels": [
+   51,
+   51
+  ],
   "x": 1276,
   "y": 5595,
   "approximate": true,
@@ -468,8 +504,12 @@
  },
  {
   "id": "esaneq",
-  "name": "Esaneq (levels 51–52)",
+  "name": "Esaneq",
   "category": "Named mob",
+  "levels": [
+   51,
+   51
+  ],
   "x": 816,
   "y": 4208,
   "approximate": true,

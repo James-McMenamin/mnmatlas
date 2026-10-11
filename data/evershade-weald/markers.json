@@ -151,8 +151,12 @@
  },
  {
   "id": "beguiled-alpha-wolf",
-  "name": "A beguiled alpha wolf (levels 8–10)",
+  "name": "A beguiled alpha wolf",
   "category": "Named mob",
+  "levels": [
+   8,
+   8
+  ],
   "x": 480,
   "y": 3273,
   "approximate": true,
