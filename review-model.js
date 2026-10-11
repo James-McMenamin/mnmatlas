@@ -2,8 +2,8 @@
 'use strict';
 window.atlasReview=(()=>{
  const target=r=>r.kind==='new-marker'?'community-'+r.id:r.target_id;
- const targetKind=r=>r.kind.endsWith('label')||['label','exit'].includes(r.payload?.noteType)?'label':'marker';
- const point=r=>r.kind.startsWith('move-')?r.payload?.to:[r.payload?.x??r.payload?.from?.x,r.payload?.y??r.payload?.from?.y];
+ const targetKind=r=>r.kind?.endsWith('label')||['label','exit'].includes(r.payload?.noteType)?'label':'marker';
+ const point=r=>r.kind?.startsWith('move-')?(Array.isArray(r.payload?.to)?r.payload.to:[undefined,undefined]):[r.payload?.x??r.payload?.from?.x,r.payload?.y??r.payload?.from?.y];
  function group(rows,{locate=point,mapName=id=>id,floorOrder=()=>0,spot=true}={}){
   const buckets=new Map();
   for(const r of rows){const level=r.payload?.level||r.level||'',key=r.map+'\0'+level;if(!buckets.has(key))buckets.set(key,{map:r.map,level,rows:[]});buckets.get(key).rows.push(r);}

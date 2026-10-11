@@ -44,7 +44,7 @@
   }
   else for(const f of fields){
    if(f==='removed')out.removed=true;
-   else if(f==='position'){[out.x,out.y]=(row.kind.startsWith('move-')?p.to:[p.x,p.y]).map(Math.round);if(has(p,'approximate'))out.approximate=p.approximate;}
+   else if(f==='position'){const at=row.kind.startsWith('move-')?p.to:[p.x,p.y];if(!Array.isArray(at)||at.length!==2||!at.every(Number.isFinite))throw Error('The suggested position is missing or invalid');[out.x,out.y]=at.map(Math.round);if(has(p,'approximate'))out.approximate=p.approximate;}
    else if(f==='type'){if(has(p,'category'))for(const k of typeKeys)delete out[k];for(const k of keysFor(p))if(has(p,k)&&p[k]!==null&&p[k]!=='')out[k]=copy(p[k]);}
    else if(f==='wiki'){const changed=has(p,'wiki')&&p.wiki!==out.wiki;for(const k of ['wiki','wikiId'])if(has(p,k))out[k]=p[k];else if(k==='wikiId'&&changed)delete out[k];if(!out.wikiId)delete out.wikiId;if(!out.wiki){delete out.wiki;delete out.wikiId;}}
    else if(p[f]===null||p[f]==='')delete out[f];else out[f]=copy(p[f]);
@@ -54,26 +54,26 @@
   return out;
  }
  const whatOf=row=>row.kind==='new-marker'?'added':row.payload?.remove===true?'removed':row.kind.startsWith('move-')?'moved':'edited';
- function buildChanges({mapId,levelId,markers=[],labels=[],trainers=[],publishedPositions,publishedLabelPositions,rows=[],includePending=false,normalise=row=>row}){
-  const all=new Map(),byRow=new Map(),newKinds=new Map();
+ function buildChanges({mapId,levelId,markers=[],labels=[],trainers=[],publishedPositions,publishedLabelPositions,rows=[],includePending=false,normalise=row=>row,onError=null}){
+  const all=new Map(),byRow=new Map(),newKinds=new Map(),fail=(row,error)=>{if(!onError)throw error;onError(row,error);};
   const here=p=>!levelId||!p.level||p.level===levelId||rows.some(r=>r.target_id===p.id&&r.level===p.level&&r.payload?.level===levelId),position=(points,id)=>points?.get?points.get(id):points?.[id];
   function target(kind,id,published=null,isNew=false){const key=kind+':'+id;if(!all.has(key))all.set(key,{key,kind,id,isNew,published,effective:copy(published)||{removed:false},proposed:copy(published)||{removed:false},rows:[],changed:new Set(),contributors:[],missing:!published&&!isNew});return all.get(key);}
   for(const [kind,list,points] of [['marker',markers,publishedPositions],['label',Array.isArray(labels)?labels:labels.labels||[],publishedLabelPositions],['chip',trainers,null]])for(const p of list)if(here(p)){
    const kept=copy(p);if(kind==='marker'){const chip=trainers.find(t=>t.id===p.id);if(chip?.building!==undefined)kept.building=chip.building;}const at=position(points,p.id);if(kind!=='chip'){delete kept.x;delete kept.y;if(at)[kept.x,kept.y]=copy(at);}else{kept.name=kept.name||kept.building||'';kept.category=kept.category||'Class trainer';}target(kind,p.id,kept);
   }
-  const sorted=rows.map(row=>normalise(copy(row))).filter(Boolean).filter(r=>(!mapId||r.map===mapId)&&(!levelId||r.level===levelId||r.payload?.level===levelId)).slice().sort((a,b)=>Number(a.id)-Number(b.id));
+  const sorted=rows.map(row=>{try{return normalise(copy(row));}catch(error){fail(row,error);return null;}}).filter(Boolean).filter(r=>(!mapId||r.map===mapId)&&(!levelId||r.level===levelId||r.payload?.level===levelId)).slice().sort((a,b)=>Number(a.id)-Number(b.id));
   for(const row of sorted)if(row.kind==='new-marker')newKinds.set('community-'+row.id,['label','exit'].includes(row.payload?.noteType)?'label':'marker');
-  for(const row of sorted){
+  for(const row of sorted){try{
    if(!['new-marker','move-marker','move-label','edit-marker','edit-label'].includes(row.kind))continue;
    const id=row.kind==='new-marker'?'community-'+row.id:row.target_id;
-   let kind=row.kind.endsWith('label')?'label':newKinds.get(id)||'marker';if(kind==='marker'&&!all.has('marker:'+id)&&all.has('chip:'+id))kind='chip';
+   let kind=row.kind.endsWith('label')?'label':newKinds.get(id)||'marker';if(kind==='label'&&!all.has('label:'+id)&&all.has('marker:'+id))kind='marker';if(kind==='marker'&&!all.has('marker:'+id)&&all.has('chip:'+id))kind='chip';
    const from=row.payload?.from,base=Array.isArray(from)?{x:from[0],y:from[1]}:copy(from)||{};
    const t=target(kind,id,null,newKinds.has(id)&&row.kind==='new-marker'&&row.status!=='published'),r={...copy(row),fields:fieldsOf(row),base,conflictsWith:[]};
    t.rows.push(r);byRow.set(String(r.id),t);t.contributors.push({user_id:r.user_id,author_name:r.author_name,credit:r.credit===true,what:whatOf(r),status:r.status,rowId:r.id});
-  }
+  }catch(error){fail(row,error);}}
   for(const t of all.values()){
    const start=()=>({...copy(t.published),removed:false}),history=[],approvedHistory=[];let proposed=start(),effective=start();
-   for(const r of t.rows){
+   for(const r of t.rows){try{
     if(!['pending','approved'].includes(r.status))continue;
     r.conflictsWith=conflicts(r,proposed,history);if(r.status==='approved'&&!(r.fields.has('added')&&t.published)&&!conflicts(r,effective,approvedHistory).length){effective=applyTo(effective,r);approvedHistory.push(r);}if(r.conflictsWith.length)continue;
     // An unacknowledged addition never rebuilds a place already in the published file.
@@ -81,7 +81,7 @@
     proposed=applyTo(proposed,r);history.push(r);
     if(includePending)effective=copy(proposed);
     for(const f of r.fields)t.changed.add(f);
-   }
+   }catch(error){fail(r,error);}}
    t.effective=effective;t.proposed=proposed;
   }
   return {get:key=>all.get(key)||null,targets:()=>[...all.values()].filter(t=>t.rows.some(r=>['pending','approved'].includes(r.status))),forRow:id=>byRow.get(String(id))||null};

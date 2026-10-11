@@ -662,7 +662,7 @@ async function loadMap(id,url=new URL(location.href),push=false,reviewToken=null
   applyLocation(url);ownView=false;updateZoom();if(keepEditing)enterEdit();loading=false;document.body.dataset.ready='true';syncUrl();
   window.dispatchEvent(new CustomEvent('atlas:loaded'));
   if(!requested&&id)status('Unknown map; showing '+config.title+'.');
- }catch(e){if(stale())return;loading=false;document.body.dataset.ready=map?'true':'false';status('The atlas could not load. '+e.message,true);if(map)syncUrl();}
+ }catch(e){if(stale())return;loading=false;document.body.dataset.ready=map?'true':'false';if(reviewToken!==null)throw e;status('The atlas could not load. '+e.message,true);if(map)syncUrl();}
  finally{if(serial===loadSerial){if(reviewToken!==null&&stale()){loading=false;document.body.dataset.ready=map?'true':'false';}for(const p of pickers)p.busy(false);if(config)setPickerMap(config.id);}}
 }
 function updateZoom(){$('zoom-label').textContent=Math.round(2**(map.getZoom()-config.coordinateZoom)*100)+'% · '+config.title;$('zoom-in').disabled=map.getZoom()>=config.maxZoom;$('zoom-out').disabled=map.getZoom()<=map.getMinZoom()+.01;}
