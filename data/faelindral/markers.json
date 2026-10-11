@@ -380,15 +380,6 @@
   "note": "Notable NPC symbol on Maggot's Faelindral map. The map does not give the NPC's name."
  },
  {
-  "id": "vendors-traders-terrace",
-  "name": "Vendors — Trader's Terrace",
-  "category": "Vendor",
-  "x": 1520,
-  "y": 1268,
-  "approximate": true,
-  "note": "Bags and packs; cloth armour; adventurer gear; used weapons; used armour. Listed for this district on Maggot's map; individual stall positions are not marked."
- },
- {
   "id": "vendors-lower-tier",
   "name": "Vendors — Lower Tier",
   "category": "Vendor",
@@ -513,5 +504,120 @@
   "y": 942,
   "approximate": true,
   "note": "Named lift on Maggot's map. Upper landing unconfirmed; no view-switch arrow."
+ },
+ {
+  "id": "community-317",
+  "community": true,
+  "name": "Takalea Scaletender",
+  "category": "Quest",
+  "note": "Located next to the Tanner building.",
+  "x": 1379,
+  "y": 1183,
+  "wiki": "https://monstersandmemories.wiki/npcs/takalea-scaletender",
+  "wikiId": "npc-takalea-scaletender"
+ },
+ {
+  "id": "community-339",
+  "community": true,
+  "name": "An outfitter",
+  "category": "Vendor",
+  "note": "Take a left at the top of the ramp, first NPC.",
+  "x": 1402,
+  "y": 1346,
+  "vendor": "Adventuring supplies",
+  "wiki": "https://monstersandmemories.wiki/npcs/an-outfitter",
+  "wikiId": "npc-an-outfitter"
+ },
+ {
+  "id": "community-340",
+  "community": true,
+  "name": "A Cloth Armorer",
+  "category": "Vendor",
+  "note": "",
+  "x": 1397,
+  "y": 1300,
+  "vendor": "Cloth armorer",
+  "sells": [
+   "Armor"
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/npc-a-cloth-armorer"
+ },
+ {
+  "id": "community-341",
+  "community": true,
+  "name": "A bag merchant",
+  "category": "Vendor",
+  "note": "",
+  "x": 1427,
+  "y": 1266,
+  "vendor": "Bag merchant",
+  "wiki": "https://monstersandmemories.wiki/npcs/a-bag-merchant",
+  "wikiId": "npc-a-bag-merchant"
+ },
+ {
+  "id": "community-343",
+  "community": true,
+  "name": "Tree Picture",
+  "category": "Personal",
+  "note": "There are 2 trees here with merchants around them, could add another one to the right of the one of you already on traders terrace",
+  "x": 1567,
+  "y": 1286
+ },
+ {
+  "id": "community-344",
+  "community": true,
+  "name": "a used weapons dealer",
+  "category": "Vendor",
+  "note": "",
+  "x": 1551,
+  "y": 1274,
+  "vendor": "Used weapons dealer",
+  "wiki": "https://monstersandmemories.wiki/npcs/a-used-weapons-dealer"
+ },
+ {
+  "id": "community-345",
+  "community": true,
+  "name": "a used armor dealer",
+  "category": "Vendor",
+  "note": "",
+  "x": 1596,
+  "y": 1278,
+  "vendor": "Used armor trader",
+  "wiki": "https://monstersandmemories.wiki/npcs/npc-used-armor-trader"
+ },
+ {
+  "id": "community-346",
+  "community": true,
+  "name": "a scrap dealer",
+  "category": "Vendor",
+  "note": "directly across from the lift",
+  "x": 1108,
+  "y": 2089,
+  "vendor": "Scrap dealer",
+  "wiki": "https://monstersandmemories.wiki/npcs/npc-a-scrap-dealer"
+ },
+ {
+  "id": "community-347",
+  "community": true,
+  "name": "Delloreli the Butcher",
+  "category": "Vendor",
+  "note": "across from the ramp up to the bank",
+  "x": 1190,
+  "y": 2135,
+  "vendor": "Butcher",
+  "wiki": "https://monstersandmemories.wiki/npcs/delloreli-the-butcher",
+  "wikiId": "npc-delloreli-the-butcher"
+ },
+ {
+  "id": "community-348",
+  "community": true,
+  "name": "Drogo the Grocer",
+  "category": "Vendor",
+  "note": "next to butcher",
+  "x": 1180,
+  "y": 2204,
+  "vendor": "Grocer",
+  "wiki": "https://monstersandmemories.wiki/npcs/drogo-the-grocer",
+  "wikiId": "npc-drogo-the-grocer"
  }
 ]

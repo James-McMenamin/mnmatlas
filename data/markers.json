@@ -1040,5 +1040,104 @@
     "y": 1484,
     "wiki": "https://monstersandmemories.wiki/npcs/sproggets-bedsprings",
     "wikiId": "npc-sproggets-bedsprings"
+  },
+  {
+    "id": "community-243",
+    "community": true,
+    "name": "Snar the Egg Collector (level 8)",
+    "category": "Named mob",
+    "note": "",
+    "x": 2340,
+    "y": 1005,
+    "wiki": "https://monstersandmemories.wiki/npcs/snar-the-egg-collector",
+    "wikiId": "npc-snar-the-egg-collector"
+  },
+  {
+    "id": "community-250",
+    "community": true,
+    "name": "Milham the Mad",
+    "category": "Quest",
+    "note": "",
+    "x": 834,
+    "y": 1227,
+    "wiki": "https://monstersandmemories.wiki/npcs/milham-the-mad",
+    "wikiId": "npc-milham-the-mad"
+  },
+  {
+    "id": "community-251",
+    "community": true,
+    "name": "Grubbfist (level 9)",
+    "category": "Named mob",
+    "note": "There’s a cave; he’s at the camp farthest from the North Gate.",
+    "x": 1691,
+    "y": 710,
+    "wiki": "https://monstersandmemories.wiki/npcs/grubbfist",
+    "wikiId": "npc-grubbfist"
+  },
+  {
+    "id": "community-252",
+    "community": true,
+    "name": "Noel Klares (level 3)",
+    "category": "Quest",
+    "note": "Top floor, on the roof",
+    "x": 829,
+    "y": 1206,
+    "wiki": "https://monstersandmemories.wiki/npcs/noel-klares",
+    "wikiId": "npc-noel-klares"
+  },
+  {
+    "id": "community-312",
+    "community": true,
+    "name": "Calaada Acaciathorn",
+    "category": "Quest",
+    "note": "Top Floor around back",
+    "x": 1613,
+    "y": 1533,
+    "wiki": "https://monstersandmemories.wiki/npcs/calaada-acaciathorn",
+    "wikiId": "npc-calaada-acaciathorn"
+  },
+  {
+    "id": "community-321",
+    "community": true,
+    "name": "Harbormaster Daoud",
+    "category": "Quest",
+    "note": "He stands here (at night)",
+    "x": 1627,
+    "y": 1905,
+    "wiki": "https://monstersandmemories.wiki/npcs/harbormaster-daoud",
+    "wikiId": "npc-harbormaster-daoud"
+  },
+  {
+    "id": "community-322",
+    "community": true,
+    "name": "Elrind Steele",
+    "category": "Quest",
+    "note": "You can get to the library through a window on the ramparts just south of the tower",
+    "x": 790,
+    "y": 1794,
+    "wiki": "https://monstersandmemories.wiki/npcs/elrind-steele",
+    "wikiId": "npc-elrind-steele"
+  },
+  {
+    "id": "community-323",
+    "community": true,
+    "name": "Jiselle Heyley",
+    "category": "Quest",
+    "note": "Upstairs in the room with Dalinder",
+    "x": 835,
+    "y": 1269,
+    "wiki": "https://monstersandmemories.wiki/npcs/jiselle-heyley",
+    "wikiId": "npc-jiselle-heyley"
+  },
+  {
+    "id": "community-324",
+    "community": true,
+    "name": "Assistant Researcher Farland",
+    "category": "Quest",
+    "note": "",
+    "x": 546,
+    "y": 1113,
+    "wiki": "https://monstersandmemories.wiki/npcs/assistant-researcher-farland",
+    "wikiId": "npc-assistant-researcher-farland"
   }
 ]

@@ -52,16 +52,6 @@
   "minZoom": 3
  },
  {
-  "id": "skeletons-wolves-4-6",
-  "name": "Skeletons and rabid wolves (levels 4–6)",
-  "category": "Mob camp",
-  "x": 2842,
-  "y": 2818,
-  "approximate": true,
-  "note": "",
-  "minZoom": 3
- },
- {
   "id": "orcs-3-11-1",
   "name": "Fellstone orcs (levels 3–11)",
   "category": "Mob camp",
@@ -103,13 +93,14 @@
  },
  {
   "id": "wolves-cave",
-  "name": "Wolves (levels 1–10)",
+  "name": "Beguiled wolves",
   "category": "Mob camp",
   "x": 533,
   "y": 3208,
   "approximate": true,
   "note": "",
-  "minZoom": 3
+  "minZoom": 3,
+  "community": true
  },
  {
   "id": "beguiled-alpha-wolf",
@@ -354,5 +345,82 @@
   "x": 4146,
   "y": 3377,
   "note": "Leads to Blacktide Bay."
+ },
+ {
+  "id": "community-240",
+  "community": true,
+  "name": "Rotmuzzle (level 6)",
+  "category": "Named mob",
+  "note": "Spawns in the ruins with the skeletons, at the bottom of the hill leading up to the orc area.",
+  "x": 3057,
+  "y": 3433,
+  "wiki": "https://monstersandmemories.wiki/npcs/rotmuzzle",
+  "wikiId": "npc-rotmuzzle"
+ },
+ {
+  "id": "community-241",
+  "community": true,
+  "name": "Wasp Hive Protector (level 3)",
+  "category": "Named mob",
+  "note": "Wasp Hive Protector can spawn in the ruins with the \"a wasp worker\" serving as its placeholder.",
+  "x": 2211,
+  "y": 3008,
+  "wiki": "https://monstersandmemories.wiki/npcs/wasp-hive-protector",
+  "wikiId": "npc-wasp-hive-protector"
+ },
+ {
+  "id": "community-242",
+  "community": true,
+  "name": "Scout Grimgaze (level 4 or 5)",
+  "category": "Named mob",
+  "note": "Scout Grimgaze spawns in either tent spawn location with the Orc Scouts and Orc Warriors serving as its placeholder.",
+  "x": 3304,
+  "y": 1390,
+  "wiki": "https://monstersandmemories.wiki/npcs/scout-grimgaze",
+  "wikiId": "npc-scout-grimgaze"
+ },
+ {
+  "id": "community-311",
+  "community": true,
+  "name": "Watcher Aquafis",
+  "category": "Notable NPC",
+  "note": "Back of the cave",
+  "x": 4095,
+  "y": 1794,
+  "wiki": "https://monstersandmemories.wiki/npcs/watcher-aquafis",
+  "wikiId": "npc-watcher-aquafis"
+ },
+ {
+  "id": "community-314",
+  "community": true,
+  "name": "Skeletons (levels 4–6)",
+  "category": "Mob camp",
+  "note": "Approximately 8 skeletons, good camp spot after exiting bridge",
+  "x": 3073,
+  "y": 2757,
+  "wiki": "https://monstersandmemories.wiki/npcs/a-skeleton",
+  "wikiId": "npc-a-skeleton"
+ },
+ {
+  "id": "community-315",
+  "community": true,
+  "name": "Skeletons (levels 7-10)",
+  "category": "Mob camp",
+  "note": "",
+  "x": 3454,
+  "y": 2844,
+  "wiki": "https://monstersandmemories.wiki/npcs/an-old-elven-skeleton",
+  "wikiId": "npc-an-old-elven-skeleton"
+ },
+ {
+  "id": "community-320",
+  "community": true,
+  "name": "Polietta Two-tone (level 10)",
+  "category": "Quest",
+  "note": "",
+  "x": 1634,
+  "y": 1590,
+  "wiki": "https://monstersandmemories.wiki/npcs/polietta-two-tone",
+  "wikiId": "npc-polietta-two-tone"
  }
 ]

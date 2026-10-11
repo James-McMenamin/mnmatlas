@@ -374,5 +374,27 @@
   "note": "At the giants’ fire near the road to the Vale of Zintar.",
   "wiki": "https://monstersandmemories.wiki/npcs/brukk-goldgut",
   "wikiId": "npc-brukk-goldgut"
+ },
+ {
+  "id": "community-308",
+  "community": true,
+  "name": "Captain Hale",
+  "category": "Quest",
+  "note": "At the docks of Penshaw. Hale is in the last ship, farthest out from the lifts.",
+  "x": 1896,
+  "y": 3232,
+  "wiki": "https://monstersandmemories.wiki/npcs/captain-hale",
+  "wikiId": "npc-captain-hale"
+ },
+ {
+  "id": "community-309",
+  "community": true,
+  "name": "Captain Hale's Crates",
+  "category": "Quest",
+  "note": "Watch out for sharks.",
+  "x": 1186,
+  "y": 3152,
+  "wiki": "https://monstersandmemories.wiki/npcs/captain-hale",
+  "wikiId": "npc-captain-hale"
  }
 ]

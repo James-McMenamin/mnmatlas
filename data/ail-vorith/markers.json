@@ -543,9 +543,9 @@
     "community": true,
     "name": "Zarlya Vael'xirith",
     "category": "Class trainer",
-    "note": "Ranger",
-    "x": 3404,
-    "y": 2709,
+    "note": "",
+    "x": 3384,
+    "y": 2707,
     "classes": [
       "Ranger"
     ]
@@ -636,11 +636,11 @@
   {
     "id": "community-45",
     "community": true,
-    "name": "Vael'xirith",
+    "name": "High Commander Ral Vael'xirith",
     "category": "Notable NPC",
     "note": "",
-    "x": 3412,
-    "y": 2771
+    "x": 3438,
+    "y": 2784
   },
   {
     "id": "community-73",
@@ -1019,5 +1019,14 @@
     "x": 3272,
     "y": 2974,
     "trade": "Carpentry / Woodworking"
+  },
+  {
+    "id": "community-307",
+    "community": true,
+    "name": "Glaeron Kes'tel",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 3426,
+    "y": 2762
   }
 ]

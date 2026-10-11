@@ -89,6 +89,14 @@
     {
       "name": "satoukurotama",
       "what": "added"
+    },
+    {
+      "name": "darkhayn",
+      "what": "edited"
+    },
+    {
+      "name": "darkhayn",
+      "what": "moved"
     }
   ],
   "marker:community-46": [
@@ -165,6 +173,14 @@
     {
       "name": "satoukurotama",
       "what": "added"
+    },
+    {
+      "name": "darkhayn",
+      "what": "moved"
+    },
+    {
+      "name": null,
+      "what": "edited"
     }
   ],
   "marker:community-77": [
@@ -442,6 +458,12 @@
     }
   ],
   "marker:community-303": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-307": [
     {
       "name": "darkhayn",
       "what": "added"

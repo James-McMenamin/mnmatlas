@@ -22,5 +22,59 @@
       "name": ".sethuir",
       "what": "added"
     }
+  ],
+  "marker:community-240": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:community-241": [
+    {
+      "name": "itodd",
+      "what": "added"
+    }
+  ],
+  "marker:community-242": [
+    {
+      "name": "itodd",
+      "what": "added"
+    }
+  ],
+  "marker:community-311": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:skeletons-wolves-4-6": [
+    {
+      "name": "karnix91",
+      "what": "removed"
+    }
+  ],
+  "marker:community-314": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:community-315": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:community-320": [
+    {
+      "name": "doctorrobinson",
+      "what": "added"
+    }
+  ],
+  "marker:wolves-cave": [
+    {
+      "name": null,
+      "what": "edited"
+    }
   ]
 }
