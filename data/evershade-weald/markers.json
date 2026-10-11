@@ -537,5 +537,20 @@
   "x": 3010,
   "y": 3453,
   "wiki": "https://monstersandmemories.wiki/npcs/npc-a-rabid-wolf"
+ },
+ {
+  "id": "community-395",
+  "community": true,
+  "name": "Vorkuul Blighteye",
+  "category": "Named mob",
+  "note": "",
+  "x": 3159,
+  "y": 3217,
+  "levels": [
+   7,
+   7
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/vorkuul-blighteye",
+  "wikiId": "npc-vorkuul-blighteye"
  }
 ]

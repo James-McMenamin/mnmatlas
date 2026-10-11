@@ -410,7 +410,7 @@
     "category": "Class trainer",
     "x": 1010,
     "y": 1533,
-    "note": "BRD",
+    "note": "Bard Guild:\n\nClass Trainer:\nJalwa Noor\nJaimee Langris ( Quest Giver )\n\nVendors:\na composer - Bard Scrolls\nRaise Alyssum - Instrument Vendor",
     "classes": [
       "Bard"
     ],
@@ -530,12 +530,15 @@
     "id": "community-66",
     "community": true,
     "name": "Jalwa Noor",
-    "category": "Personal",
-    "note": "",
+    "category": "Class trainer",
+    "note": "Bard Trainer",
     "x": 1021,
     "y": 1534,
     "wiki": "https://monstersandmemories.wiki/npcs/jalwa-noor",
-    "wikiId": "npc-jalwa-noor"
+    "wikiId": "npc-jalwa-noor",
+    "classes": [
+      "Bard"
+    ]
   },
   {
     "id": "community-99",
@@ -887,28 +890,16 @@
     ]
   },
   {
-    "id": "community-184",
-    "community": true,
-    "name": "Tailor Darya",
-    "category": "Vendor",
-    "note": "",
-    "x": 1135,
-    "y": 1562,
-    "vendor": "Tailoring vendor",
-    "wiki": "https://monstersandmemories.wiki/npcs/tailor-darya",
-    "wikiId": "npc-tailor-darya"
-  },
-  {
     "id": "community-137",
     "community": true,
     "name": "Blacksmith Musafar",
-    "category": "Vendor",
+    "category": "Tradeskill",
     "note": "",
     "x": 1148,
     "y": 1552,
-    "vendor": "Blacksmithing vendor",
     "wiki": "https://monstersandmemories.wiki/npcs/blacksmith-musafar",
-    "wikiId": "npc-blacksmith-musafar"
+    "wikiId": "npc-blacksmith-musafar",
+    "trade": "Blacksmithing / Smelting"
   },
   {
     "id": "community-138",
@@ -1266,5 +1257,54 @@
     "y": 1127,
     "wiki": "https://monstersandmemories.wiki/npcs/hult-beetlewrangler",
     "wikiId": "npc-hult-beetlewrangler"
+  },
+  {
+    "id": "community-390",
+    "community": true,
+    "name": "Jamee Langris",
+    "category": "Notable NPC",
+    "note": "Jamee is located back stage in the Night Market stage.",
+    "x": 995,
+    "y": 1508,
+    "color": "#6a4a7a",
+    "wiki": "https://monstersandmemories.wiki/npcs/jamee-langris"
+  },
+  {
+    "id": "community-392",
+    "community": true,
+    "name": "a composer",
+    "category": "Class trainer",
+    "note": "Sells Bard spell scrolls.",
+    "x": 1004,
+    "y": 1536,
+    "classes": [
+      "Bard"
+    ],
+    "wiki": "https://monstersandmemories.miraheze.org/wiki/Rais_Alyssum"
+  },
+  {
+    "id": "community-393",
+    "community": true,
+    "name": "Rais Alyssum",
+    "category": "Vendor",
+    "note": "Sells Bard instruments.",
+    "x": 1001,
+    "y": 1531,
+    "vendor": "Instrument merchant",
+    "wiki": "https://monstersandmemories.miraheze.org/wiki/Rais_Alyssum"
+  },
+  {
+    "id": "community-398",
+    "community": true,
+    "name": "Noura the Tailor",
+    "category": "Class trainer",
+    "note": "",
+    "x": 1131,
+    "y": 1549,
+    "classes": [
+      "Archer"
+    ],
+    "wiki": "https://monstersandmemories.wiki/npcs/noura-the-tailor",
+    "wikiId": "npc-noura-the-tailor"
   }
 ]

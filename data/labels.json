@@ -439,7 +439,8 @@
       ],
       "building": "Bard guild",
       "x": 1010,
-      "y": 1533
+      "y": 1533,
+      "note": "Bard Guild:\n\nClass Trainer:\nJalwa Noor\nJaimee Langris ( Quest Giver )\n\nVendors:\na composer - Bard Scrolls\nRaise Alyssum - Instrument Vendor"
     },
     {
       "id": "class-3",

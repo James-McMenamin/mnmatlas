@@ -45,6 +45,10 @@
     {
       "name": "ocombe",
       "what": "added"
+    },
+    {
+      "name": "t3mpust",
+      "what": "edited"
     }
   ],
   "marker:wiki-34": [
@@ -61,6 +65,10 @@
     {
       "name": "ocombe",
       "what": "moved"
+    },
+    {
+      "name": "t3mpust",
+      "what": "edited"
     }
   ],
   "marker:community-99": [
@@ -227,6 +235,10 @@
     {
       "name": "orthok",
       "what": "added"
+    },
+    {
+      "name": null,
+      "what": "edited"
     }
   ],
   "marker:community-138": [
@@ -303,6 +315,14 @@
     {
       "name": null,
       "what": "moved"
+    },
+    {
+      "name": null,
+      "what": "moved"
+    },
+    {
+      "name": null,
+      "what": "removed"
     }
   ],
   "marker:community-190": [
@@ -533,6 +553,34 @@
     {
       "name": null,
       "what": "added"
+    }
+  ],
+  "marker:community-390": [
+    {
+      "name": "t3mpust",
+      "what": "added"
+    }
+  ],
+  "marker:community-392": [
+    {
+      "name": "t3mpust",
+      "what": "added"
+    }
+  ],
+  "marker:community-393": [
+    {
+      "name": "t3mpust",
+      "what": "added"
+    }
+  ],
+  "marker:community-398": [
+    {
+      "name": null,
+      "what": "added"
+    },
+    {
+      "name": null,
+      "what": "moved"
     }
   ]
 }
