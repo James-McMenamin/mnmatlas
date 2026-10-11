@@ -109,10 +109,13 @@ function wikiIdOf(value){
  return typeof value==='string'&&value.length<=160&&value.trim()===value&&!/[\u0000-\u001f\u007f<>]/.test(value)?value:null;
 }
 // Camp ranges also read the older level suffix without changing the marker.
-const levelsOk=v=>Array.isArray(v)&&v.length===2&&Number.isInteger(v[0])&&v[0]>=1&&v[0]<=99&&(v[1]===null||Number.isInteger(v[1])&&v[1]>=v[0]&&v[1]<=99);
+const levelsOk=(v,category)=>Array.isArray(v)&&v.length===2&&Number.isInteger(v[0])&&v[0]>=1&&v[0]<=99&&(v[1]===null||Number.isInteger(v[1])&&v[1]>=v[0]&&v[1]<=99)&&(category!=='Named mob'||v[0]===v[1]);
 function levelRange(value){const m=/^(?:levels?\s+)?(\d{1,2})\s*(?:([-–—])\s*(\d{1,2})|(\+))?$/i.exec(String(value??'').trim());if(!m)return null;const v=[Number(m[1]),m[4]?null:Number(m[3]||m[1])];return levelsOk(v)?v:null;}
 function campLevels(m){if(levelsOk(m?.levels))return m.levels;const v=/\(levels?\s+([^)]*)\)\s*$/i.exec(m?.name||'');return v?levelRange(v[1]):null;}
 const levelsText=v=>levelsOk(v)?'Levels '+v[0]+(v[1]===null?'+':v[1]===v[0]?'':'–'+v[1]):'';
+// Older named mobs keep their level suffix; an alternative level stays a range for display.
+function namedLevels(m){if(levelsOk(m?.levels,'Named mob'))return m.levels;const v=/\(levels?\s+([^)]*)\)\s*$/i.exec(m?.name||'');return v?levelRange(v[1].replace(/\s+or\s+/i,'–')):null;}
+const namedLevelText=m=>m.category==='Named mob'?levelsText(namedLevels(m)).replace(/^Levels /,'Level '):'';
 const mobsOk=v=>Array.isArray(v)&&v.length<=12&&v.every(m=>m&&typeof m==='object'&&!Array.isArray(m)&&Object.keys(m).every(k=>['name','wikiId','wiki'].includes(k))&&typeof m.name==='string'&&!!m.name.trim()&&m.name.length<=100&&typeof m.wikiId==='string'&&!!wikiIdOf(m.wikiId)&&typeof m.wiki==='string'&&!!wikiAddress(m.wiki))&&new Set(v.map(m=>m.wikiId)).size===v.length;
 // The id rides on the address field with the address it was picked for, so typing another address or clearing it drops the id.
 function setWikiPick(input,href,id){input.dataset.wikiUrl=wikiAddress(href)||'';input.dataset.wikiId=wikiIdOf(id)||'';}
@@ -165,7 +168,8 @@ function markerExtras(m){
  if(m.noteType!=='label')for(const k of ['travel','arrow','toMap','toPlace','toLevel','toMarker','direction','switchOnClick'])if(m[k]!==undefined&&m[k]!==null&&m[k]!=='')out[k]=m[k];
  if(m.noteType==='label'||m.noteType==='exit'){out.noteType=m.noteType;if(m.noteType==='exit'){if(m.arrow)out.arrow=m.arrow;if(m.toMap)out.toMap=m.toMap;}return out;}
  if(m.color)out.color=m.color;if(m.wiki){out.wiki=m.wiki;if(m.wikiId)out.wikiId=m.wikiId;}
- if(m.category==='Mob camp')for(const k of ['levels','mobs'])if(m[k]!=null)out[k]=structuredClone(m[k]);
+ if(['Mob camp','Named mob'].includes(m.category)&&m.levels!=null)out.levels=structuredClone(m.levels);
+ if(m.category==='Mob camp'&&m.mobs!=null)out.mobs=structuredClone(m.mobs);
  if(m.category==='Tradeskill'&&m.trade)out.trade=m.trade;
  if(m.category==='Class trainer'&&Array.isArray(m.classes)&&m.classes.length)out.classes=[...m.classes];
  if(m.category==='Vendor'){if(m.vendor)out.vendor=vendorKindNow(m.vendor);if(Array.isArray(m.sells)&&m.sells.length)out.sells=[...m.sells].sort((a,b)=>sellTypes.indexOf(a)-sellTypes.indexOf(b));}

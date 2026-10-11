@@ -70,7 +70,7 @@ window.atlasKeepStatus=ms=>{clearTimeout(statusTimer);$('status').hidden=false;s
 function locationOf(m){return map.unproject([m.x,m.y],config.coordinateZoom);}
 function pixelsOf(latlng){const p=map.project(latlng,config.coordinateZoom);return [Math.round(p.x),Math.round(p.y)];}
 function bounded(x,y,z=map.getZoom()){return Number.isFinite(x)&&Number.isFinite(y)&&Number.isFinite(z)&&x>=0&&y>=0&&x<=config.width&&y<=config.height&&z>=config.minZoom&&z<=config.maxZoom;}
-function valid(m){m=normaliseMarker(m);return m&&validLevel(m.level)&&(m.toMap===undefined||typeof m.toMap==='string'&&!!registry?.maps.some(c=>c.id===m.toMap))&&typeof m.id==='string'&&/^personal-[a-zA-Z0-9-]{1,80}$/.test(m.id)&&typeof m.name==='string'&&m.name.trim()&&m.name.length<=100&&typeof m.note==='string'&&m.note.length<=2000&&Object.hasOwn(categories,m.category)&&[undefined,'label','exit'].includes(m.noteType)&&(m.arrow===undefined||Object.hasOwn(exitArrows,m.arrow))&&(m.trade===undefined||Object.hasOwn(tradePaths,m.trade))&&(m.color===undefined||Object.values(pinColours).includes(m.color))&&(m.wiki===undefined||typeof m.wiki==='string'&&m.wiki.length<=300)&&(m.wikiId===undefined||!!wikiIdOf(m.wikiId))&&classesOk(m.classes)&&vendorKindOk(m.vendor)&&sellsOk(m.sells)&&(m.levels===undefined||m.category==='Mob camp'&&levelsOk(m.levels))&&(m.mobs===undefined||m.category==='Mob camp'&&mobsOk(m.mobs))&&Number.isFinite(m.x)&&m.x>=0&&m.x<=config.width&&Number.isFinite(m.y)&&m.y>=0&&m.y<=config.height;}
+function valid(m){m=normaliseMarker(m);return m&&validLevel(m.level)&&(m.toMap===undefined||typeof m.toMap==='string'&&!!registry?.maps.some(c=>c.id===m.toMap))&&typeof m.id==='string'&&/^personal-[a-zA-Z0-9-]{1,80}$/.test(m.id)&&typeof m.name==='string'&&m.name.trim()&&m.name.length<=100&&typeof m.note==='string'&&m.note.length<=2000&&Object.hasOwn(categories,m.category)&&[undefined,'label','exit'].includes(m.noteType)&&(m.arrow===undefined||Object.hasOwn(exitArrows,m.arrow))&&(m.trade===undefined||Object.hasOwn(tradePaths,m.trade))&&(m.color===undefined||Object.values(pinColours).includes(m.color))&&(m.wiki===undefined||typeof m.wiki==='string'&&m.wiki.length<=300)&&(m.wikiId===undefined||!!wikiIdOf(m.wikiId))&&classesOk(m.classes)&&vendorKindOk(m.vendor)&&sellsOk(m.sells)&&(m.levels===undefined||['Mob camp','Named mob'].includes(m.category)&&levelsOk(m.levels,m.category))&&(m.mobs===undefined||m.category==='Mob camp'&&mobsOk(m.mobs))&&Number.isFinite(m.x)&&m.x>=0&&m.x<=config.width&&Number.isFinite(m.y)&&m.y>=0&&m.y<=config.height;}
 function persist(next){try{localStorage.setItem(storageKey('notes'),JSON.stringify(next));personal=next;window.dispatchEvent(new CustomEvent('atlas:notes'));return true;}catch{status('Your browser could not save this change. Free some storage and try again.',true);return false;}}
 function download(data,name){const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=text('a','');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function allMarkers(){return [...originals,...(labelData.trainers||[]).filter(t=>!originals.some(m=>m.id===t.id)).map(t=>({...t,name:t.name||t.building||'Class trainers',note:t.note||'',category:'Class trainer'})),...personal];}
@@ -81,15 +81,15 @@ const squash=v=>String(v).toLocaleLowerCase().replace(/[^a-z]/g,'');
 // A vendor with a kind reads kind first ("Used weapons dealer"), like a trainer reads class first, unless its name
 // already is just that kind ("A bag merchant", "Butchers").
 const vendorNamed=m=>{const kind=vendorKindNow(m.vendor),bare=String(m.name).toLowerCase().replace(/[^a-z ]+/g,' ').trim().replace(/^(a|an|the) /,'').replace(/s$/,''),forms=vendorKinds[vendorGroupOf(kind)]?.[kind]||[];return squash(bare)===squash(kind)||forms.some(f=>squash(f)===squash(bare));};
-function markerTitle(m){if(m.category==='Mob camp')return campLevels(m)?titleLevel(m.name).name:m.name;const kind=vendorKindNow(m.vendor);if(m.category==='Vendor'&&kind&&!vendorNamed(m))return kind;
+function markerTitle(m){if(['Mob camp','Named mob'].includes(m.category))return (m.category==='Mob camp'?campLevels(m):namedLevels(m))?titleLevel(m.name).name:m.name;const kind=vendorKindNow(m.vendor);if(m.category==='Vendor'&&kind&&!vendorNamed(m))return kind;
  // A tradeskill trainer reads like a vendor: the trade on top, the NPC's own name under it (unless the name already says the trade).
  if(m.category==='Tradeskill'&&typeof m.trade==='string'&&m.trade&&!squash(m.name).includes(squash(m.trade).slice(0,6)))return m.trade;const c=classesOf(m);if(!c.length||c.every(x=>squash(m.name).includes(squash(x))))return m.name;return c.join(' / ')+(c.length>1?' trainers':' trainer');}
 // The name under a class-first (or kind-first) title; nothing when the name is only class abbreviations ("NEC").
 function markerSubtitle(m){
- if(m.category==='Mob camp')return '';return markerTitle(m)!==m.name&&!/^[A-Z]{2,4}(\s*[\/·,]\s*[A-Z]{2,4})*$/.test(m.name.trim())?m.name:'';}
+ if(['Mob camp','Named mob'].includes(m.category))return '';return markerTitle(m)!==m.name&&!/^[A-Z]{2,4}(\s*[\/·,]\s*[A-Z]{2,4})*$/.test(m.name.trim())?m.name:'';}
 // A vendor's kind, or the kind its name says ("A bag merchant"), for search and the vendor filter.
 const vendorKindFor=m=>m.category==='Vendor'?vendorKindNow(m.vendor)||vendorKindNamed(m.name):'';
-const markerText=m=>(m.name+' '+m.category+' '+m.note+' '+classesOf(m).join(' ')+' '+vendorWords(vendorKindFor(m))+' '+(m.category==='Vendor'&&Array.isArray(m.sells)?m.sells.join(' '):'')+(m.category==='Mob camp'&&Array.isArray(m.mobs)?' '+m.mobs.map(x=>x.name).join(' '):'')).toLocaleLowerCase();
+const markerText=m=>(m.name+' '+m.category+' '+namedLevelText(m)+' '+m.note+' '+classesOf(m).join(' ')+' '+vendorWords(vendorKindFor(m))+' '+(m.category==='Vendor'&&Array.isArray(m.sells)?m.sells.join(' '):'')+(m.category==='Mob camp'&&Array.isArray(m.mobs)?' '+m.mobs.map(x=>x.name).join(' '):'')).toLocaleLowerCase();
 // Vendors can be narrowed to a group, kind or Sells tag ("s:Recipes"); '' shows them all.
 let vendorGroup='';
 const vendorShown=m=>{if(!vendorGroup||m.category!=='Vendor')return true;if(vendorGroup.startsWith('s:'))return Array.isArray(m.sells)&&m.sells.includes(vendorGroup.slice(2));const kind=vendorKindFor(m);return vendorGroup.startsWith('g:')?vendorGroupOf(kind)===vendorGroup.slice(2):kind===vendorGroup.slice(2);};
@@ -111,7 +111,7 @@ function markerSells(m){return m.category!=='Vendor'?'':m.vendor==='Shady mercha
 function markerHoverCard(m,state){
  const n=text('div','','marker-hover'),who=markerSubtitle(m),detail=m.category==='Tradeskill'?m.trade:m.category==='Class trainer'?classesOf(m).join(' / '):markerSells(m);
  n.append(text('div',noteKind(m)+(m.id.startsWith('personal-')?' · Your note':''),'tag'),text('h3',markerTitle(m)));if(who)n.append(text('div',who,'marker-who'));if(detail)n.append(text('div',detail,'hover-detail'));
- if(m.category==='Mob camp')n.append(campCard(m));
+ if(m.category==='Mob camp')n.append(campCard(m));else if(namedLevelText(m))n.append(text('p',namedLevelText(m),'hover-detail'));
  const first=String(m.note||'').split(/\r?\n/,1)[0].trim();if(first)n.append(text('p',first.length>120?first.slice(0,119).trimEnd()+'…':first,'hover-note'));
  const rows=state?.rows||[],waiting=rows.filter(r=>r.status==='pending'),approved=rows.filter(r=>r.status==='approved'),rejected=rows.filter(r=>r.status==='rejected'),words=(count,end)=>count+' change'+(count===1?'':'s')+' '+end;
  const line=[waiting.length&&words(waiting.length,'waiting'),approved.length&&words(approved.length,'approved, not live yet'),rejected.length&&words(rejected.length,'set aside')].filter(Boolean).join(' · '),next=state?.proposed?.name;
@@ -177,7 +177,7 @@ function titleLevel(t){const found=/^(.*?)\s*\((levels?\s[^)]*)\)\s*$/i.exec(t);
 function npcCard(c,m){
  // The tag line keeps what the rows below do not already say ("Named · Human · Wizard" over a Human · Wizard row).
  // A named mob's kind already says Named; our title's level ("(levels 51–53)") leads the line instead of sitting in the name.
- const shown=[c.race,c.class,/named/i.test(noteKind(m))?'named':''].filter(Boolean).map(v=>v.toLowerCase()),level=titleLevel(markerTitle(m)).level;
+ const shown=[c.race,c.class,/named/i.test(noteKind(m))?'named':''].filter(Boolean).map(v=>v.toLowerCase()),level=namedLevelText(m)||titleLevel(markerTitle(m)).level;
  const tags=[level&&level[0].toUpperCase()+level.slice(1),...String(c.tags||'').split(' · ').filter(t=>t&&!shown.includes(t.toLowerCase()))].filter(Boolean).join(' · ');
  // One band across the popup holds everything from the wiki: the tag line and facts, then loot and the wiki's own words
  // as sections under small headings, then its credit.
@@ -209,7 +209,7 @@ function popup(m){const n=text('div',''),card=npcCardFor(m),title=text('h3',card
  // A shady merchant buys anything and sells back whatever players sold it, so its stock has no fixed types.
  {const sells=markerSells(m);if(sells)n.append(text('p',sells,'marker-sells'));}
  // With a wiki card the wiki comes first; the atlas's own note and actions follow.
- if(m.category==='Mob camp')n.append(campCard(m));else if(card)n.append(npcCard(card,m));if(m.note){if(card){const ours=text('section','','npc-section npc-ours');ours.append(text('h4','Atlas note','npc-heading'),text('p',m.note));n.append(ours);}else n.append(text('p',m.note));}const wiki=!card&&wikiButton(m);if(wiki)n.append(wiki);n.append(copyButton(m));if(m.toLevel){const floor=config.levels?.find(l=>l.id===m.toLevel);n.append(button((m.direction==='up'?'Go up to ':'Go down to ')+(floor?.title||floor?.name||m.toLevel),()=>switchAt(m),'level-link'));}
+ if(m.category==='Mob camp')n.append(campCard(m));else if(card)n.append(npcCard(card,m));else if(namedLevelText(m))n.append(text('p',namedLevelText(m),'npc-tags'));if(m.note){if(card){const ours=text('section','','npc-section npc-ours');ours.append(text('h4','Atlas note','npc-heading'),text('p',m.note));n.append(ours);}else n.append(text('p',m.note));}const wiki=!card&&wikiButton(m);if(wiki)n.append(wiki);n.append(copyButton(m));if(m.toLevel){const floor=config.levels?.find(l=>l.id===m.toLevel);n.append(button((m.direction==='up'?'Go up to ':'Go down to ')+(floor?.title||floor?.name||m.toLevel),()=>switchAt(m),'level-link'));}
  // A lift to a linked map (Evershade Weald and Faelindral) goes to the matching lift there.
  {const to=!m.noteType&&m.toPlace&&registry.maps.find(c=>c.id===m.toMap);if(to)n.append(button((m.direction==='up'?'Go up to ':m.direction==='down'?'Go down to ':'Go to ')+to.title,()=>{const url=mapLink(to.id);url.searchParams.set('place',m.toPlace);goToMap(to.id,url);},'level-link'));}
 const leads=m.noteType==='exit'&&!alignmentMode&&registry.maps.find(c=>c.id===m.toMap);if(leads)n.append(button('Go to '+leads.title,()=>openMap(leads.id),'level-link'));
@@ -268,7 +268,7 @@ function resultRow(title,detail,onClick,symbolOf,cls='place'){
  if(symbolOf){const glyph=text('span','','symbol');glyph.append(markerSymbol(symbolOf));b.append(glyph);}
  label.append(text('strong',title),text('small',detail));b.append(label);b.onclick=onClick;return b;
 }
-const markerDetail=(m,...more)=>[noteKind(m),markerSubtitle(m),...more].filter(Boolean).join(' · ');
+const markerDetail=(m,...more)=>[noteKind(m),namedLevelText(m),markerSubtitle(m),...more].filter(Boolean).join(' · ');
 function drawMarkers(){
  {const box=$('vendor-filter');if(box){const has=allMarkers().some(m=>m.category==='Vendor'&&atLevel(m));box.hidden=!has||!enabled.has('Vendor');if(box.hidden&&vendorGroup)setVendorGroup('');}}
  for(const pin of pins.values())pin.remove();pins.clear();const list=$('results');list.replaceChildren();

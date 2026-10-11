@@ -557,6 +557,24 @@ console.log('Client checks passed: accounts, notes, ledgers, shared fields, revi
  console.log('Camp field checks passed: plain names, wiki multi-picks, chips, range guesses, manual ranges, removals and type changes.');
 }
 
+// Named mobs keep one fixed level, including wiki picks and older suggestion names.
+{
+ const e=environment({supabaseUrl:'http://fixture',supabaseKey:'test'},'atlas.example',{access_token:'fixture-token',user:{id:'named-user'}});await settle();const c=e.context;c.categoryChoices=()=>['Personal','Named mob','Mob camp','Bank'];
+ const row={id:'npc-captain',name:'Captain',type:'npc',role:'named',level:'8–10',url:'https://monstersandmemories.wiki/npcs/captain'};c.fetch=async()=>({ok:true,json:async()=>({results:[row]})});
+ const form=c.window.atlasFields.build(new Node('div'),{value:{name:'Captain',category:'Named mob'},finder:c.testWikiFinder}),r=form.controls.levels;
+ assert(!form.boxes.levels.hidden&&form.boxes.mobs.hidden);assert.equal(r.caption.textContent,'Level');assert.equal(r.querySelectorAll('input').length,1);assert.equal(r.firstChild,r.fixed);assert.equal(r.fixed.type,'number');assert.equal(r.fixed.min,1);assert.equal(r.fixed.max,99);assert.equal(form.controls.name['aria-autocomplete'],'list');
+ const pick=async()=>{form.controls.name.value='capt';form.controls.name.fire('input');await e.tick(600);await settle();form.root.querySelector('.wiki-result').onclick();};
+ await pick();assert.equal(r.fixed.value,'8');assert.deepEqual(plain2c(form.read().levels),[8,8]);assert.equal(form.read().wikiId,row.id);
+ r.fixed.value='12';r.fixed.fire('input');await pick();assert.deepEqual(plain2c(form.read().levels),[12,12],'Wiki picks keep a filled level');
+ for(const v of ['0','100','8.5']){r.fixed.value=v;assert.throws(()=>form.read(),/level from 1 to 99/);}form.fill({name:'Captain',category:'Named mob',levels:[12,12]});r.fixed.value='';assert.equal(form.read().levels,null);
+ form.fill({name:'Captain (level 8)',category:'Named mob'});assert.equal(r.fixed.value,'8');assert.equal(form.read().name,'Captain (level 8)');assert(!Object.hasOwn(form.read(),'levels'),'A published name stays a display guess');
+ form.fill({name:'Captain (level 4 or 5)',category:'Named mob'});assert.equal(r.fixed.value,'','Alternative levels never fill a fixed level');form.fill({name:'Captain',category:'Named mob',levels:[9,9]});assert.equal(r.fixed.value,'9');
+ form.controls.category.value='Mob camp';form.controls.category.fire('change');assert.equal(r.querySelectorAll('input').length,2);assert(!form.boxes.mobs.hidden);form.controls.category.value='Bank';form.controls.category.fire('change');assert(form.boxes.levels.hidden&&r.fixed.disabled);assert.equal(form.read().levels,null);form.dispose();
+ const fresh=c.window.atlasFields.build(new Node('div'),{newMarker:true,value:{name:'Captain (level 8)',category:'Named mob'}});assert.equal(fresh.controls.levels.fixed.value,'8');assert.deepEqual(plain2c(fresh.read().levels),[8,8]);assert.equal(fresh.read().name,'Captain (level 8)');fresh.dispose();
+ const dynamic=c.window.atlasFields.build(new Node('div'),{value:{name:'',category:'Personal'}});dynamic.attachFinder(c.testWikiFinder,()=>{dynamic.controls.category.value='Named mob';dynamic.controls.category.fire('change');});dynamic.controls.name.value='capt';dynamic.controls.name.fire('input');await e.tick(600);await settle();dynamic.root.querySelector('.wiki-result').onclick();assert.deepEqual(plain2c(dynamic.read().levels),[8,8],'A wiki pick may set the type before filling its level');dynamic.dispose();
+ console.log('Named mob field checks passed: one number, wiki pre-fill, manual levels, legacy names, validation and type changes.');
+}
+
 // Review cards show readable was/now camp fields; additions have no previous-field diff.
 {
  const e=environment({supabaseUrl:'http://fixture',supabaseKey:'test'},'localhost',{user:{id:'reviewer',admin:true}});await settle();const c=e.context;c.categoryChoices=()=>['Personal','Mob camp','Bank'];c.categories['Mob camp']=['M','#876036'];
@@ -565,6 +583,16 @@ console.log('Client checks passed: accounts, notes, ledgers, shared fields, revi
  const diffs=c.$('review-card').querySelectorAll('.desk-diff').map(x=>x['aria-label']);assert(diffs.some(x=>x.includes('Levels 11\u201315')&&x.includes('Levels 20+')));assert(diffs.some(x=>x.includes('Goblin')&&x.includes('Shaman')));assert(!diffs.some(x=>x.includes('[object Object]')));
  await selectRow(e,1101);assert.equal(c.$('review-card').querySelectorAll('.desk-diff').length,0);console.log('Camp review checks passed: readable ranges, mob names and no was/now on additions.');
 }
+{
+ const e=environment({supabaseUrl:'http://fixture',supabaseKey:'test'},'localhost',{user:{id:'reviewer',admin:true}});await settle();const c=e.context;c.categoryChoices=()=>['Personal','Named mob'];c.categories['Named mob']=['N','#876036'];
+ const named={id:'captain',name:'Captain',category:'Named mob',note:'',levels:[8,8],x:10,y:20,level:'lower'};c.originals.push(named);c.publishedPositions.set(named.id,[10,20]);
+ e.suggestions.push({id:1110,map:'test-map',level:'lower',kind:'edit-marker',target_id:named.id,status:'pending',payload:{name:named.name,levels:[9,9],from:named}},{id:1111,map:'test-map',level:'lower',kind:'new-marker',status:'pending',payload:{name:'Captain (level 8)',category:'Named mob',x:20,y:30}});await openDesk(e);await selectRow(e,1110);
+ assert(c.$('review-card').querySelectorAll('.desk-diff').some(x=>x['aria-label']==='Was Level 8 → now Level 9'));await selectRow(e,1111);assert.equal(c.$('review-card').querySelectorAll('.desk-diff').length,0);assert.equal(c.$('review-levels').querySelector('input').value,'8');await cardAction(e,'Save edits');assert.deepEqual(plain2c(e.suggestions.find(r=>r.id===1111).payload.levels),[8,8]);assert.equal(e.suggestions.find(r=>r.id===1111).payload.name,'Captain (level 8)');
+ console.log('Named mob review checks passed: fixed-level diffs, suffix pre-fill, unchanged names and no diff on additions.');
+}
+await case2c('named-mob-change-suggestion',async()=>{
+ const e=await signed2c(),c=e.context;c.categoryChoices=()=>['Personal','Named mob'];c.categories['Named mob']=['N','#876036'];const own={id:1120,user_id:'mine',status:'pending',kind:'new-marker',map:'test-map',level:'lower',payload:{name:'Captain (level 8)',category:'Named mob',x:10,y:20}};e.suggestions.push(own);await c.window.atlasNotices.refresh();const bell=e.bar.children.find(n=>n.className==='notices').children[0];bell.onclick();await settle();await mineTab(c.$('notices-panel'));await c.$('notices-panel').querySelectorAll('button').find(b=>b.textContent==='Change').onclick();await settle();assert.equal(c.$('own-levels').querySelector('input').value,'8');assert.equal(c.$('own-name').value,own.payload.name);await c.$('community-dialog').querySelectorAll('button').find(b=>b.textContent==='Save suggestion').onclick();await settle();assert.deepEqual(plain2c(own.payload.levels),[8,8]);assert.equal(own.payload.name,'Captain (level 8)');
+});
 
 // Every queue tab and map uses the same public rows and the worktree's map files.
 {

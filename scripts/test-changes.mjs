@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-const context=vm.createContext({});vm.runInContext(await readFile(new URL('../changes.js',import.meta.url),'utf8'),context);
+const context=vm.createContext({});vm.runInContext(await readFile(new URL('../wiki-links.js',import.meta.url),'utf8'),context);vm.runInContext(await readFile(new URL('../changes.js',import.meta.url),'utf8'),context);
 const {buildChanges,fieldsOf,diffWords,nextFrom}=context.atlasChanges,plain=v=>JSON.parse(JSON.stringify(v)),fields=r=>[...fieldsOf(r)].sort();
 const marker={id:'bank',name:'Bank',note:'By the gate',category:'Bank',x:90,y:90,level:'lower'},label={id:'hall',name:'Hall',kind:'building',x:80,y:80,level:'lower'},chip={id:'trainer',building:'Tutor',classes:['Monk'],x:5,y:6};
 const row=(id,kind,payload,extra={})=>({id,kind,payload,map:'bay',level:'lower',status:'approved',target_id:'bank',user_id:'u'+id,author_name:'Traveller '+id,credit:true,...extra});
@@ -103,4 +103,11 @@ console.log('Change ledger checks passed: published positions, composition, conf
  const fresh=row(704,'edit-marker',{name:camp.name,levels:[20,null],from:{name:camp.name,levels:null}});assert(context.atlasChanges.matchesFrom(fresh,{name:camp.name},'levels'));
  const switched=context.atlasChanges.applyTo(camp,row(705,'edit-marker',{name:camp.name,category:'Vendor',from:camp}));assert(!Object.hasOwn(switched,'mobs')&&!Object.hasOwn(switched,'levels'));
  console.log('Camp conflict checks passed: independent fields, stale levels, blank bases and changing type.');
+}
+{
+ const named={...marker,category:'Named mob',levels:[8,8]},a=row(710,'edit-marker',{name:named.name,levels:[9,9],from:named}),b=row(711,'edit-marker',{name:'Captain',from:named}),d=row(712,'edit-marker',{name:named.name,levels:[10,10],from:named});
+ const t=buildChanges({...fixture([]),markers:[named],rows:[a,b,d]}).forRow(710);assert.deepEqual(fields(a),['levels']);assert.deepEqual(plain(t.effective.levels),[9,9]);assert.equal(t.effective.name,'Captain');assert.deepEqual(plain(t.rows.map(r=>r.conflictsWith)),[[],[],[710]]);
+ const apply=p=>context.atlasChanges.applyTo(named,row(713,'edit-marker',{name:named.name,...p,from:named}));for(const levels of [[8,9],[8,null],[0,0],[100,100],[1.5,1.5],[8],'8'])assert.throws(()=>apply({levels}),/level from 1 to 99/);
+ assert(!Object.hasOwn(apply({category:'Bank'}),'levels'));assert(!Object.hasOwn(apply({levels:null}),'levels'));assert.deepEqual(plain(context.atlasChanges.applyTo({},row(714,'new-marker',{name:'Captain',category:'Named mob',levels:[99,99],x:10,y:20})).levels),[99,99]);
+ console.log('Named mob ledger checks passed: fixed levels, independent edits, conflicts, validation and clearing.');
 }

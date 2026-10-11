@@ -66,7 +66,7 @@ function validatePayload(row,c){
  }else if(typeof row.target_id!=='string'||!row.target_id)fail('Missing target for suggestion '+row.id+'.');
  // A marker edit may change the type too (set while reviewing): the same check as a new marker's type.
  if(row.kind==='edit-marker'&&p.category!==undefined&&(!supported.categories.includes(p.category)||p.trade!==undefined&&!supported.trades.includes(p.trade)))fail('Unsupported marker fields for suggestion '+row.id+'.');
- for(const k of ['levels','mobs'])if(p[k]!==undefined&&p[k]!==null){if(row.kind==='edit-label'||row.kind.startsWith('move-')||p.noteType==='label'||p.noteType==='exit'||(p.category??p.from?.category)!==undefined&&(p.category??p.from?.category)!=='Mob camp'||!(k==='levels'?levelsOk(p[k]):mobsOk(p[k])))fail('Unsupported '+k+' for suggestion '+row.id+'.');}
+ for(const k of ['levels','mobs'])if(p[k]!==undefined&&p[k]!==null){if(row.kind==='edit-label'||row.kind.startsWith('move-')||p.noteType==='label'||p.noteType==='exit'||(p.category??p.from?.category)!==undefined&&!(k==='levels'?['Mob camp','Named mob'].includes(p.category??p.from?.category):(p.category??p.from?.category)==='Mob camp')||!(k==='levels'?levelsOk(p[k],p.category??p.from?.category):mobsOk(p[k])))fail('Unsupported '+k+' for suggestion '+row.id+'.');}
  p.name=clean(p.name);if(p.note!==undefined)p.note=clean(p.note,true);
  if(p.from&&!Array.isArray(p.from))p.from={...p.from,name:clean(p.from.name),...(p.from.note!==undefined?{note:clean(p.from.note,true)}:{})};
  if(row.kind==='new-marker')point([p.x,p.y],c,row.id);else if(row.kind.startsWith('move-')){point(p.from,c,row.id);point(p.to,c,row.id);}else if(fieldsOf(row).has('position')){point([p.from.x,p.from.y],c,row.id);point([p.x,p.y],c,row.id);}
@@ -77,7 +77,7 @@ const original=new Map(),history=new Map();let batch=[],past=null,heldIds=new Se
 function before(path,m,row){const key=path+'#'+runKey(row);if(!original.has(key))original.set(key,structuredClone(m));return original.get(key);}
 const typeKeys=['trade','classes','vendor','sells'];
 function typeFields(m,p,id){
- if(p.category==='Mob camp')for(const k of ['levels','mobs'])if(p[k]!=null){if(!(k==='levels'?levelsOk(p[k]):mobsOk(p[k])))fail('Unsupported '+k+' for suggestion '+id+'.');m[k]=structuredClone(p[k]);}
+ for(const k of ['levels','mobs'])if(p[k]!=null&&(k==='levels'?['Mob camp','Named mob'].includes(p.category):p.category==='Mob camp')){if(!(k==='levels'?levelsOk(p[k],p.category):mobsOk(p[k])))fail('Unsupported '+k+' for suggestion '+id+'.');m[k]=structuredClone(p[k]);}
  if(p.trade&&p.category==='Tradeskill')m.trade=p.trade;
  if(p.category==='Class trainer'&&p.classes!==undefined){if(p.classes!==null&&!classesOk(p.classes))fail('Unsupported classes for suggestion '+id+'.');if(p.classes)m.classes=[...p.classes];}
  if(p.category==='Vendor'){if(p.vendor!==undefined){if(p.vendor!==null&&(typeof p.vendor!=='string'||!vendorKindOk(p.vendor)))fail('Unsupported vendor kind for suggestion '+id+'.');if(p.vendor)m.vendor=vendorKindNow(p.vendor);}
@@ -115,7 +115,7 @@ async function prepare(row){
  await validateExtra(row,p,c,m||chip||batch.find(r=>r.kind==='new-marker'&&r.map===row.map&&'community-'+r.id===row.target_id)?.payload);
  const category=p.category||p.from?.category||m?.category||(chip?'Class trainer':undefined);
  if(!label&&!row.kind.startsWith('move-')){
-  for(const k of ['levels','mobs'])if(p[k]!=null&&category!=='Mob camp')fail('Only a Mob camp keeps '+k+'.');
+  for(const k of ['levels','mobs'])if(p[k]!=null&&(!(k==='levels'?['Mob camp','Named mob'].includes(category):category==='Mob camp')||k==='levels'&&!levelsOk(p[k],category)))fail('Unsupported '+k+' for suggestion '+row.id+'.');
   if(!category&&p.classes!==undefined&&!classesOk(p.classes))fail('Unsupported classes for suggestion '+row.id+'.');
   if(p.wiki!==undefined||row.kind==='new-marker')p.wiki=wikiOf(p.wiki,row.id);
   if(p.wikiId!==undefined||row.kind==='new-marker')p.wikiId=wikiIdFrom(p,row.id);
@@ -183,7 +183,7 @@ async function applyRow(row){
   for(const k of ['color','level','arrow','toMap'])if(p[k]!==undefined&&p[k]!==null&&p[k]!==''&&(k==='color'&&!supported.colours.includes(p[k])||k==='level'&&!(c.levels||[]).some(l=>l.id===p[k])||k==='arrow'&&!supported.arrows.includes(p[k])||k==='toMap'&&!registry.maps.some(r=>r.id===p[k])))fail('Unsupported marker fields for suggestion '+row.id+'.');
   if(!conflicts(row,live,history.get(runKey(row))||[]).length&&superseded(row,live))return 'already superseded';
   if(!m){check(row,null,path);if(p.remove)return 'already removed';fail('Target missing for suggestion '+row.id+'.');}
-  for(const k of ['levels','mobs'])if(p[k]!=null&&category!=='Mob camp')fail('Only a Mob camp keeps '+k+'.');
+  for(const k of ['levels','mobs'])if(p[k]!=null&&(!(k==='levels'?['Mob camp','Named mob'].includes(category):category==='Mob camp')||k==='levels'&&!levelsOk(p[k],category)))fail('Unsupported '+k+' for suggestion '+row.id+'.');
   const next=structuredClone(m);
   if(p.remove){check(row,live,path);mrows.splice(mrows.indexOf(m),1);mf.changed=true;if(chip&&chip!==m){chips.splice(chips.indexOf(chip),1);lf.changed=true;}return label?'place name removed':'marker removed';}
   if(fields.has('name'))next.name=clean(p.name);
@@ -193,7 +193,7 @@ async function applyRow(row){
   if(typed){next.category=typed.category;for(const k of typeKeys)if(Object.hasOwn(typed,k))next[k]=typed[k];else delete next[k];}
   if(fields.has('wiki')){if(wiki){next.wiki=wiki;if(wikiId)next.wikiId=wikiId;else if(p.wikiId!==undefined||wiki!==m.wiki)delete next.wikiId;}else{delete next.wiki;delete next.wikiId;}}
   for(const k of editKeys.filter(k=>!['name','note'].includes(k)))if(fields.has(k)&&!(k==='building'&&chip&&chip!==m)){if(p[k]===null||p[k]==='')delete next[k];else next[k]=p[k];}
-  if(next.category!=='Mob camp'){delete next.levels;delete next.mobs;}
+  if(!['Mob camp','Named mob'].includes(next.category))delete next.levels;if(next.category!=='Mob camp')delete next.mobs;if(next.levels!=null&&!levelsOk(next.levels,next.category))fail('Unsupported levels for suggestion '+row.id+'.');
   // Retries after a successful push can find the desired values already on the map.
   const hits=conflicts(row,live,history.get(runKey(row))||[]);if(hits.length)fail('conflicts with #'+hits.join(', #'));
   if(JSON.stringify(next)===JSON.stringify(m)&&(!fields.has('building')||!chip||chip===m||chip.building===p.building))return 'already edited';

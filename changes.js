@@ -49,7 +49,8 @@
    else if(f==='wiki'){const changed=has(p,'wiki')&&p.wiki!==out.wiki;for(const k of ['wiki','wikiId'])if(has(p,k))out[k]=p[k];else if(k==='wikiId'&&changed)delete out[k];if(!out.wikiId)delete out.wikiId;if(!out.wiki){delete out.wiki;delete out.wikiId;}}
    else if(p[f]===null||p[f]==='')delete out[f];else out[f]=copy(p[f]);
   }
-  if(out.category!=='Mob camp'){delete out.levels;delete out.mobs;}
+  if(!['Mob camp','Named mob'].includes(out.category))delete out.levels;if(out.category!=='Mob camp')delete out.mobs;
+  if(out.category==='Named mob'&&out.levels!=null&&!levelsOk(out.levels,out.category))throw Error('Choose a level from 1 to 99.');
   if(fields.size&&!fields.has('removed'))out.community=true;
   return out;
  }

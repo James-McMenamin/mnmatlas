@@ -356,6 +356,19 @@ try{
   console.log('Camp publisher checks passed: range and mob validation, twelve picks, independent edits, holds, clearing, category changes and credits.');
  }
 
+ // Named mobs publish only fixed levels; older suffixes remain names until a form supplies the field.
+ {
+  const base={name:'Captain (level 8)',category:'Named mob',levels:[8,8],x:10,y:20};await reset([]);
+  const bad=[[8,9],[8,null],[0,0],[100,100],[8.5,8.5],[8],[],{},'8'].map(levels=>({levels}));bad.push({mobs:[{name:'Guard',wikiId:'npc-guard',wiki:'https://monstersandmemories.wiki/npcs/guard'}]},{noteType:'label'},{category:'Bank'});
+  approved=[R(1000,'new-marker',null,base),R(1001,'new-marker',null,{...base,levels:[1,1]}),R(1002,'new-marker',null,{...base,levels:[99,99]}),R(1003,'new-marker',null,{...base,levels:undefined}),...bad.map((p,i)=>R(1010+i,'new-marker',null,{...base,...p}))];let r=await run();assert.equal(r.code,0,r.output);let marks=await json('data/markers.json');assert.equal(marks.length,4);assert.deepEqual(marks.map(m=>m.levels),[[8,8],[1,1],[99,99],undefined]);assert(marks.every(m=>m.name===base.name));assert.equal((await json('.publish/held.json')).length,bad.length);
+  const from=marks[0];approved=[R(1030,'edit-marker',from.id,{name:from.name,levels:[9,9],from}),R(1031,'edit-marker',from.id,{name:'Captain',from}),R(1032,'edit-marker',from.id,{name:from.name,levels:[10,10],from})];r=await run();assert.equal(r.code,0,r.output);marks=await json('data/markers.json');assert.deepEqual(marks[0].levels,[9,9]);assert.equal(marks[0].name,'Captain');assert((await json('.publish/held.json')).some(x=>x.id===1032));
+  approved=[R(1033,'edit-marker',from.id,{name:'Captain',levels:[10,11],from:{name:'Captain',levels:[9,9]}})];r=await run();assert.equal(r.code,0,r.output);assert.equal((await json('.publish/held.json'))[0].id,1033,'The live type validates a payload with no category');assert.deepEqual((await json('data/markers.json'))[0].levels,[9,9]);
+  const now=(await json('data/markers.json'))[0];approved=[R(1034,'edit-marker',now.id,{name:now.name,levels:null,from:now})];r=await run();assert.equal(r.code,0,r.output);const cleared=(await json('data/markers.json'))[0];assert(!Object.hasOwn(cleared,'levels'));
+  approved=[R(1035,'edit-marker',now.id,{name:now.name,category:'Bank',from:cleared})];r=await run();assert.equal(r.code,0,r.output);assert(!Object.hasOwn((await json('data/markers.json'))[0],'levels'));
+  await reset([{id:'camp',name:'Camp',category:'Mob camp',levels:[8,10],mobs:[],x:10,y:20,level:'lower'}]);approved=[R(1040,'edit-marker','camp',{name:'Camp',category:'Named mob',from:{name:'Camp',category:'Mob camp'}})];r=await run();assert.equal(r.code,0,r.output);assert.equal((await json('.publish/held.json'))[0].id,1040,'Changing type cannot retain a camp range');const camp=(await json('data/markers.json'))[0];approved=[R(1041,'edit-marker','camp',{name:'Captain',category:'Named mob',levels:[8,8],from:camp})];r=await run();assert.equal(r.code,0,r.output);const named=(await json('data/markers.json'))[0];assert.equal(named.category,'Named mob');assert.deepEqual(named.levels,[8,8]);assert(!Object.hasOwn(named,'mobs'));
+  console.log('Named mob publisher checks passed: fixed levels, bounds, holds, independent edits, clearing, live type validation and type changes.');
+ }
+
  // Run the publish endpoint with local replies; a running batch gets one more dispatch, a waiting one does not.
  const source=stripTypeScriptTypes(await readFile(root+'/supabase/functions/publish-now/index.ts','utf8'));
  async function endpoint(states){let handler;const calls=[],context=vm.createContext({URL,Request,Response,Deno:{env:{get:k=>({GITHUB_DISPATCH_TOKEN:'test-token',SUPABASE_ANON_KEY:'public-key',SUPABASE_URL:'http://fixture'})[k]},serve:fn=>handler=fn},fetch:async(url,options={})=>{
