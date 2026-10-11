@@ -1,6 +1,24 @@
 {
  "entries": [
   {
+   "date": "2026-10-11",
+   "title": "Suggesting changes, made simpler",
+   "text": "Every marker and sign has one Change form with the same fields, the changes on their way show under its name, and the bell at the top lists what's new on the atlas and where your own suggestions stand.",
+   "maps": []
+  },
+  {
+   "date": "2026-10-11",
+   "title": "Mob camps list their mobs",
+   "text": "Camps show their level range, the mobs found there with a link to each one's wiki page, and the loot they drop together. Named mobs show their level too.",
+   "maps": []
+  },
+  {
+   "date": "2026-10-11",
+   "title": "A quick look on hover",
+   "text": "Rest the pointer on a marker to see what it is before clicking, and long lists such as vendor kinds and destinations can be searched by typing.",
+   "maps": []
+  },
+  {
    "date": "2026-10-10",
    "title": "Safer publishing of travellers' changes",
    "text": "Several changes to the same place no longer overwrite each other, an accepted change can no longer be lost on its way to the atlas, and every traveller who improved a place stays credited.",
