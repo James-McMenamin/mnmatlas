@@ -848,7 +848,8 @@ function setupControls(){
  $('copy-embed').onclick=()=>copyEmbed('embed-code');$('copy-embed-address').onclick=()=>copyEmbed('embed-address');
  $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{status('Fullscreen is unavailable. Open the atlas in its own tab, or allow fullscreen on the iframe.');}};
  document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-label',document.fullscreenElement?'Exit fullscreen':'Enter fullscreen');$('fullscreen').title=document.fullscreenElement?'Exit fullscreen':'Enter fullscreen';map?.invalidateSize({pan:true,animate:false});});
- for(const host of document.querySelectorAll('.map-combo'))pickers.push(buildMapPicker(host));
+ for(const host of document.querySelectorAll('.map-picker .map-combo'))pickers.push(buildMapPicker(host));
+ window.atlasSelect.enhance($('marker-form'));window.atlasSelect.enhance($('journal'));
  window.addEventListener('popstate',()=>{const url=new URL(location.href);ownView=true;loadMap(mapIdOf(url),url);});
 }
 // Every publish refreshes each file's Last-Modified, so one small HEAD request spots a newer edition.

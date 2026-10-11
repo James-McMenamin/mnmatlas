@@ -4,6 +4,7 @@ import vm from 'node:vm';
 const changes=await readFile(new URL('../changes.js',import.meta.url),'utf8'),fields=await readFile(new URL('../marker-fields.js',import.meta.url),'utf8');
 const source=await readFile(new URL('../community.js',import.meta.url),'utf8'),wikiLinks=await readFile(new URL('../wiki-links.js',import.meta.url),'utf8'),app=await readFile(new URL('../app.js',import.meta.url),'utf8');
 const reviewModel=await readFile(new URL('../review-model.js',import.meta.url),'utf8'),reviewDesk=await readFile(new URL('../review-desk.js',import.meta.url),'utf8'),notices=await readFile(new URL('../notices.js',import.meta.url),'utf8');
+const searchableSelect=await readFile(new URL('../searchable-select.js',import.meta.url),'utf8');
 class Node {
  constructor(tag,value='',cls=''){this.tagName=tag;this.textContent=value;this.className=cls;this.children=[];this.listeners={};this.hidden=false;this.value='';this.open=false;this.dataset={};this.style={setProperty(){}};this.classList={add:(...xs)=>{this.className=[...new Set([...this.className.split(' ').filter(Boolean),...xs])].join(' ');},remove:(...xs)=>{this.className=this.className.split(' ').filter(x=>!xs.includes(x)).join(' ');},contains:x=>this.className.split(' ').includes(x),toggle:x=>{this.classList.contains(x)?this.classList.remove(x):this.classList.add(x);}};}
  append(...nodes){for(const n of nodes){if(n.parentElement)n.remove();n.parentElement=this;this.children.push(n);}}
@@ -31,6 +32,58 @@ class Node {
  querySelectorAll(tag){if(tag.includes(' ')){const [first,...rest]=tag.split(' ');return this.querySelectorAll(first).flatMap(n=>n.querySelectorAll(rest.join(' ')));}return this.children.flatMap(n=>[...(n.matches(tag)?[n]:[]),...n.querySelectorAll(tag)]);}
 }
 const settle=async()=>{for(let i=0;i<8;i++)await new Promise(resolve=>setImmediate(resolve));};
+// A select fixture with native-style value/selectedIndex setters and observed option refills.
+{
+ const observers=new Set();let activeElement=null;
+ const mutation=m=>{for(const o of observers)if(o.root?.contains(m.target)){o.pending.push(m);if(o.pending.length===1)queueMicrotask(()=>{const batch=o.pending.splice(0);if(batch.length&&observers.has(o))o.callback(batch);});}};
+ class Element extends Node {
+  constructor(...args){super(...args);this.nodeType=1;}
+  get childNodes(){return this.children;}
+  getAttribute(k){return this[k]??null;}
+  removeEventListener(k,fn){this.listeners[k]=(this.listeners[k]||[]).filter(f=>f!==fn);}
+  append(...nodes){super.append(...nodes);mutation({target:this,type:'childList',addedNodes:nodes});}
+  replaceChildren(...nodes){for(const n of this.children)n.parentElement=null;super.replaceChildren(...nodes);mutation({target:this,type:'childList',addedNodes:nodes});}
+  focus(){activeElement=this;}
+  getBoundingClientRect(){return this.tagName==='button'?{left:270,top:580,bottom:612,width:150,height:32}:{height:180};}
+  dispatchEvent(event){for(const fn of this.listeners[event.type]||[])fn(event);this['on'+event.type]?.(event);if(event.bubbles)this.parentElement?.dispatchEvent(event);return true;}
+ }
+ class Select extends Element {
+  get value(){if(!this.children)return '';return this._index===undefined?this.options[0]?.value||'':this.options[this._index]?.value||'';}
+  set value(v){if(this.children)this._index=this.options.findIndex(o=>o.value===String(v));}
+  get selectedIndex(){return this._index??(this.options.length?0:-1);}
+  set selectedIndex(v){this._index=Number(v);}
+  get options(){return this.querySelectorAll('option');}
+ }
+ class Observer {
+  constructor(callback){this.callback=callback;this.pending=[];}
+  observe(root){this.root=root;observers.add(this);}
+  disconnect(){observers.delete(this);}
+ }
+ const document=new Element('document'),window=new Element('window');window.innerWidth=360;window.innerHeight=640;
+ document.createElement=tag=>new Element(tag);
+ const ctx=vm.createContext({document,window,MutationObserver:Observer,Event,setTimeout,console});vm.runInContext(searchableSelect,ctx);
+ const root=new Element('div'),select=new Select('select'),short=new Select('select');root.append(select,short);document.append(root);select.setAttribute('aria-label','Vendor kind');
+ const option=(title,value)=>{const o=new Element('option',title);o.label=title;o.value=value;Object.defineProperty(o,'selected',{get(){return select.value===o.value;}});return o;};
+ const group=(title,options)=>{const g=new Element('optgroup');g.label=title;g.append(...options);return g;};
+ select.append(option('Not set',''),group('Food & drink',[option('Café—keeper','cafe'),option('Baker','baker')]),group('Trade vendors',Array.from({length:9},(_,i)=>option('Trade '+i,'trade-'+i))));short.append(...Array.from({length:10},(_,i)=>new Element('option','Short '+i)));
+ select.value='baker';const scope=window.atlasSelect.enhance(root),host=root.querySelector('.searchable-select'),button=host.querySelector('button'),input=host.querySelector('input'),list=host.querySelector('.map-menu-list'),menu=host.querySelector('.map-menu'),caption=host.querySelector('.map-select-value');
+ assert(select.hidden);assert(!short.hidden);assert.equal(root.querySelectorAll('.searchable-select').length,1);assert.equal(caption.textContent,'Baker');assert.equal(button['role'],'combobox');assert.equal(list['role'],'listbox');
+ let changes=0,inputs=0,bubbled=0;select.addEventListener('change',()=>changes++);select.addEventListener('input',()=>inputs++);root.addEventListener('change',()=>bubbled++);
+ select.value='cafe';assert.equal(caption.textContent,'Café—keeper','Direct value writes refresh the label immediately');assert.equal(changes,0,'Programmatic values retain native event semantics');
+ select.selectedIndex=2;assert.equal(caption.textContent,'Baker');select.focus();assert.equal(activeElement,button,'Existing validation focus reaches the picker');
+ button.onclick();assert.equal(activeElement,input);assert.equal(button['aria-expanded'],'true');assert.equal(menu.style.left,'102px','The menu stays within a narrow viewport');assert(Number.parseFloat(menu.style.top)<580,'A bottom-sheet menu opens above when there is more room');
+ input.value='CAFEkeeper';input.oninput();let visible=list.querySelectorAll('.map-option').filter(o=>!o.hidden);assert.equal(visible.length,1);assert.equal(visible[0].textContent,'Café—keeper','Filtering ignores case, accents and punctuation');
+ const groups=list.querySelectorAll('div').filter(n=>n.role==='group');assert.equal(groups.length,2);assert(!groups[0].hidden);assert(groups[1].hidden,'Empty group headings are hidden');
+ const key=k=>({key:k,target:input,preventDefault(){},stopPropagation(){}});input.onkeydown(key('Enter'));assert.equal(select.value,'cafe');assert.equal(changes,1);assert.equal(inputs,1);assert.equal(bubbled,1);assert(menu.hidden);assert.equal(activeElement,button);
+ button.onclick();input.value='no such vendor';input.oninput();assert(!host.querySelector('.map-menu-empty').hidden);assert.equal(input['aria-activedescendant'],undefined);input.onkeydown(key('Escape'));assert(menu.hidden);assert.equal(button['aria-expanded'],'false');
+ button.onclick();input.onkeydown(key('ArrowDown'));input.onkeydown(key('Enter'));assert.equal(select.value,'baker','Arrow keys and Enter select the next item');
+ window.visualViewport=new Element('viewport');Object.assign(window.visualViewport,{width:360,height:300,offsetLeft:0,offsetTop:0});button.onclick();assert(Number.parseFloat(menu.style.top)+180<=300,'The menu stays above a phone keyboard even when its button is obscured');input.onkeydown(key('Escape'));delete window.visualViewport;
+ select.replaceChildren(...Array.from({length:11},(_,i)=>option('Refilled '+i,'new-'+i)));select.value='new-4';await settle();assert.equal(caption.textContent,'Refilled 4');button.onclick();assert.equal(list.querySelectorAll('.map-option').length,11,'Refilled options replace the list');input.value='Baker';input.oninput();assert(!host.querySelector('.map-menu-empty').hidden);input.onkeydown(key('Escape'));
+ select.replaceChildren(option('Only choice','only'));await settle();assert(!select.hidden);assert(host.hidden,'A list that becomes short returns to the native select');
+ short.replaceChildren(...Array.from({length:11},(_,i)=>new Element('option','Added '+i)));await settle();assert(short.hidden,'A short list is enhanced when a refill adds many options');
+ const card=new Element('article'),arrival=new Select('select');card.append(arrival);root.append(card);const cardScope=window.atlasSelect.enhance(card);arrival.append(...Array.from({length:12},(_,i)=>new Element('option','Arrival '+i)));await settle();assert(arrival.hidden);cardScope.dispose();assert(!arrival.hidden);assert.equal(card.querySelectorAll('.searchable-select').length,0,'The card owns asynchronous enhancements inside a watched Search menu');
+ scope.dispose();assert(!select.hidden);assert(!short.hidden);assert.equal(root.querySelectorAll('.searchable-select').length,0);assert.equal(observers.size,0);console.log('PASS searchable selects: value sync, grouped filtering, keyboard, events, viewport and refills');
+}
 // The bell opens on What's new; tests about your own suggestions switch to that tab first.
 const mineTab=async panel=>{const b=panel?.querySelectorAll('button').find(n=>String(n.textContent).startsWith('Your suggestions'));if(b&&b['aria-pressed']!=='true'){await b.onclick();await settle();}};
 function environment(settings={},hostname='atlas.example',session=null){
