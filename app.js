@@ -139,7 +139,7 @@ function markerSells(m){return m.category!=='Vendor'?'':m.vendor==='Shady mercha
 function markerHoverCard(m,state){
  const n=text('div','','marker-hover'),who=markerSubtitle(m),detail=m.category==='Tradeskill'?m.trade:m.category==='Class trainer'?classesOf(m).join(' / '):markerSells(m);
  n.append(text('div',noteKind(m)+(m.id.startsWith('personal-')?' · Your note':''),'tag'),text('h3',markerTitle(m)));if(who)n.append(text('div',who,'marker-who'));if(detail)n.append(text('div',detail,'hover-detail'));
- if(m.category==='Mob camp')n.append(campCard(m));else if(namedLevelText(m))n.append(text('p',namedLevelText(m),'hover-detail'));
+ if(m.category==='Mob camp')n.append(...campHover(m));else if(namedLevelText(m))n.append(text('p',namedLevelText(m),'hover-detail'));
  const first=String(m.note||'').split(/\r?\n/,1)[0].trim();if(first)n.append(text('p',first.length>120?first.slice(0,119).trimEnd()+'…':first,'hover-note'));
  const rows=state?.rows||[],waiting=rows.filter(r=>r.status==='pending'),approved=rows.filter(r=>r.status==='approved'),rejected=rows.filter(r=>r.status==='rejected'),words=(count,end)=>count+' change'+(count===1?'':'s')+' '+end;
  const line=[waiting.length&&words(waiting.length,'waiting'),approved.length&&words(approved.length,'approved, not live yet'),rejected.length&&words(rejected.length,'set aside')].filter(Boolean).join(' · '),next=state?.proposed?.name;
@@ -147,7 +147,7 @@ function markerHoverCard(m,state){
 }
 // Leaflet supplies focus/blur as well as hover. No card DOM or change lookup is made while drawing pins.
 function bindMarkerTooltip(pin,m,state,offset,focusNode){
- if(!m.noteType||m.id.startsWith('personal-')){offset||=[0,markerHover.matches&&m.category==='Class trainer'?-32:-23];pin.bindTooltip(()=>{const rich=markerHover.matches;pin.getTooltip?.()?.getElement?.()?.classList.toggle('marker-card-tooltip',rich);return rich?markerHoverCard(m,state?state():window.atlasCommunity?.hoverState(m)):text('span',markerTitle(m));},{direction:'top',offset,interactive:m.category==='Mob camp',className:markerHover.matches?'marker-card-tooltip':''});
+ if(!m.noteType||m.id.startsWith('personal-')){offset||=[0,markerHover.matches&&m.category==='Class trainer'?-32:-23];pin.bindTooltip(()=>{const rich=markerHover.matches;pin.getTooltip?.()?.getElement?.()?.classList.toggle('marker-card-tooltip',rich);return rich?markerHoverCard(m,state?state():window.atlasCommunity?.hoverState(m)):text('span',markerTitle(m));},{direction:'top',offset,className:markerHover.matches?'marker-card-tooltip':''});
   // Offset plates contain their own button, which can receive focus before the marker's outer element.
   if(focusNode){focusNode.onfocus=()=>pin.openTooltip();focusNode.onblur=()=>pin.closeTooltip();}}
  return pin;
@@ -226,6 +226,12 @@ function npcCard(c,m){
 function campLoot(m,cards,parent=wikiEmbedParent()){
  const items=new Map();for(const mob of m.mobs||[]){if(wikiLinkFor(mob,parent)?.site!=='mnm-wiki')continue;const c=cards?.[mob.wikiId];for(const i of Array.isArray(c?.loot)?c.loot:[]){const link=wikiLinkFor({wiki:i?.url},parent);if(!i?.name||link?.site!=='mnm-wiki'||!new URL(link.href).pathname.startsWith('/items/'))continue;const url=new URL(link.href);url.hash='';url.search='';const key=url.href,rate=Number.isFinite(i.dropRate)&&i.dropRate>=0&&i.dropRate<=100?i.dropRate:null,old=items.get(key);if(old){if(rate!==null&&(old.dropRate===null||rate>old.dropRate))old.dropRate=rate;if(!old.mobs.some(x=>x.wikiId===mob.wikiId))old.mobs.push(mob);}else items.set(key,{name:i.name,url:link.href,dropRate:rate,mobs:[mob]});}}
  return [...items.values()].sort((a,b)=>(b.dropRate??-1)-(a.dropRate??-1)||a.name.localeCompare(b.name));
+}
+// The hover card stays short: the level range and the first mobs; the full roster and loot are in the popup.
+function campHover(m){
+ const out=[],range=levelsText(campLevels(m)),mobs=Array.isArray(m.mobs)?m.mobs.map(x=>x.name).filter(Boolean):[];if(range)out.push(text('p',range,'hover-detail'));
+ if(mobs.length)out.push(text('p',mobs.slice(0,3).join(', ')+(mobs.length>3?' and '+(mobs.length-3)+' more':''),'hover-detail'));
+ if(mobs.length)out.push(text('p','Click for all mobs and their loot.','hover-state'));return out;
 }
 function campCard(m){
  npcCardFor(m);const box=text('div','','npc-card camp-card'),range=levelsText(campLevels(m));if(range)box.append(text('p',range,'npc-tags'));
