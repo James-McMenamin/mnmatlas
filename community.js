@@ -565,7 +565,7 @@
   return payload;
  }
  function shareNote(m){
-  sendDialog('Share a personal note',[{token:sharedToken(m),name:m.name,map:config.id,level:m.level||config.levelId||null,kind:'new-marker',target_id:null,payload:notePayload(m)}],true);
+  sendDialog('Share a personal note',[{token:sharedToken(m),name:m.name,map:config.id,level:m.level||config.levelId||null,kind:'new-marker',target_id:null,payload:notePayload(m),note_id:m.id}],true);
  }
  // Being credited is opt-in: the Discord name goes into the public contributors list once a suggestion is published.
  const creditKey='mnmaps-community-credit';
@@ -680,7 +680,7 @@
  const writeFollowed=v=>{try{localStorage.setItem(followKey,JSON.stringify(v));}catch{}};
  const followId=m=>user.id+':'+scope()+':'+m.id;
  async function sendNote(m,credited){
-  const payload=notePayload(m),{id,published}=await submitRow({map:config.id,level:m.level||config.levelId||null,kind:'new-marker',target_id:null,payload,user_id:user.id,author_name:displayName(user),comment:null,credit:credited});
+  const payload=notePayload(m),{id,published}=await submitRow({map:config.id,level:m.level||config.levelId||null,kind:'new-marker',target_id:null,payload,note_id:m.id,user_id:user.id,author_name:displayName(user),comment:null,credit:credited});
   if(id!=null){const all=readFollowed();all[followId(m)]={id,sent:payload,credit:credited};writeFollowed(all);}
   return published;
  }
@@ -723,6 +723,31 @@
    }
    const all=readFollowed();delete all[key];writeFollowed(all);
   }catch(e){status('Saved to your field notes, but your suggestion could not be updated. '+sendError(e,'You can share the note again from its popup.'));}
+ }
+ // A shared note that is now a public marker is not kept as a second, personal copy: once its marker is live the note
+ // is retired, and text of its own that the marker does not carry moves to the private "Your note" on that marker.
+ // The note is found by the id its suggestion keeps, by this browser's record of the share, or (older shares) by the
+ // same name and wiki page close to where it was suggested or now stands. Waiting or refused shares keep their note.
+ async function retirePublishedNotes(serial){
+  if(!user||!notesReadable||!privateNotesReadable||alignmentMode||!personal.length)return;
+  const uid=user.id,{data,error}=await client.from('suggestions').select('id,level,payload,note_id').eq('user_id',uid).eq('map',config.id).eq('kind','new-marker').in('status',['approved','published']);
+  if(error||!Array.isArray(data)||serial!==mapSerial||user?.id!==uid)return;
+  const near=0.015*Math.max(config.width,config.height),followed=readFollowed(),taken=new Set(),retired=[];let moved=0;
+  for(const row of data){
+   const p=row.payload||{},label=p.noteType==='label'||p.noteType==='exit',live=(label?labelData.labels:originals).find(x=>x.id==='community-'+row.id);if(!live)continue;
+   const free=personal.filter(m=>!taken.has(m.id)&&(m.level||'')===(row.level||'')),close=m=>[[p.x,p.y],[live.x,live.y]].some(([x,y])=>Number.isFinite(x)&&Number.isFinite(y)&&Math.hypot(x-m.x,y-m.y)<=near);
+   const note=free.find(m=>m.id===row.note_id)||free.find(m=>followed[followId(m)]?.id===row.id)
+    ||free.find(m=>looseName(m.name)===looseName(p.name)&&(!m.wikiId||!p.wikiId||m.wikiId===p.wikiId)&&close(m));
+   if(!note)continue;
+   const own=String(note.note||'').trim();
+   if(own&&own!==String(live.note||'').trim()){const kind=label?'label':'marker',was=privateNoteFor(live,kind),next=!was?own:was.includes(own)?was:was+'\n\n'+own;
+    if(next.length>1000||!savePrivateNote(live,kind,next))continue;if(next!==was)moved++;}
+   taken.add(note.id);retired.push(note);
+  }
+  if(!retired.length||serial!==mapSerial||!persist(personal.filter(m=>!taken.has(m.id))))return;
+  const all=readFollowed();for(const m of retired)delete all[followId(m)];writeFollowed(all);
+  setupCategoryControls();buildPlaceIndex();drawMarkers();
+  status((retired.length===1?'Your note “'+retired[0].name+'” is now on the public map, so it is no longer kept twice.':retired.length+' of your notes are now on the public map, so they are no longer kept twice.')+(moved?' Your own text is kept as “Your note” on '+(moved===1?'its marker.':'their markers.'):''),true);
  }
  function sendDialog(title,rows,sharing){if(!user&&!sharing){deferredPositions={title,rows};try{localStorage.setItem(positionSigninKey,scope());}catch{}signInDialog();return;}
   const amendments=[...approvedRows,...pendingRows],d=showDialog(title);d.append(text('p',sharing?'Send this note for review before it appears in the community atlas.':'Choose the saved moves to send for review.'));
@@ -796,7 +821,7 @@
  async function syncMapNotes(serial){await syncPrivateNotes(serial,false);if(serial===mapSerial)await syncNotes(serial);}
  async function onMap(){
   if(!map||loading)return;const serial=++mapSerial;syncReady='';privateSyncReady='';clearPreview();desk.mapChanged();
-  map.off?.('zoomend',zoomApproved);map.on?.('zoomend',zoomApproved);loadApproved();await syncMapNotes(serial);if(serial!==mapSerial)return;if(!positionVisits.has(scope())&&!dialog.open&&!desk.opened&&offerPositions())positionVisits.add(scope());
+  map.off?.('zoomend',zoomApproved);map.on?.('zoomend',zoomApproved);loadApproved();await syncMapNotes(serial);if(serial!==mapSerial)return;await retirePublishedNotes(serial).catch(()=>{});if(serial!==mapSerial)return;if(!positionVisits.has(scope())&&!dialog.open&&!desk.opened&&offerPositions())positionVisits.add(scope());
  }
  // Suggestions on the map before they are live. Approved ones wait for the publishing run: admins see them all, and each
  // author their own (the read policy already lets authors read their rows). Admins also see those waiting for review,
