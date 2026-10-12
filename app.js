@@ -179,7 +179,7 @@ function fitCardPopup(){
 // A popup's own buttons (copy, edit, delete, share, suggest, report) end it as one tidy list; ways to move on (a floor,
 // another map) stay in the body.
 // Each action button gets a small line icon above its label, like the map's own tools.
-const actionPaths={
+const actionPaths={shape:'M5 8l6-4 8 4-1 9-8 3-6-5z',
  copy:'M10 8h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z M5 16H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1',
  edit:'M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z M15 5l4 4',
  report:'M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z M12 9v4 M12 17h.01',
@@ -242,7 +242,7 @@ function popup(m){const n=text('div',''),card=npcCardFor(m),title=text('h3',card
  {const to=!m.noteType&&m.toPlace&&registry.maps.find(c=>c.id===m.toMap);if(to)n.append(button((m.direction==='up'?'Go up to ':m.direction==='down'?'Go down to ':'Go to ')+to.title,()=>{const url=mapLink(to.id);url.searchParams.set('place',m.toPlace);goToMap(to.id,url);},'level-link'));}
 const leads=m.noteType==='exit'&&!alignmentMode&&registry.maps.find(c=>c.id===m.toMap);if(leads)n.append(button('Go to '+leads.title,()=>openMap(leads.id),'level-link'));
  if(!m.noteType&&m.toMap&&!m.toPlace){const to=registry.maps.find(c=>c.id===m.toMap);if(to)n.append(button('Go to '+to.title,()=>openMap(to.id),'level-link'));}
- if(m.id.startsWith('personal-'))n.append(button('Edit note',()=>openEditor(m),'','edit'),button('Delete',()=>confirmDelete(m),'popup-delete','delete'));
+ if(m.id.startsWith('personal-'))n.append(...(m.shape?[button('Edit shape',()=>editNoteShape(m.id),'','shape')]:[]),button('Edit note',()=>openEditor(m),'','edit'),button('Delete',()=>confirmDelete(m),'popup-delete','delete'));
  if(m.id.startsWith('personal-'))n.append(text('div','Yours','yours'));else privateNoteBox(m,m.atlasLabel?'label':'marker',n);
  if(m.community&&!m.id.startsWith('personal-'))n.append(text('p','Community contribution','community-note'));
  if(!singleMap)window.atlasCommunity?.popup(m,n);return tidyActions(n);}
@@ -408,6 +408,11 @@ function keepInSnapshot(m){if(!editSnapshot)return;const before=editSnapshot.per
 function editChanged(){
  if(!editSnapshot)return false;const spots=list=>JSON.stringify(list.map(p=>[p.id,p.x,p.y]).sort());
  return JSON.stringify(alignmentPositions)!==JSON.stringify(editSnapshot.positions)||JSON.stringify(alignmentLabelPositions)!==JSON.stringify(editSnapshot.labels)||spots(personal)!==spots(editSnapshot.personal);
+}
+// Reshape a personal note straight from its popup; the note's spot follows the new shape.
+function editNoteShape(id){
+ const m=personal.find(p=>p.id===id);if(!m?.shape||!window.atlasShapeUI)return;map.closePopup();
+ window.atlasShapeUI.edit({kind:m.shape.kind,shape:m.shape,onDone:shape=>{const [x,y]=window.atlasShapes.anchor(shape);if(!persist(personal.map(p=>p.id===id?{...p,shape,x,y}:p)))return;buildPlaceIndex();drawMarkers();status('Shape saved.');}});
 }
 function deleteNote(id){
  const gone=personal.find(p=>p.id===id);if(!persist(personal.filter(p=>p.id!==id)))return false;
