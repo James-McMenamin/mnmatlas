@@ -1,19 +1,5 @@
 [
  {
-  "id": "goblins-17-22-1",
-  "name": "Muggrah goblins",
-  "category": "Mob camp",
-  "levels": [
-   17,
-   22
-  ],
-  "x": 7026,
-  "y": 7429,
-  "approximate": true,
-  "note": "Goblin camp along the south wall, near the road to Sungreet Strand.",
-  "minZoom": 3
- },
- {
   "id": "baron-bigtent",
   "name": "Baron Bigtent",
   "category": "Named mob",
@@ -21,13 +7,14 @@
    20,
    20
   ],
-  "x": 7116,
-  "y": 7369,
+  "x": 6953,
+  "y": 7235,
   "approximate": true,
-  "note": "In the goblin camp, near the wall path.",
+  "note": "In the goblin camp, near the wall path. Usually pretty quick respawn (10-20mn).",
   "minZoom": 3,
   "wiki": "https://monstersandmemories.wiki/npcs/baron-bigtent",
-  "wikiId": "npc-baron-bigtent"
+  "wikiId": "npc-baron-bigtent",
+  "community": true
  },
  {
   "id": "pyrmos-30-1",
@@ -545,5 +532,93 @@
   ],
   "wiki": "https://monstersandmemories.wiki/npcs/adept-kossco",
   "wikiId": "npc-adept-kossco"
+ },
+ {
+  "id": "community-415",
+  "community": true,
+  "name": "Muggrah Goblins",
+  "category": "Mob camp",
+  "note": "Goblin camp along the south wall, near the road to Sungreet Strand.",
+  "x": 6803,
+  "y": 7145,
+  "shape": {
+   "form": "outline",
+   "kind": "area",
+   "points": [
+    [
+     7170,
+     7442
+    ],
+    [
+     7208,
+     7210
+    ],
+    [
+     6880,
+     7096
+    ],
+    [
+     6676,
+     6864
+    ],
+    [
+     6342,
+     7092
+    ],
+    [
+     6624,
+     7172
+    ],
+    [
+     6782,
+     7292
+    ],
+    [
+     7032,
+     7326
+    ]
+   ]
+  },
+  "levels": [
+   17,
+   22
+  ],
+  "mobs": [
+   {
+    "name": "A Muggrah raider",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-muggrah-raider",
+    "wikiId": "npc-a-muggrah-raider"
+   },
+   {
+    "name": "A Muggrah scrapper",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-muggrah-scrapper",
+    "wikiId": "npc-a-muggrah-scrapper"
+   },
+   {
+    "name": "A Muggrah shaman",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-muggrah-shaman",
+    "wikiId": "npc-a-muggrah-shaman"
+   },
+   {
+    "name": "A Muggrah spiritualist",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-muggrah-spiritualist",
+    "wikiId": "npc-a-muggrah-spiritualist"
+   },
+   {
+    "name": "A Muggrah stabber",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-muggrah-stabber",
+    "wikiId": "npc-a-muggrah-stabber"
+   },
+   {
+    "name": "A Muggrah frightener",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-muggrah-frightener",
+    "wikiId": "npc-a-muggrah-frightener"
+   },
+   {
+    "name": "A Muggrah bonestealer",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-muggrah-bonestealer",
+    "wikiId": "npc-a-muggrah-bonestealer"
+   }
+  ]
  }
 ]

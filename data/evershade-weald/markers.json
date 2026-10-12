@@ -570,5 +570,35 @@
   ],
   "wiki": "https://monstersandmemories.wiki/npcs/vorkuul-blighteye",
   "wikiId": "npc-vorkuul-blighteye"
+ },
+ {
+  "id": "community-419",
+  "community": true,
+  "name": "Bewildered Gorakk Four-Toes (level 11?)",
+  "category": "Named mob",
+  "note": "Spawned by Ranger Starter Quest at the tent at the end of the orc clifftop.",
+  "x": 3400,
+  "y": 3506,
+  "levels": [
+   11,
+   11
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/bewildered-gorakk-four-toes",
+  "wikiId": "npc-bewildered-gorakk-four-toes"
+ },
+ {
+  "id": "community-420",
+  "community": true,
+  "name": "Scout Leader Krindor (level 6)",
+  "category": "Named mob",
+  "note": "Spawns at the top of the ramp.",
+  "x": 3451,
+  "y": 3265,
+  "levels": [
+   6,
+   6
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/scout-leader-krindor",
+  "wikiId": "npc-scout-leader-krindor"
  }
 ]

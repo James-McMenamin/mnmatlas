@@ -10,5 +10,31 @@
       "name": null,
       "what": "added"
     }
+  ],
+  "marker:goblins-17-22-1": [
+    {
+      "name": null,
+      "what": "removed"
+    }
+  ],
+  "marker:community-415": [
+    {
+      "name": "ocombe",
+      "what": "added"
+    }
+  ],
+  "marker:baron-bigtent": [
+    {
+      "name": "ocombe",
+      "what": "moved"
+    },
+    {
+      "name": "ocombe",
+      "what": "edited"
+    },
+    {
+      "name": "ocombe",
+      "what": "moved"
+    }
   ]
 }

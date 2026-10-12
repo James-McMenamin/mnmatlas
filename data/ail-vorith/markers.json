@@ -1074,5 +1074,47 @@
     "vendor": "General goods",
     "wiki": "https://monstersandmemories.wiki/npcs/supplier-jul",
     "wikiId": "npc-supplier-jul"
+  },
+  {
+    "id": "community-421",
+    "community": true,
+    "name": "outcast camp",
+    "category": "Mob camp",
+    "note": "",
+    "x": 4144,
+    "y": 6182,
+    "levels": [
+      12,
+      13
+    ],
+    "mobs": [
+      {
+        "name": "A mournful outcast",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-mournful-outcast",
+        "wikiId": "npc-a-mournful-outcast"
+      }
+    ]
+  },
+  {
+    "id": "community-422",
+    "community": true,
+    "name": "Jerek D'shadow",
+    "category": "Named mob",
+    "note": "",
+    "x": 4163,
+    "y": 6292,
+    "levels": [
+      13,
+      13
+    ]
+  },
+  {
+    "id": "community-423",
+    "community": true,
+    "name": "Laeran Birchshade",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 3910,
+    "y": 6224
   }
 ]
