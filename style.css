@@ -183,7 +183,7 @@ dialog fieldset{border:0;padding:0;margin:13px 0 0;min-width:0}dialog legend{fon
    facts as ruled rows, then loot and the wiki's words under small headings, its credit last. The popup keeps no side
    margin of its own here, so the band reaches both edges; its other parts get the usual inset instead. */
 .leaflet-popup-content:has(.npc-card){margin:13px 0 0;width:auto!important;min-width:280px;max-width:300px}
-.leaflet-popup-content:has(.npc-card)>div>*{margin-left:20px;margin-right:24px}
+.leaflet-popup-content:has(.npc-card)>div>*,.leaflet-popup-content:has(.npc-card) .popup-body>*{margin-left:20px;margin-right:24px}.leaflet-popup-content:has(.npc-card)>div>.popup-body{margin-left:0;margin-right:0}
 .leaflet-popup-content .npc-card{margin:8px 0 0!important;padding:10px 24px 12px 20px;background:hsl(30 20% 14%);border-block:1px solid var(--border);font-size:12px;line-height:1.45}
 .leaflet-popup-content .npc-tags{margin:0 0 6px;font:13px/1.2 var(--small-caps);letter-spacing:.05em;color:#d9b77e}
 .leaflet-popup-content .npc-card dl{display:grid;grid-template-columns:max-content 1fr;margin:0}
@@ -588,5 +588,3 @@ dialog.moved::backdrop{background:#0000001f}
 ::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-track{background:#00000033;border-radius:3px}::-webkit-scrollbar-thumb{background:#7a6448;border:2px solid transparent;background-clip:padding-box;border-radius:3px}::-webkit-scrollbar-thumb:hover{background-color:#a3865f}::-webkit-scrollbar-corner{background:transparent}
 @supports not selector(::-webkit-scrollbar){*{scrollbar-width:thin;scrollbar-color:#7a6448 #00000033}}
 .leaflet-popup-content>div:has(>.popup-body){display:flex;flex-direction:column;max-height:min(640px,70dvh)}.popup-body{min-height:0;overflow-y:auto;overflow-x:hidden}
-/* A camp's loot matters least: it closes the details, just above the actions (the popup's later parts are filled in after it opens). */
-.popup-body{display:flex;flex-direction:column}.popup-body>*{flex:none}.popup-body>.camp-card{display:contents}.popup-body>.camp-card>.npc-loot,.popup-body>.camp-card>.npc-credit{order:1}

@@ -252,7 +252,9 @@ const leads=m.noteType==='exit'&&!alignmentMode&&registry.maps.find(c=>c.id===m.
  if(m.id.startsWith('personal-'))n.append(...(m.shape?[button('Edit shape',()=>editNoteShape(m.id),'','shape')]:[]),button('Edit note',()=>openEditor(m),'','edit'),button('Delete',()=>confirmDelete(m),'popup-delete','delete'));
  if(m.id.startsWith('personal-'))n.append(text('div','Yours','yours'));else privateNoteBox(m,m.atlasLabel?'label':'marker',n);
  if(m.community&&!m.id.startsWith('personal-'))n.append(text('p','Community contribution','community-note'));
- if(!singleMap)window.atlasCommunity?.popup(m,n);return tidyActions(n);}
+ if(!singleMap)window.atlasCommunity?.popup(m,n);
+ // A camp's loot matters least: it gets its own card at the end, just above the actions.
+ {const holder=[...n.children].find(x=>String(x.className)==='popup-body')||n,camp=[...holder.children].find(x=>String(x.className).includes('camp-card')),late=camp?[...camp.children].filter(x=>String(x.className).split(' ').some(k=>k==='npc-loot'||k==='npc-credit')):[];if(late.length){const box=text('div','','npc-card camp-card camp-loot');box.append(...late);holder.append(box);}}return tidyActions(n);}
 function labelEditPopup(row){
  const n=text('div','');n.append(text('div','Place name','tag'),text('h3',row.name));
  privateNoteBox(row,'label',n);
