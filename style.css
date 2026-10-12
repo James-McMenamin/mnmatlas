@@ -289,7 +289,7 @@ dialog fieldset{border:0;padding:0;margin:13px 0 0;min-width:0}dialog legend{fon
 .journal-bottom{text-align:left;padding-top:12px}
 .notes-actions{display:flex;gap:8px}
 .notes-actions #add{flex:1}
-.journal-bottom .notes-actions #edit-positions{width:auto;margin:0;flex:none}
+.notes-actions #edit-positions{width:auto;margin:0;flex:none}.journal .notes-actions{margin:12px 0 10px}
 .notes-meta{display:flex;flex-direction:column;align-items:flex-start;gap:0;margin-top:8px}
 .journal-bottom .notes-meta p{margin:0;font-size:11px}
 .notes-meta .backup{gap:2px;margin-left:-4px}.notes-meta .backup button{font-size:11px;padding:4px}
