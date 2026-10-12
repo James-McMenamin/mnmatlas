@@ -101,7 +101,15 @@ function bounded(x,y,z=map.getZoom()){return Number.isFinite(x)&&Number.isFinite
 function valid(m){m=normaliseMarker(m);if(m?.shape){try{window.atlasShapes.validate(m.shape,config);}catch{return false;}}return m&&validLevel(m.level)&&(m.toMap===undefined||typeof m.toMap==='string'&&!!registry?.maps.some(c=>c.id===m.toMap))&&typeof m.id==='string'&&/^personal-[a-zA-Z0-9-]{1,80}$/.test(m.id)&&typeof m.name==='string'&&m.name.trim()&&m.name.length<=100&&typeof m.note==='string'&&m.note.length<=2000&&Object.hasOwn(categories,m.category)&&[undefined,'label','exit'].includes(m.noteType)&&(m.arrow===undefined||Object.hasOwn(exitArrows,m.arrow))&&(m.trade===undefined||Object.hasOwn(tradePaths,m.trade))&&(m.color===undefined||Object.values(pinColours).includes(m.color))&&(m.wiki===undefined||typeof m.wiki==='string'&&m.wiki.length<=300)&&(m.wikiId===undefined||!!wikiIdOf(m.wikiId))&&classesOk(m.classes)&&vendorKindOk(m.vendor)&&sellsOk(m.sells)&&(m.levels===undefined||['Mob camp','Named mob'].includes(m.category)&&levelsOk(m.levels,m.category))&&(m.mobs===undefined||m.category==='Mob camp'&&mobsOk(m.mobs))&&Number.isFinite(m.x)&&m.x>=0&&m.x<=config.width&&Number.isFinite(m.y)&&m.y>=0&&m.y<=config.height;}
 function persist(next){if(!notesReadable){status('Saved notes could not be read. Your saved data is still kept in this browser.',true);return false;}try{localStorage.setItem(storageKey('notes'),JSON.stringify(next));personal=next;window.dispatchEvent(new CustomEvent('atlas:notes'));return true;}catch{status('Your browser could not save this change. Free some storage and try again.',true);return false;}}
 function download(data,name){const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=text('a','');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function allMarkers(){return [...originals,...(labelData.trainers||[]).filter(t=>!originals.some(m=>m.id===t.id)).map(t=>({...t,name:t.name||t.building||'Class trainers',note:t.note||'',category:'Class trainer'})),...personal];}
+// A note shared for the public map and published since: the public marker now stands where the note does, with the
+// same wiki page (or name), so only the marker is drawn. The note itself stays saved, synced and exported; one with its
+// own text, or one that has moved away, still shows.
+function publishedCopy(m){
+ const own=String(m.note||'').trim(),near=0.015*Math.max(config.width,config.height),name=slug(m.name);
+ return originals.some(o=>(m.wikiId&&o.wikiId?o.wikiId===m.wikiId:slug(o.name)===name)&&(o.level||'')===(m.level||'')&&!m.shape&&!o.shape
+  &&Math.hypot(o.x-m.x,o.y-m.y)<=near&&(!own||own===String(o.note||'').trim()));
+}
+function allMarkers(){return [...originals,...(labelData.trainers||[]).filter(t=>!originals.some(m=>m.id===t.id)).map(t=>({...t,name:t.name||t.building||'Class trainers',note:t.note||'',category:'Class trainer'})),...personal.filter(m=>!publishedCopy(m))];}
 // A class trainer reads as its class first ("Enchanter trainer"), so the pin says what it is; the trainer's own name,
 // when it names someone, sits underneath. Names that already spell out the classes ("Cleric / Paladin — Hospice") stay.
 const classesOf=m=>m.category==='Class trainer'&&Array.isArray(m.classes)?m.classes.filter(c=>typeof c==='string'&&c.trim()):[];
