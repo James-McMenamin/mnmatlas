@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-10-12",
+   "title": "Tidier camp cards",
+   "text": "Resting the pointer on a camp shows its levels and first mobs; a click opens the full card, with the camp's top five drops at the end. Long cards scroll with a visible bar while their buttons stay in place.",
+   "maps": []
+  },
+  {
+   "date": "2026-10-12",
    "title": "Areas and paths",
    "text": "A marker can now cover an area (a rectangle, a circle or any outline) or follow a path, such as a camp's grounds or a guard's patrol round. It keeps its type and details, and shapes on the public map go through review like any other change.",
    "maps": []
