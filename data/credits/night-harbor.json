@@ -586,5 +586,11 @@
       "name": null,
       "what": "moved"
     }
+  ],
+  "marker:wiki-3": [
+    {
+      "name": null,
+      "what": "removed"
+    }
   ]
 }
