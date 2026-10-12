@@ -2,6 +2,24 @@
  "entries": [
   {
    "date": "2026-10-12",
+   "title": "Areas and paths",
+   "text": "A marker can now cover an area (a rectangle, a circle or any outline) or follow a path, such as a camp's grounds or a guard's patrol round. It keeps its type and details, and shapes on the public map go through review like any other change.",
+   "maps": []
+  },
+  {
+   "date": "2026-10-12",
+   "title": "Your own notes on any place",
+   "text": "Every marker and place name has a \"Your note\" box only you can see, kept with your account. Your personal markers now wear a dashed border, and moving a public place sends it for review instead of only moving it in your browser.",
+   "maps": []
+  },
+  {
+   "date": "2026-10-12",
+   "title": "Smaller fixes",
+   "text": "Add a personal note and Edit now sit at the top of the Search menu, your notes stay in step across several browsers, and the notices panel no longer runs off the edge of maps shown on other sites.",
+   "maps": []
+  },
+  {
+   "date": "2026-10-12",
    "title": "Camp levels and mobs restored",
    "text": "A few camps lost the levels and mob lists travellers had given them; they are back, and changes that were sent back for a second look can now be accepted again.",
    "maps": [
