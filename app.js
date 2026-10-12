@@ -98,7 +98,7 @@ window.atlasKeepStatus=ms=>{clearTimeout(statusTimer);$('status').hidden=false;s
 function locationOf(m){return map.unproject([m.x,m.y],config.coordinateZoom);}
 function pixelsOf(latlng){const p=map.project(latlng,config.coordinateZoom);return [Math.round(p.x),Math.round(p.y)];}
 function bounded(x,y,z=map.getZoom()){return Number.isFinite(x)&&Number.isFinite(y)&&Number.isFinite(z)&&x>=0&&y>=0&&x<=config.width&&y<=config.height&&z>=config.minZoom&&z<=config.maxZoom;}
-function valid(m){m=normaliseMarker(m);return m&&validLevel(m.level)&&(m.toMap===undefined||typeof m.toMap==='string'&&!!registry?.maps.some(c=>c.id===m.toMap))&&typeof m.id==='string'&&/^personal-[a-zA-Z0-9-]{1,80}$/.test(m.id)&&typeof m.name==='string'&&m.name.trim()&&m.name.length<=100&&typeof m.note==='string'&&m.note.length<=2000&&Object.hasOwn(categories,m.category)&&[undefined,'label','exit'].includes(m.noteType)&&(m.arrow===undefined||Object.hasOwn(exitArrows,m.arrow))&&(m.trade===undefined||Object.hasOwn(tradePaths,m.trade))&&(m.color===undefined||Object.values(pinColours).includes(m.color))&&(m.wiki===undefined||typeof m.wiki==='string'&&m.wiki.length<=300)&&(m.wikiId===undefined||!!wikiIdOf(m.wikiId))&&classesOk(m.classes)&&vendorKindOk(m.vendor)&&sellsOk(m.sells)&&(m.levels===undefined||['Mob camp','Named mob'].includes(m.category)&&levelsOk(m.levels,m.category))&&(m.mobs===undefined||m.category==='Mob camp'&&mobsOk(m.mobs))&&Number.isFinite(m.x)&&m.x>=0&&m.x<=config.width&&Number.isFinite(m.y)&&m.y>=0&&m.y<=config.height;}
+function valid(m){m=normaliseMarker(m);if(m?.shape){try{window.atlasShapes.validate(m.shape,config);}catch{return false;}}return m&&validLevel(m.level)&&(m.toMap===undefined||typeof m.toMap==='string'&&!!registry?.maps.some(c=>c.id===m.toMap))&&typeof m.id==='string'&&/^personal-[a-zA-Z0-9-]{1,80}$/.test(m.id)&&typeof m.name==='string'&&m.name.trim()&&m.name.length<=100&&typeof m.note==='string'&&m.note.length<=2000&&Object.hasOwn(categories,m.category)&&[undefined,'label','exit'].includes(m.noteType)&&(m.arrow===undefined||Object.hasOwn(exitArrows,m.arrow))&&(m.trade===undefined||Object.hasOwn(tradePaths,m.trade))&&(m.color===undefined||Object.values(pinColours).includes(m.color))&&(m.wiki===undefined||typeof m.wiki==='string'&&m.wiki.length<=300)&&(m.wikiId===undefined||!!wikiIdOf(m.wikiId))&&classesOk(m.classes)&&vendorKindOk(m.vendor)&&sellsOk(m.sells)&&(m.levels===undefined||['Mob camp','Named mob'].includes(m.category)&&levelsOk(m.levels,m.category))&&(m.mobs===undefined||m.category==='Mob camp'&&mobsOk(m.mobs))&&Number.isFinite(m.x)&&m.x>=0&&m.x<=config.width&&Number.isFinite(m.y)&&m.y>=0&&m.y<=config.height;}
 function persist(next){if(!notesReadable){status('Saved notes could not be read. Your saved data is still kept in this browser.',true);return false;}try{localStorage.setItem(storageKey('notes'),JSON.stringify(next));personal=next;window.dispatchEvent(new CustomEvent('atlas:notes'));return true;}catch{status('Your browser could not save this change. Free some storage and try again.',true);return false;}}
 function download(data,name){const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=text('a','');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function allMarkers(){return [...originals,...(labelData.trainers||[]).filter(t=>!originals.some(m=>m.id===t.id)).map(t=>({...t,name:t.name||t.building||'Class trainers',note:t.note||'',category:'Class trainer'})),...personal];}
@@ -298,10 +298,12 @@ function resultRow(title,detail,onClick,symbolOf,cls='place'){
  label.append(text('strong',title),text('small',detail));b.append(label);b.onclick=onClick;return b;
 }
 const markerDetail=(m,...more)=>[noteKind(m),namedLevelText(m),markerSubtitle(m),...more].filter(Boolean).join(' · ');
+function shapeShown(m){const z=map.getZoom();return showPins&&(alignmentMode||z>=(m.minZoom??-Infinity))&&(m.category!=='Class trainer'||z>=3.25||enabled.size===1&&enabled.has('Class trainer'));}
+function drawMarkerShapes(matches=null){window.atlasMarkerShapes?.remove();window.atlasMarkerShapes=null;if(matches===null)matches=allMarkers().some(m=>m.shape)?visibleMarkers():[];const shapes=matches.filter(m=>m.shape&&shapeShown(m));if(shapes.length){window.atlasMarkerShapes=L.layerGroup().addTo(map);for(const m of shapes){const state=window.atlasCommunity?.hoverState(m),old=state?.rows.some(r=>r.fields.has('shape')||r.fields.has('position'));window.atlasShapeUI.render(m,window.atlasMarkerShapes,{old,click:()=>choose(m)});}}map.atlasShapeVisibility=shapes.map(m=>m.id).join(',');}
 function drawMarkers(){
  {const box=$('vendor-filter');if(box){const has=allMarkers().some(m=>m.category==='Vendor'&&atLevel(m));box.hidden=!has||!enabled.has('Vendor');if(box.hidden&&vendorGroup)setVendorGroup('');}}
  for(const pin of pins.values())pin.remove();pins.clear();const list=$('results');list.replaceChildren();
- const matches=visibleMarkers();$('count').textContent=matches.length+' places';
+ const matches=visibleMarkers();drawMarkerShapes(matches);$('count').textContent=matches.length+' places';
  for(const m of matches){
   const own=m.id.startsWith('personal-');
   const pin=L.marker(locationOf(m),{icon:pinIcon(m),alt:[markerTitle(m),markerSubtitle(m)].filter(Boolean).join(', '),keyboard:true,riseOnHover:true,draggable:alignmentMode}).bindPopup(()=>popup(m),{autoPan:false});
@@ -336,7 +338,7 @@ function drawMarkers(){
   if(!findState.hits.length)list.append(text('p','Nothing on the atlas matches “'+findState.text+'” yet.','empty'));
  }
  if(!list.childElementCount)list.append(text('p','No places found. Try another name or enable more categories.','empty'));
- schedulePlaceLabels();
+ window.atlasCommunity?.filtersChanged?.();schedulePlaceLabels();
 }
 function keepPopupInside(pop){
  const el=pop.getElement?.(),frame=$('map')?.getBoundingClientRect();if(!el||!frame)return;
@@ -378,7 +380,7 @@ function startPlacement(given){
 // Edit mode keeps moves in memory: Done saves them, Cancel puts back the positions from when editing began.
 function movePersonal(id,latlng){
  const point=pixelsOf(latlng);
- if(bounded(...point))personal=personal.map(p=>p.id===id?{...p,x:point[0],y:point[1]}:p);else status('Choose a point inside the illustration.');
+ if(bounded(...point)){try{personal=personal.map(p=>p.id===id?{...p,x:point[0],y:point[1],...(p.shape?{shape:window.atlasShapes.translate(p.shape,point[0]-p.x,point[1]-p.y,config)}:{})}:p);}catch(e){status(e.message);}}else status('Choose a point inside the illustration.');
  buildPlaceIndex();drawMarkers();
 }
 function applyOverrides(){
@@ -401,7 +403,7 @@ function saveEdits(){
  return persist(personal);
 }
 // A note's text saved while editing survives Cancel; only its unsaved move is undone.
-function keepInSnapshot(m){if(!editSnapshot)return;const before=editSnapshot.personal.find(p=>p.id===m.id);editSnapshot.personal=[...editSnapshot.personal.filter(p=>p.id!==m.id),before?{...m,x:before.x,y:before.y}:m];}
+function keepInSnapshot(m){if(!editSnapshot)return;const before=editSnapshot.personal.find(p=>p.id===m.id);let kept=m;if(before){const shape=m.shape?window.atlasShapes.translate(m.shape,before.x-m.x,before.y-m.y):null;/* A saved reshape keeps its own derived position when Edit is cancelled. */if(!m.shape||JSON.stringify(shape)===JSON.stringify(before.shape))kept={...m,x:before.x,y:before.y,...(shape?{shape}:{})};}editSnapshot.personal=[...editSnapshot.personal.filter(p=>p.id!==m.id),kept];}
 // Leaving Edit with the pen asks before saving moves, rather than saving them silently.
 function editChanged(){
  if(!editSnapshot)return false;const spots=list=>JSON.stringify(list.map(p=>[p.id,p.x,p.y]).sort());
@@ -452,7 +454,7 @@ function pickClasses(list){const v=Array.isArray(list)?list.filter(c=>atlasClass
 function guessVendor(){if($('category').value!=='Vendor'||$('vendor-kind').value)return;const kind=vendorKindNamed($('name').value+' '+$('note').value);if(kind)$('vendor-kind').value=kind;}
 // A Tradeskill named in its name or note ("an enchanting trainer") starts on that trade; a chosen trade stays.
 function guessTrade(){if($('category').value!=='Tradeskill'||$('trade').value)return;const trade=tradeNamed($('name').value+' '+$('note').value,Object.keys(tradePaths));if(trade)$('trade').value=trade;}
-function openEditor(m){m=normaliseMarker(m);draft={...m};$('editor-title').textContent=personal.some(p=>p.id===m.id)?'Your discovery':'A new discovery';$('name').value=m.name;$('category').value=m.category;$('note').value=m.note;$('wiki').value=m.wiki||'';setWikiPick($('wiki'),m.wiki,m.wikiId);pickClasses(m.classes);$('vendor-kind').value=vendorKindNow(m.vendor)||'';
+function openEditor(m){cancelPlacement();m=normaliseMarker(m);draft={...m};$('editor-title').textContent=personal.some(p=>p.id===m.id)?'Your discovery':'A new discovery';$('name').value=m.name;$('category').value=m.category;$('note').value=m.note;$('wiki').value=m.wiki||'';setWikiPick($('wiki'),m.wiki,m.wikiId);pickClasses(m.classes);$('vendor-kind').value=vendorKindNow(m.vendor)||'';
  for(const i of $('sells-chips').querySelectorAll('input'))i.checked=Array.isArray(m.sells)&&m.sells.includes(i.value);
  for(const r of document.querySelectorAll('input[name="note-type"]'))r.checked=r.value===(m.noteType||'marker');$('trade').value=m.trade||'';
  for(const r of document.querySelectorAll('input[name="pin-colour"]'))r.checked=r.value===(m.color||'');
@@ -637,6 +639,7 @@ function validateRegistry(data){
  return data;
 }
 async function loadMap(id,url=new URL(location.href),push=false,reviewToken=null){
+ window.atlasShapeUI?.cancel();
  if(map&&window.atlasCommunity?.leaveReview?.(reviewToken)===false){const current=mapLink(config.id);if(config.levelId)current.searchParams.set('level',config.levelId);history.replaceState({map:config.id},'',current);return;}
  if(alignmentMode&&editChanged()){const current=mapLink(config.id);if(config.levelId)current.searchParams.set('level',config.levelId);history.replaceState({map:config.id},'',current);confirmDialog('edit-map-confirm','Save your moves before travelling?','Save these positions and choose which to send before opening another map.',[['Keep editing',()=>{}],['Discard and travel',()=>{finishEdit(false);loadMap(id,url,push);}],['Save and travel',()=>{finishEdit(true);const go=()=>loadMap(id,url,push);if(window.atlasCommunity?.afterPositions)window.atlasCommunity.afterPositions(go);else go();},'primary']]);return;}
 
@@ -675,7 +678,7 @@ async function loadMap(id,url=new URL(location.href),push=false,reviewToken=null
   fitMap();wheelAfterClick();map.on('resize',()=>{limitZoomOut();updateZoom();});disposeBackdrop=setupSheetEdge(map,config,config.frame||{x:0,y:0,width:config.width,height:config.height});disposeLabels=setupPlaceLabels(labelData);hiddenController=setupHiddenAreas(map,config,currentHidden);if(zonesData)disposeZones=setupWorldZones(map,config,zonesData);
   buildPlaceIndex();refreshSearch();setPanel(window.atlasCommunity?.reviewOpen?.()||!compact()&&desktopPanelOpen&&!config.entry);$('hidden-controls').hidden=!config.hiddenAreasFile||!(currentHidden.areas.length||(currentHidden.additionalAreas||[]).length);$('alignment-tools').hidden=true;$('add').hidden=!takesNotes();if($('add-note'))$('add-note').hidden=!takesNotes();$('edit-positions').hidden=false;updateAlignmentStatus();
   map.on('movestart',()=>{if(!applyingView){activePlace=null;sharedPin?.remove();sharedPin=null;}});
-  map.on('moveend zoomend',()=>{updateZoom();scheduleUrl();});
+  map.on('moveend zoomend',()=>{updateZoom();scheduleUrl();});map.on('zoomend',()=>{const visible=visibleMarkers(),signature=visible.filter(m=>m.shape&&shapeShown(m)).map(m=>m.id).join(',');if(signature!==map.atlasShapeVisibility)drawMarkerShapes(visible);});
   map.on('popupclose',()=>{if(!applyingView){activePlace=null;scheduleUrl();}});
   // Near the edge of a map the view cannot pan further, so a popup slides sideways to stay inside; its tip keeps pointing at the place.
   map.on('popupopen',e=>{requestAnimationFrame(()=>keepPopupInside(e.popup));setTimeout(()=>{if(map.hasLayer(e.popup))keepPopupInside(e.popup);},450);});
@@ -857,7 +860,7 @@ function setupControls(){
   // What the form says, then only the fields this kind of note keeps (markerExtras).
   const type=noteTypeValue(),category=type==='marker'?$('category').value:'Personal';let values;try{values=noteFields.read();}catch(e){status(e.message);return;}
   const colour=document.querySelector('input[name="pin-colour"]:checked')?.value,base={...draft};for(const k of markerExtraKeys)delete base[k];
-  const m={...base,name:values.name,note:values.note,category,...markerExtras({...values,category,noteType:type==='marker'?undefined:type,classes:pickedClasses(),color:colour&&(category==='Personal'||colour===draft.color)?colour:''})};
+  const m={...base,...(values.shape?{shape:values.shape,x:values.x??draft.x,y:values.y??draft.y}:{}),name:values.name,note:values.note,category,...markerExtras({...values,category,noteType:type==='marker'?undefined:type,classes:pickedClasses(),color:colour&&(category==='Personal'||colour===draft.color)?colour:''})};
   if(!valid(m)){status('This note could not be saved: check its name and fields.');return;}if(personal.length>=2000&&!personal.some(p=>p.id===m.id)){status('You have reached the 2,000-note limit. Export and remove older notes.');return;}const added=!personal.some(p=>p.id===m.id);if(persist([...personal.filter(p=>p.id!==m.id),m])){keepInSnapshot(m);closeEditor();cancelPlacement();enabled.add(m.category);setupCategoryControls();$('search').value='';buildPlaceIndex();refreshSearch();choose(m);status('Saved to your field notes.');if(added)window.dispatchEvent(new CustomEvent('atlas:note-added'));window.dispatchEvent(new CustomEvent('atlas:note-saved',{detail:{note:m}}));}};
  $('delete').onclick=()=>{if(draft&&deleteNote(draft.id))closeEditor();};
  $('export').onclick=()=>download({version:1,map:config.id,tileRevision:config.tileRevision,markers:personal},`${config.id}-field-notes.json`);

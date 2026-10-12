@@ -60,7 +60,8 @@ const vendorKinds={
 };
 const vendorKindList=Object.values(vendorKinds).flatMap(g=>Object.keys(g));
 // Older markers, notes and suggestions used Shady merchant as a marker type. Read them as a vendor kind.
-const normaliseMarker=m=>m?.category==='Shady merchant'?{...m,category:'Vendor',vendor:'Shady merchant'}:m;
+// A shaped marker's spot always follows its shape, so an older or hand-edited spot never makes saved notes unreadable.
+const normaliseMarker=m=>{m=m?.category==='Shady merchant'?{...m,category:'Vendor',vendor:'Shady merchant'}:m;if(m?.shape&&globalThis.atlasShapes)try{const [x,y]=globalThis.atlasShapes.anchor(m.shape);if(Number.isFinite(x)&&Number.isFinite(y))m={...m,x,y};}catch{}return m;};
 // Older notes and waiting suggestions still use the supplies names.
 const vendorLegacy=Object.fromEntries(Object.keys(vendorKinds['Trade vendors']).filter(k=>k.endsWith(' vendor')).map(k=>[k.replace(/ vendor$/,' supplies'),k]));
 const vendorKindNow=v=>typeof v==='string'&&Object.hasOwn(vendorLegacy,v)?vendorLegacy[v]:v;
@@ -162,9 +163,9 @@ const trainerOnMap=(row,classes)=>{const c=trainerClasses(row);return c.length>0
 // the same ones: an area label nothing else; a zone exit its arrow and the map it leads to; a marker its colour and wiki
 // page (with the wiki's id), a tradeskill its trade, a class trainer its classes, a vendor its kind and Sells tags. Values are checked
 // where they are saved (app.js valid(), scripts/apply-approved.mjs).
-const markerExtraKeys=['noteType','travel','arrow','toMap','toPlace','toLevel','toMarker','direction','switchOnClick','level','minZoom','approximate','color','wiki','wikiId','trade','classes','vendor','sells','levels','mobs'];
+const markerExtraKeys=['shape','noteType','travel','arrow','toMap','toPlace','toLevel','toMarker','direction','switchOnClick','level','minZoom','approximate','color','wiki','wikiId','trade','classes','vendor','sells','levels','mobs'];
 function markerExtras(m){
- const out={};for(const k of ['level','minZoom','approximate'])if(m[k]!==undefined&&m[k]!==null&&m[k]!=='')out[k]=m[k];
+ const out={};if(m.shape)out.shape=structuredClone(m.shape);for(const k of ['level','minZoom','approximate'])if(m[k]!==undefined&&m[k]!==null&&m[k]!=='')out[k]=m[k];
  if(m.noteType!=='label')for(const k of ['travel','arrow','toMap','toPlace','toLevel','toMarker','direction','switchOnClick'])if(m[k]!==undefined&&m[k]!==null&&m[k]!=='')out[k]=m[k];
  if(m.noteType==='label'||m.noteType==='exit'){out.noteType=m.noteType;if(m.noteType==='exit'){if(m.arrow)out.arrow=m.arrow;if(m.toMap)out.toMap=m.toMap;}return out;}
  if(m.color)out.color=m.color;if(m.wiki){out.wiki=m.wiki;if(m.wikiId)out.wikiId=m.wikiId;}

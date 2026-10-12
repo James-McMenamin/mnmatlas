@@ -1,19 +1,41 @@
+// Geometry uses native map pixels, independent of Leaflet and account services.
+(function(root){
+ 'use strict';
+ const clone=v=>JSON.parse(JSON.stringify(v));
+ function validate(s,c={width:Infinity,height:Infinity}){
+  if(!s||typeof s!=='object'||Array.isArray(s)||!['area','path'].includes(s.kind))throw Error('Invalid shape: choose Area or Path.');
+  const circle=s.kind==='area'&&s.form==='circle',rect=s.kind==='area'&&s.form==='rect',min=circle?1:s.kind==='path'?2:3;
+  if(s.kind==='area'&&!['rect','circle','outline'].includes(s.form))throw Error('Invalid shape: choose Rectangle, Circle or Outline.');
+  const keys=circle?['kind','form','points','r']:s.kind==='path'?['kind','points','loop']:['kind','form','points'];
+  if(Object.keys(s).some(k=>!keys.includes(k))||!Array.isArray(s.points)||s.points.length<min||s.points.length>100||(circle&&s.points.length!==1)||(rect&&s.points.length!==4))throw Error('Invalid shape: use '+min+'–100 points (four for a rectangle, one for a circle).');
+  if(!s.points.every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isInteger)&&p[0]>=0&&p[1]>=0&&p[0]<=c.width&&p[1]<=c.height))throw Error('Invalid shape: keep whole-pixel points inside the map.');
+  if(circle){const [x,y]=s.points[0];if(!Number.isInteger(s.r)||s.r<=0||x-s.r<0||y-s.r<0||x+s.r>c.width||y+s.r>c.height)throw Error('Invalid shape: keep the circle and its radius inside the map.');}
+  else {if(new Set(s.points.map(p=>p.join(','))).size!==s.points.length)throw Error('Invalid shape: points must be distinct.');if(s.kind==='path'&&typeof s.loop!=='boolean')throw Error('Invalid shape: Loops back must be true or false.');if(rect){const [a,b,d,e]=s.points;if(a[1]!==b[1]||b[0]!==d[0]||d[1]!==e[1]||e[0]!==a[0]||a[0]===b[0]||a[1]===e[1])throw Error('Invalid shape: a rectangle needs four ordered corners.');}if(s.kind==='area'&&!area(s.points))throw Error('Invalid shape: the area needs a nonzero outline.');}
+  const at=anchor(s);if(!at.every(Number.isFinite)||at[0]<0||at[1]<0||at[0]>c.width||at[1]>c.height)throw Error('Invalid shape: its centre must be inside the map.');return clone(s);
+ }
+ const area=ps=>ps.reduce((v,p,i)=>{const q=ps[(i+1)%ps.length];return v+p[0]*q[1]-q[0]*p[1];},0);
+ function anchor(s){if(s.kind==='path'||s.form==='circle')return s.points[0].slice();const a=area(s.points),sum=[0,0];s.points.forEach((p,i)=>{const q=s.points[(i+1)%s.points.length],v=p[0]*q[1]-q[0]*p[1];sum[0]+=(p[0]+q[0])*v;sum[1]+=(p[1]+q[1])*v;});return sum.map(v=>Math.round(v/(3*a)));}
+ function translate(s,dx,dy,c){const out=clone(s);out.points=out.points.map(([x,y])=>[x+Math.round(dx),y+Math.round(dy)]);return c?validate(out,c):out;}
+ const describe=s=>!s?'Pin':s.kind==='path'?'Path ('+s.points.length+' points'+(s.loop?', loop':'')+')':'Area ('+({rect:'rectangle',circle:'circle',outline:'outline, '+s.points.length+' points'}[s.form])+')';
+ root.atlasShapes={validate,anchor,translate,describe};
+})(typeof window==='object'?window:globalThis);
 // The same field rules serve the review ledger and the publishing job.
 (function(root){
  'use strict';
  const copy=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v)),has=(v,k)=>Object.prototype.hasOwnProperty.call(v||{},k);
- const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b),typeKeys=['category','trade','classes','vendor','sells'];
+ const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+ const equal=(a,b)=>JSON.stringify(stable(a))===JSON.stringify(stable(b)),typeKeys=['category','trade','classes','vendor','sells'];
  const keysFor=p=>['category',...(p.category===undefined?['trade','classes','vendor','sells']:p.category==='Tradeskill'?['trade']:p.category==='Class trainer'?['classes']:p.category==='Vendor'?['vendor','sells']:[])];
- const editKeys=['name','note','color','level','kind','travel','arrow','toMap','toPlace','toLevel','toMarker','direction','switchOnClick','minZoom','approximate','tier','priority','building','levels','mobs'];
- const value=(p,k)=>k==='levels'?p?.levels??null:k==='mobs'?(p?.mobs?.length?p.mobs:null):['name','note','wiki','wikiId'].includes(k)?p?.[k]||'':p?.[k];
+ const editKeys=['name','note','color','level','kind','travel','arrow','toMap','toPlace','toLevel','toMarker','direction','switchOnClick','minZoom','approximate','tier','priority','building','levels','mobs','shape'];
+ const value=(p,k)=>['shape','levels'].includes(k)?p?.[k]??null:k==='mobs'?(p?.mobs?.length?p.mobs:null):['name','note','wiki','wikiId'].includes(k)?p?.[k]||'':p?.[k];
  function fieldsOf(row){
   const p=row.payload||{},f=p.from||{},out=new Set();
   if(row.kind==='new-marker')return new Set(['added']);
-  if(row.kind==='move-marker'||row.kind==='move-label')return new Set(['position']);
+  if(row.kind==='move-marker'||row.kind==='move-label')return new Set(['position',...(has(p,'shape')?['shape']:[])]);
   if(row.kind!=='edit-marker'&&row.kind!=='edit-label')return out;
   if(p.remove===true)return new Set(['removed']);
   for(const k of editKeys)if(has(p,k)&&!equal(value(p,k),value(f,k)))out.add(k);
-  if(['x','y'].some(k=>has(p,k)&&!equal(p[k],f[k])))out.add('position');
+  if((!out.has('shape')||p.shape===null)&&['x','y'].some(k=>has(p,k)&&!equal(p[k],f[k])))out.add('position');
   if(['wiki','wikiId'].some(k=>has(p,k)&&!equal(value(p,k),value(f,k))))out.add('wiki');
   // Phase 2 must send the full type base in from: category and all of its type keys.
   if(keysFor(p).some(k=>has(p,k)&&!equal(p[k]??null,f[k]??null)))out.add('type');
@@ -21,17 +43,17 @@
  }
  function matchesFrom(row,state,field){
   const p=row.payload||{},f=p.from||{};if(!state)return false;
-  if(field==='position'){const at=Array.isArray(f)?f:[f.x,f.y];return at.every(Number.isFinite)&&equal(at.map(Math.round),[state.x,state.y].map(Math.round));}
+  if(field==='position'){const at=Array.isArray(f)?f:[f.x,f.y];return at.every(Number.isFinite)&&equal(at.map(Math.round),[state.x,state.y].map(Math.round))&&(!has(p,'fromShape')||equal(state.shape??null,p.fromShape??null));}
   if(field==='removed')return value(state,'name')===value(f,'name')&&(!has(f,'note')||value(state,'note')===value(f,'note'));
   if(field==='type')return keysFor(f).filter(k=>has(f,k)).every(k=>equal(state[k]??null,f[k]??null));
   if(field==='wiki')return ['wiki','wikiId'].filter(k=>has(p,k)&& (k==='wiki'||has(f,k))).every(k=>equal(value(state,k),value(f,k)));
-  return equal(value(state,field),value(f,field));
+  return equal(value(state,field),field==='shape'&&Array.isArray(f)?p.fromShape??null:value(f,field));
  }
  function conflicts(row,state,history){
   const out=new Set(),fields=fieldsOf(row);
   for(const h of history||[]){
    if(h.fields.has('removed')){out.add(h.id);continue;}
-   for(const f of fields)if((!matchesFrom(row,state,f)||f==='type'&&h.fields.has('type')&&!keysFor(state||{}).every(k=>has(row.payload?.from,k)))&&(h.fields.has(f)||h.fields.has('added')||f==='removed'&&(h.fields.has('name')||has(row.payload?.from,'note')&&h.fields.has('note'))))out.add(h.id);
+   for(const f of fields)if((!matchesFrom(row,state,f)||f==='type'&&h.fields.has('type')&&!keysFor(state||{}).every(k=>has(row.payload?.from,k)))&&(h.fields.has(f)||h.fields.has('added')||f==='shape'&&h.fields.has('position')||f==='position'&&h.fields.has('shape')||f==='removed'&&(h.fields.has('name')||has(row.payload?.from,'note')&&h.fields.has('note'))))out.add(h.id);
   }
   return [...out];
  }
@@ -44,17 +66,18 @@
   }
   else for(const f of fields){
    if(f==='removed')out.removed=true;
-   else if(f==='position'){const at=row.kind.startsWith('move-')?p.to:[p.x,p.y];if(!Array.isArray(at)||at.length!==2||!at.every(Number.isFinite))throw Error('The suggested position is missing or invalid');[out.x,out.y]=at.map(Math.round);if(has(p,'approximate'))out.approximate=p.approximate;}
+   else if(f==='position'){const at=row.kind.startsWith('move-')?p.to:[p.x,p.y];if(!Array.isArray(at)||at.length!==2||!at.every(Number.isFinite))throw Error('The suggested position is missing or invalid');if(out.shape&&!fields.has('shape'))out.shape=root.atlasShapes.translate(out.shape,Math.round(at[0])-out.x,Math.round(at[1])-out.y);[out.x,out.y]=at.map(Math.round);if(has(p,'approximate'))out.approximate=p.approximate;}
    else if(f==='type'){if(has(p,'category'))for(const k of typeKeys)delete out[k];for(const k of keysFor(p))if(has(p,k)&&p[k]!==null&&p[k]!=='')out[k]=copy(p[k]);}
    else if(f==='wiki'){const changed=has(p,'wiki')&&p.wiki!==out.wiki;for(const k of ['wiki','wikiId'])if(has(p,k))out[k]=p[k];else if(k==='wikiId'&&changed)delete out[k];if(!out.wikiId)delete out.wikiId;if(!out.wiki){delete out.wiki;delete out.wikiId;}}
    else if(p[f]===null||p[f]==='')delete out[f];else out[f]=copy(p[f]);
   }
+  if(out.shape){out.shape=root.atlasShapes.validate(out.shape);[out.x,out.y]=root.atlasShapes.anchor(out.shape);}
   if(!['Mob camp','Named mob'].includes(out.category))delete out.levels;if(out.category!=='Mob camp')delete out.mobs;
   if(out.category==='Named mob'&&out.levels!=null&&!levelsOk(out.levels,out.category))throw Error('Choose a level from 1 to 99.');
   if(fields.size&&!fields.has('removed'))out.community=true;
   return out;
  }
- const whatOf=row=>row.kind==='new-marker'?'added':row.payload?.remove===true?'removed':row.kind.startsWith('move-')?'moved':'edited';
+ const whatOf=row=>row.kind==='new-marker'?'added':row.payload?.remove===true?'removed':row.kind.startsWith('move-')?'moved':fieldsOf(row).has('shape')?'reshaped':'edited';
  function buildChanges({mapId,levelId,markers=[],labels=[],trainers=[],publishedPositions,publishedLabelPositions,rows=[],includePending=false,normalise=row=>row,onError=null}){
   const all=new Map(),byRow=new Map(),newKinds=new Map(),fail=(row,error)=>{if(!onError)throw error;onError(row,error);};
   const here=p=>!levelId||!p.level||p.level===levelId||rows.some(r=>r.target_id===p.id&&r.level===p.level&&r.payload?.level===levelId),position=(points,id)=>points?.get?points.get(id):points?.[id];

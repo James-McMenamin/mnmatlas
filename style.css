@@ -572,3 +572,15 @@ dialog.moved::backdrop{background:#0000001f}
 .personal-pin>span,.personal-pin .trainer-badge,.personal-pin .personal-label{border:2px dashed #ed7ce0;box-shadow:0 0 0 1px #241825,0 2px 6px #000a}.personal-pin .personal-label{border-radius:3px;padding:2px 5px}.personal-pin .exit-arrow{border-color:#ed7ce0;border-style:dashed}.yours,.your-note-title{font:600 11px var(--body);color:#ed7ce0}.yours{display:inline-block;border:1px dashed #ed7ce0;border-radius:3px;padding:1px 5px}.private-note{margin-top:10px;padding-top:8px;border-top:1px solid var(--border)}.private-note label{display:block;font-size:12px}.private-note textarea{display:block;width:100%;box-sizing:border-box;margin:4px 0;padding:6px 8px;border:1px solid var(--border);border-radius:3px;background:var(--muted);color:var(--foreground);font:12px var(--body);resize:vertical}.private-note small{display:block;color:var(--muted-foreground);font-size:10px}.marker-hover .your-note-title{margin-top:8px}
 /* The type's pin swatch sits beside its searchable list instead of falling under it. */
 .shared-field:has(>#pin-preview){position:relative}.shared-field>#pin-preview{position:absolute;right:0;bottom:4px}.shared-field:has(>#pin-preview:not([hidden]))>:is(select,.searchable-select){width:calc(100% - 32px)}
+/* Marker geometry stays below the ordinary pins. */
+.shape-arrow-anchor,.shape-handle-anchor{background:none;border:0}
+.shape-arrow{display:block;font:bold 22px/12px sans-serif;text-align:center;transform-origin:center}
+.shape-handle{display:block;width:14px;height:14px;margin:2px;background:#fff1cb;border:2px solid #a04438;border-radius:3px;box-sizing:border-box;font:bold 12px/10px sans-serif;text-align:center;color:#713d19}
+.shape-handle.selected{background:#e2b46a;border-color:#f1cd80}
+.drawing-shape .leaflet-interactive:not(.shape-handle-anchor){pointer-events:none!important}
+@media(max-width:760px){body:has(.shape-draw-bar) .journal{visibility:hidden;pointer-events:none}}
+.shape-draw-bar{position:absolute;z-index:2100;left:12px;right:12px;bottom:14px;margin:auto;max-width:640px;display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:8px;background:var(--background,#201911);border:1px solid var(--border,#705239);border-radius:3px;box-shadow:0 2px 10px #0008;font-size:12px}
+.shape-draw-bar button,.shape-draw-bar select{min-height:30px;border-radius:3px;padding:4px 7px;font-size:12px}
+.shape-draw-bar .community-check{margin:0}.shape-draw-hint{flex-basis:100%;color:var(--muted-foreground)}
+.shared-field:has(>select[id$="-shape"]){gap:4px}.shared-field:has(>select[id$="-shape"]) button{font-size:12px;min-height:28px;padding:3px 7px;border-radius:3px}
+@media(max-width:760px){.shape-draw-bar{left:6px;right:6px;bottom:max(8px,env(safe-area-inset-bottom));max-height:40vh;overflow:auto}.shape-draw-bar button{min-height:36px}}

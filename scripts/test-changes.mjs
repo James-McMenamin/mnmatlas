@@ -2,6 +2,17 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 const context=vm.createContext({});vm.runInContext(await readFile(new URL('../wiki-links.js',import.meta.url),'utf8'),context);vm.runInContext(await readFile(new URL('../changes.js',import.meta.url),'utf8'),context);
+{
+ const S=context.atlasShapes,C=context.atlasChanges,rect={kind:'area',form:'rect',points:[[10,10],[30,10],[30,30],[10,30]]},path={kind:'path',points:[[40,40],[50,50],[60,40]],loop:true},base={id:'shape',name:'Patrol',category:'Bank',x:20,y:20,shape:rect};
+ const plain=v=>JSON.parse(JSON.stringify(v));assert.deepEqual(plain(S.anchor(rect)),[20,20]);assert.deepEqual(plain(S.anchor(path)),[40,40]);assert.equal(S.describe(rect),'Area (rectangle)');
+ const edit={id:1,kind:'edit-marker',payload:{name:'Patrol',shape:path,from:base}},moved={id:2,kind:'move-marker',payload:{name:'Patrol',from:[20,20],fromShape:rect,to:[30,30],shape:S.translate(rect,10,10)}};
+ assert.deepEqual([...C.fieldsOf(edit)],['shape']);assert.equal(C.whatOf(edit),'reshaped');const next=C.applyTo(base,edit);assert.deepEqual(plain([next.x,next.y]),[40,40]);assert.deepEqual(plain(next.shape),path);assert(C.matchesFrom(edit,base,'shape'));assert(!C.matchesFrom(edit,next,'shape'));
+ assert.deepEqual(plain(C.conflicts(edit,C.applyTo(base,moved),[{id:2,fields:C.fieldsOf(moved)}])),[2]);assert.deepEqual(plain(C.conflicts(moved,next,[{id:1,fields:C.fieldsOf(edit)}])),[1]);
+ assert.deepEqual(plain(C.applyTo(base,{kind:'move-marker',payload:{from:[20,20],to:[30,30]}}).shape),plain(S.translate(rect,10,10)),'Legacy move payloads also translate shapes');
+ assert.deepEqual(plain(C.nextFrom({effective:next},'edit-marker').shape),path);assert(!C.applyTo(base,{kind:'edit-marker',payload:{name:'Patrol',shape:null,from:base}}).shape);
+ const bad=[{...path,points:[[1.2,2],[3,4]]},{...path,loop:'yes'},{...path,points:[[1,2]]},{...path,points:Array.from({length:101},(_,i)=>[i,1])},{...rect,points:[[10,10],[30,11],[30,30],[10,30]]},{kind:'area',form:'circle',points:[[5,5]],r:10}];for(const s of bad)assert.throws(()=>S.validate(s,{width:100,height:100}),/Invalid shape/);assert.throws(()=>S.translate(rect,-20,0,{width:100,height:100}),/inside the map/);
+ console.log('Shape ledger checks passed: whole-field changes, centroid/start anchors, moves, conflicts, clearing, bases and validation.');
+}
 const {buildChanges,fieldsOf,diffWords,nextFrom}=context.atlasChanges,plain=v=>JSON.parse(JSON.stringify(v)),fields=r=>[...fieldsOf(r)].sort();
 const marker={id:'bank',name:'Bank',note:'By the gate',category:'Bank',x:90,y:90,level:'lower'},label={id:'hall',name:'Hall',kind:'building',x:80,y:80,level:'lower'},chip={id:'trainer',building:'Tutor',classes:['Monk'],x:5,y:6};
 const row=(id,kind,payload,extra={})=>({id,kind,payload,map:'bay',level:'lower',status:'approved',target_id:'bank',user_id:'u'+id,author_name:'Traveller '+id,credit:true,...extra});

@@ -369,6 +369,17 @@ try{
   console.log('Named mob publisher checks passed: fixed levels, bounds, holds, independent edits, clearing, live type validation and type changes.');
  }
 
+ // Shapes survive publishing, type changes and moves; invalid geometry is held atomically.
+ {
+  await reset([]);const rect={kind:'area',form:'rect',points:[[10,10],[30,10],[30,30],[10,30]]},circle={kind:'area',form:'circle',points:[[50,50]],r:12},path={kind:'path',points:[[30,30],[50,50],[70,30]],loop:true};
+  const bad=[{...rect,form:'bad'},{...path,points:[[1,1]]},{...path,loop:'true'},{...path,points:[[1.1,1],[2,2]]},{...path,points:[[1,1],[101,2]]},{...path,points:Array.from({length:101},(_,i)=>[i,1])},{...circle,r:-1},{...circle,r:51},{...rect,points:[[10,10],[30,11],[30,30],[10,30]]},{...path,extra:true}];
+  approved=[R(1100,'new-marker',null,{name:'Area',category:'Bank',shape:rect,x:2,y:3}),R(1101,'new-marker',null,{name:'Circle',category:'Vendor',shape:circle,x:50,y:50}),R(1102,'new-marker',null,{name:'Patrol',category:'Mob camp',levels:[5,8],shape:path,x:30,y:30}),...bad.map((shape,i)=>R(1110+i,'new-marker',null,{name:'Bad shape',category:'Bank',shape,x:20,y:20}))];let r=await run();assert.equal(r.code,0,r.output);let marks=await json('data/markers.json');assert.equal(marks.length,3);assert.deepEqual(marks[0].shape,rect);assert.deepEqual([marks[0].x,marks[0].y],[20,20]);assert.deepEqual(marks[1].shape,circle);assert.deepEqual(marks[2].shape,path);let held=await json('.publish/held.json');assert.equal(held.length,bad.length);assert(held.every(h=>JSON.stringify(h).includes('Invalid shape')));
+  const from=marks[0];approved=[R(1130,'edit-marker',from.id,{name:from.name,category:'Vendor',shape:path,from}),R(1131,'edit-marker',from.id,{name:from.name,shape:circle,from})];r=await run();assert.equal(r.code,0,r.output);marks=await json('data/markers.json');assert.deepEqual(marks[0].shape,path);assert.deepEqual([marks[0].x,marks[0].y],[30,30]);assert((await json('.publish/held.json')).some(h=>h.id===1131));assert((await json('data/credits/test-map.json'))['marker:'+from.id].some(c=>c.what==='reshaped'));
+  const translated={...path,points:path.points.map(([x,y])=>[x+5,y+5])};approved=[R(1132,'move-marker',from.id,{name:from.name,from:[30,30],fromShape:path,to:[35,35],shape:translated})];r=await run();assert.equal(r.code,0,r.output);assert.deepEqual((await json('data/markers.json'))[0].shape,translated);
+  const now=(await json('data/markers.json'))[0];approved=[R(1133,'edit-marker',from.id,{name:from.name,shape:null,from:now})];r=await run();assert.equal(r.code,0,r.output);assert(!Object.hasOwn((await json('data/markers.json'))[0],'shape'));
+  approved=[R(1134,'edit-marker',from.id,{name:from.name,shape:bad[0],from:{name:from.name}})];r=await run();assert.equal(r.code,0,r.output);assert.equal((await json('.publish/held.json'))[0].id,1134);
+  console.log('Shape publisher checks passed: rectangle/circle/path, anchors, malformed/101-point holds, type preservation, reshaped credits, moves and clearing.');
+ }
  // Run the publish endpoint with local replies; a running batch gets one more dispatch, a waiting one does not.
  const source=stripTypeScriptTypes(await readFile(root+'/supabase/functions/publish-now/index.ts','utf8'));
  async function endpoint(states){let handler;const calls=[],context=vm.createContext({URL,Request,Response,Deno:{env:{get:k=>({GITHUB_DISPATCH_TOKEN:'test-token',SUPABASE_ANON_KEY:'public-key',SUPABASE_URL:'http://fixture'})[k]},serve:fn=>handler=fn},fetch:async(url,options={})=>{

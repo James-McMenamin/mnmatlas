@@ -33,7 +33,7 @@ const context=vm.createContext({URL});
 const app=await readFile(resolve(root,'app.js'),'utf8'),icons=await readFile(resolve(root,'icons.js'),'utf8'),wikiLinks=await readFile(resolve(root,'wiki-links.js'),'utf8');
 vm.runInContext(app.slice(app.indexOf('const baseCategories='),app.indexOf('const mobileLayout=')),context);
 vm.runInContext(icons,context);
-vm.runInContext(await readFile(resolve(root,'changes.js'),'utf8'),context);const {buildChanges,fieldsOf,matchesFrom,conflicts,applyTo,whatOf,editKeys}=context.atlasChanges;
+vm.runInContext(await readFile(resolve(root,'changes.js'),'utf8'),context);const {buildChanges,fieldsOf,matchesFrom,conflicts,applyTo,whatOf,editKeys}=context.atlasChanges;const shapes=context.atlasShapes;
 // Wiki links: only pages on the sites the atlas knows, in the same stored form the site writes.
 vm.runInContext(wikiLinks,context);const wikiAddress=vm.runInContext('wikiAddress',context),wikiIdOf=vm.runInContext('wikiIdOf',context),classesOk=vm.runInContext('classesOk',context),vendorKindOk=vm.runInContext('vendorKindOk',context),vendorKindNow=vm.runInContext('vendorKindNow',context),sellsOk=vm.runInContext('sellsOk',context),sellTypes=vm.runInContext('sellTypes',context),normaliseChange=vm.runInContext('normaliseChange',context),normaliseMarker=vm.runInContext('normaliseMarker',context),classAbbreviations=vm.runInContext('classAbbreviations',context);
 const levelsOk=vm.runInContext('levelsOk',context),mobsOk=vm.runInContext('mobsOk',context);
@@ -54,6 +54,8 @@ function wikiIdFrom(p,id){const wikiId=wikiIdOf(p.wikiId);if(wikiId===null)fail(
 function validatePayload(row,c){
  const p=normaliseMarker(structuredClone(row.payload));if(p?.travelArrow!==undefined){p.arrow=p.travelArrow;delete p.travelArrow;}if(!p||Array.isArray(p)||typeof p!=='object'||typeof p.name!=='string'||!clean(p.name)||p.name.length>100||Buffer.byteLength(JSON.stringify(p))>=4096)fail('Invalid payload for suggestion '+row.id+'.');
  if(!['move-marker','move-label','new-marker','edit-marker','edit-label'].includes(row.kind))fail('Invalid kind for suggestion '+row.id+'.');
+ if(Object.hasOwn(p,'shape')){if(row.kind==='edit-label'||row.kind==='move-label'||['label','exit'].includes(p.noteType))fail('Shapes need a marker.');if(p.shape===null){if(row.kind==='new-marker'||row.kind.startsWith('move-'))fail('Invalid shape: omit shape for a pin.');}else{p.shape=shapes.validate(p.shape,c);[p.x,p.y]=shapes.anchor(p.shape);}}
+ if(p.from?.shape)shapes.validate(p.from.shape,c);if(p.fromShape)shapes.validate(p.fromShape,c);if(row.kind==='move-marker'&&p.shape){if(!p.fromShape)fail('Invalid shape: a move needs its previous shape.');const from=point(p.from,c,row.id),to=point(p.to,c,row.id),translated=shapes.translate(p.fromShape,to[0]-from[0],to[1]-from[1],c);if(!matchesFrom({kind:'edit-marker',payload:{from:{shape:translated}}},{shape:p.shape},'shape'))fail('Invalid shape: a move must translate every point together.');}
  if(p.arrow!==undefined&&p.arrow!==null&&p.arrow!==''&&!supported.arrows.includes(p.arrow))fail('Unsupported arrow for suggestion '+row.id+'.');
  if(p.remove!==undefined&&(p.remove!==true||!['edit-marker','edit-label'].includes(row.kind)||p.reason!==undefined&&!['duplicate','missing','other'].includes(p.reason)))fail('Invalid removal for suggestion '+row.id+'.');
  if(row.kind!=='new-marker'&&(Object.hasOwn(p,'bounty')||Object.hasOwn(p,'priority')&&!(row.kind==='edit-label'&&typeof p.priority==='number')))fail('Bounty flags need a new marker.');
@@ -77,6 +79,7 @@ const original=new Map(),history=new Map();let batch=[],past=null,heldIds=new Se
 function before(path,m,row){const key=path+'#'+runKey(row);if(!original.has(key))original.set(key,structuredClone(m));return original.get(key);}
 const typeKeys=['trade','classes','vendor','sells'];
 function typeFields(m,p,id){
+ if(p.shape)m.shape=structuredClone(p.shape);
  for(const k of ['levels','mobs'])if(p[k]!=null&&(k==='levels'?['Mob camp','Named mob'].includes(p.category):p.category==='Mob camp')){if(!(k==='levels'?levelsOk(p[k],p.category):mobsOk(p[k])))fail('Unsupported '+k+' for suggestion '+id+'.');m[k]=structuredClone(p[k]);}
  if(p.trade&&p.category==='Tradeskill')m.trade=p.trade;
  if(p.category==='Class trainer'&&p.classes!==undefined){if(p.classes!==null&&!classesOk(p.classes))fail('Unsupported classes for suggestion '+id+'.');if(p.classes)m.classes=[...p.classes];}
@@ -149,6 +152,7 @@ function check(row,m,path){
  const was=before(path,m,row);
  for(const field of fieldsOf(row))if(field!=='added'&&!matchesFrom(row,m,field)&&!matchesFrom(row,was,field)){
   if(field==='position')fail('The published position changed after this was sent; check it again.');
+  if(field==='shape')fail('The published shape changed after this was sent; check it again.');
   if(field==='type')fail('The published type changed after this was sent; check it again.');
   fail('The published text changed after this was sent; check it again.');
  }
@@ -189,10 +193,11 @@ async function applyRow(row){
   if(fields.has('name'))next.name=clean(p.name);
   if(fields.has('note'))next.note=clean(p.note||'',true);
   // A reviewer can adjust an edit's spot without replacing its traveller's row or credit.
-  if(fields.has('position'))[next.x,next.y]=point([p.x,p.y],c,row.id);
+  if(fields.has('position')){const to=point([p.x,p.y],c,row.id);if(next.shape&&!fields.has('shape'))next.shape=shapes.translate(next.shape,to[0]-next.x,to[1]-next.y,c);[next.x,next.y]=to;}
   if(typed){next.category=typed.category;for(const k of typeKeys)if(Object.hasOwn(typed,k))next[k]=typed[k];else delete next[k];}
   if(fields.has('wiki')){if(wiki){next.wiki=wiki;if(wikiId)next.wikiId=wikiId;else if(p.wikiId!==undefined||wiki!==m.wiki)delete next.wikiId;}else{delete next.wiki;delete next.wikiId;}}
   for(const k of editKeys.filter(k=>!['name','note'].includes(k)))if(fields.has(k)&&!(k==='building'&&chip&&chip!==m)){if(p[k]===null||p[k]==='')delete next[k];else next[k]=p[k];}
+  if(next.shape){shapes.validate(next.shape,c);[next.x,next.y]=shapes.anchor(next.shape);}
   if(!['Mob camp','Named mob'].includes(next.category))delete next.levels;if(next.category!=='Mob camp')delete next.mobs;if(next.levels!=null&&!levelsOk(next.levels,next.category))fail('Unsupported levels for suggestion '+row.id+'.');
   // Retries after a successful push can find the desired values already on the map.
   const hits=conflicts(row,live,history.get(runKey(row))||[]);if(hits.length)fail('conflicts with #'+hits.join(', #'));
@@ -209,7 +214,7 @@ async function applyRow(row){
  if(superseded(row,live))return 'already superseded';
  if(!m)fail('Target missing for suggestion '+row.id+'.');
  if(Math.round(m.x)===x&&Math.round(m.y)===y)return 'already positioned';
- check(row,live,path);m.x=x;m.y=y;if(Object.hasOwn(p,'approximate'))m.approximate=p.approximate;m.community=true;mf.changed=true;
+ check(row,live,path);if(m.shape)m.shape=Object.hasOwn(p,'shape')?shapes.validate(p.shape,c):shapes.translate(m.shape,x-m.x,y-m.y,c);if(p.shape&&JSON.stringify(shapes.anchor(p.shape))!==JSON.stringify([x,y]))fail('Invalid shape: move anchor must match the shape.');m.x=x;m.y=y;if(Object.hasOwn(p,'approximate'))m.approximate=p.approximate;m.community=true;mf.changed=true;
  if(!label&&chip&&chip!==m){chip.x=x;chip.y=y;if(Object.hasOwn(p,'approximate'))chip.approximate=p.approximate;lf.changed=true;}return 'position moved';
 }
 async function apply(row){
