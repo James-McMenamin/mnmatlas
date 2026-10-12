@@ -1116,5 +1116,17 @@
     "note": "",
     "x": 3910,
     "y": 6224
+  },
+  {
+    "id": "community-428",
+    "community": true,
+    "name": "Inq",
+    "category": "Class trainer",
+    "note": "",
+    "x": 4614,
+    "y": 4270,
+    "classes": [
+      "Inquisitor"
+    ]
   }
 ]

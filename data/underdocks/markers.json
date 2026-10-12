@@ -931,5 +931,17 @@
     "classes": [
       "Necromancer"
     ]
+  },
+  {
+    "id": "community-436",
+    "community": true,
+    "name": "Sporcinius",
+    "category": "Named mob",
+    "note": "He pats in these caverns.",
+    "x": 705,
+    "y": 5561,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/sporcinius",
+    "wikiId": "npc-sporcinius"
   }
 ]

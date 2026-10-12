@@ -221,13 +221,14 @@
   "category": "Mob camp",
   "levels": [
    10,
-   15
+   17
   ],
   "x": 3674,
   "y": 2909,
   "approximate": true,
   "note": "",
-  "minZoom": 3
+  "minZoom": 3,
+  "community": true
  },
  {
   "id": "undead-6-10-2",

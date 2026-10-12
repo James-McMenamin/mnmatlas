@@ -105,11 +105,27 @@
     {
       "name": ".anduri",
       "what": "added"
+    },
+    {
+      "name": "crezax_",
+      "what": "moved"
     }
   ],
   "marker:community-420": [
     {
       "name": ".anduri",
+      "what": "added"
+    }
+  ],
+  "marker:community-424": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:community-427": [
+    {
+      "name": "karnix91",
       "what": "added"
     }
   ]

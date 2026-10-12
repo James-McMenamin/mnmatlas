@@ -577,8 +577,8 @@
   "name": "Bewildered Gorakk Four-Toes (level 11?)",
   "category": "Named mob",
   "note": "Spawned by Ranger Starter Quest at the tent at the end of the orc clifftop.",
-  "x": 3400,
-  "y": 3506,
+  "x": 3817,
+  "y": 3054,
   "levels": [
    11,
    11
@@ -600,5 +600,47 @@
   ],
   "wiki": "https://monstersandmemories.wiki/npcs/scout-leader-krindor",
   "wikiId": "npc-scout-leader-krindor"
+ },
+ {
+  "id": "community-424",
+  "community": true,
+  "name": "Fossergrim",
+  "category": "Mob camp",
+  "note": "Watchers up top 8-10, maidens down below 11-12",
+  "x": 3933,
+  "y": 1823,
+  "levels": [
+   8,
+   12
+  ],
+  "mobs": [
+   {
+    "name": "Fossergrim Watch",
+    "wiki": "https://monstersandmemories.wiki/npcs/fossergrim-watch",
+    "wikiId": "npc-fossergrim-watch"
+   }
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/fossergrim-watch"
+ },
+ {
+  "id": "community-427",
+  "community": true,
+  "name": "Calafreyan Skeletons",
+  "category": "Mob camp",
+  "note": "",
+  "x": 3072,
+  "y": 2908,
+  "levels": [
+   11,
+   14
+  ],
+  "mobs": [
+   {
+    "name": "A Calafreyan soldier",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-calafreyan-soldier",
+    "wikiId": "npc-a-calafreyan-soldier"
+   }
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/npc-a-calafreyan-soldier"
  }
 ]

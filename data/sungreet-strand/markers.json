@@ -760,5 +760,42 @@
   "note": "Only spawn at night.",
   "x": 3930,
   "y": 6428
+ },
+ {
+  "id": "community-430",
+  "community": true,
+  "name": "Warlord Muggrah (level 25)",
+  "category": "Named mob",
+  "note": "Muggrah Goblin Camp on the mountain past Tel Ekir. Pathing brawler that walks a circuit around the snake statue is the PH.",
+  "x": 2460,
+  "y": 900,
+  "levels": [
+   25,
+   25
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/warlord-muggrah",
+  "wikiId": "npc-warlord-muggrah"
+ },
+ {
+  "id": "community-431",
+  "community": true,
+  "name": "Best Appraiser Bibic",
+  "category": "Named mob",
+  "note": "Muggrah Goblin Camp on the mountain past Tel Ekir. By fallen obelisk.",
+  "x": 2398,
+  "y": 795,
+  "wiki": "https://monstersandmemories.wiki/npcs/best-appraiser-bibic",
+  "wikiId": "npc-best-appraiser-bibic"
+ },
+ {
+  "id": "community-437",
+  "community": true,
+  "name": "Klimpi the Feared",
+  "category": "Notable NPC",
+  "note": "Muggrah Goblin Camp on the mountain past Tel Ekir.",
+  "x": 2468,
+  "y": 1034,
+  "wiki": "https://monstersandmemories.wiki/npcs/klimpi-the-feared",
+  "wikiId": "npc-klimpi-the-feared"
  }
 ]
