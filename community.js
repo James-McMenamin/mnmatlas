@@ -19,9 +19,9 @@
  let client;
  try{client=window.supabase.createClient(settings.supabaseUrl,settings.supabaseKey);}catch{status('Accounts could not start. Your local notes are safe.');return;}
  let previewLeave=()=>true;const allowLeave=()=>{if(!previewLeave())return false;previewLeave=()=>true;return true;};
- let user=null,admin=false,authSerial=0,mapSerial=0,reviewLayer=null,syncing=false,syncReady='',syncTimer,reviewSerial=0;
+ let user=null,admin=false,authSerial=0,mapSerial=0,reviewLayer=null,syncing=false,syncReady='',privateSyncReady='',syncTimer,reviewSerial=0;
  // Reports sent in this visit; nothing is kept per marker, so a fixed marker starts clean.
- const reportedNow=new Set(),syncJobs=new Map(),sentKey='mnmaps-community-sent',sharedKey='mnmaps-community-shared';
+ const reportedNow=new Set(),syncJobs=new Map(),sentKey='mnmaps-community-reviewed-positions',sharedKey='mnmaps-community-shared';
  const normaliseSuggestion=normaliseChange;
  const scope=()=>config.id+'-'+config.tileRevision,displayName=u=>String(u?.user_metadata?.full_name||u?.user_metadata?.name||u?.user_metadata?.preferred_username||'Discord member').slice(0,80);
  function readSet(key){try{const rows=JSON.parse(localStorage.getItem(key)||'[]');return new Set(Array.isArray(rows)?rows.filter(r=>typeof r==='string'):[]);}catch{return new Set();}}
@@ -127,7 +127,7 @@
  // What went wrong when sending, in the visitor's words.
  const sendError=(e,fallback,what='suggestions')=>turnedOff(e)?'Your account can no longer send '+what+'.':e?.code==='too-long'?'This is too long to send: shorten its description.':fallback;
  // A dialog's send button: it needs an account, runs once at a time and says what went wrong.
- function sendButton(label,run,failed,what){const b=button(label,async()=>{if(!user){signInDialog();return;}b.disabled=true;try{await run();}catch(e){status(sendError(e,failed,what));}finally{b.disabled=false;}},'primary');return b;}
+ function sendButton(label,run,failed,what,signedOut){const b=button(label,async()=>{if(!user){signedOut?.();signInDialog();return;}b.disabled=true;try{await run();}catch(e){status(sendError(e,failed,what));}finally{b.disabled=false;}},'primary');return b;}
  function signInDialog(){const d=showDialog('Sign in to contribute');d.append(text('p','Sign in with Discord to report problems or send suggestions for review. Your positions and notes remain saved in this browser.'));const actions=text('div','','dialog-actions');actions.append(button('Close',()=>d.close()),button('Sign in with Discord',signIn,'primary'));d.append(actions);}
  function freshPopup(){if(!map||loading)return;for(const m of allMarkers()){const pin=pins.get(m.id);if(pin?.isPopupOpen?.())pin.setPopupContent(()=>popup(m));}}
  // A report says what is wrong, so it can be acted on; it waits in review until fixed or dismissed.
@@ -446,6 +446,7 @@
   const all=readBounties();all[m.id]={bounty:bountyNext.id,priority:bountyNext.priority,map:config.id};writeBounties(all);}bountyNext=null;});
  // Contribution points (approved suggestions: 1, bounty 2, priority bounty 3), from the database; null when unavailable.
  async function myPoints(){if(!user)return null;try{const {data,error}=await client.rpc('my_contribution_points');if(error)throw error;const row=Array.isArray(data)?data[0]:data;return row&&Number.isFinite(row.points)?row:null;}catch{return null;}}
+ let labelMoveDraft=null;
  async function editDialog(target,kind){
   if(!user){signInDialog();return;}await loadApproved();const amendments=[...approvedRows,...pendingRows],state=targetState(target,kind),own=!admin&&amendments.filter(r=>r.user_id===user.id&&r.status==='pending'&&!r.reviewed_at&&r.kind===kind&&r.target_id===target.id&&r.map===config.id&&(kind!=='edit-label'||(r.level||null)===(target.level||config.levelId||null))).sort((a,b)=>Number(b.id)-Number(a.id))[0],base=own?window.atlasChanges.applyTo(state?.effective||target,own):state?.effective||target,chip=state?.kind==='chip';
   const d=showDialog('Change “'+base.name+'”',kind==='edit-label');if(kind==='edit-label')d.classList.add('place-change');
@@ -454,7 +455,7 @@
   const why=field(d,'Why (optional)','edit-comment',textBox(2,500,'Tell the cartographers what changed.')),credit=creditBox(d);if(own){why.value=own.comment||'';credit.checked=own.credit===true;}
   let moved=null,movePin=null,start=base.x!==undefined?[base.x,base.y]:null;
   // A name stays on the map while its floating card is open, and can be dragged on touch screens too.
-  if(kind==='edit-label'&&start){map.closePopup();const pin=labelPins.get(target.id);if(pin){movePin=pin;pin.dragging?.enable();pin.getElement?.()?.classList.add('change-selected');const drag=()=>{moved=pixelsOf(pin.getLatLng());};pin.on('dragend',drag);d.addEventListener('close',()=>{pin.off?.('dragend',drag);if(!alignmentMode)pin.dragging?.disable();pin.setLatLng?.(locationOf({...base,x:target.x,y:target.y}));pin.getElement?.()?.classList.remove('change-selected');},{once:true});}}
+  if(kind==='edit-label'&&start){map.closePopup();const pin=labelPins.get(target.id);if(pin){movePin=pin;pin.dragging?.enable();pin.getElement?.()?.classList.add('change-selected');labelMoveDraft={id:target.id,dialog:d};const drag=()=>{if(alignmentMode)return;const to=pixelsOf(pin.getLatLng());pin.setLatLng?.(locationOf(target));moveDialog(target,kind,to);};pin.on('dragend',drag);d.addEventListener('close',()=>{labelMoveDraft=null;pin.off?.('dragend',drag);if(!alignmentMode)pin.dragging?.disable();pin.setLatLng?.(locationOf({...base,x:target.x,y:target.y}));pin.getElement?.()?.classList.remove('change-selected');},{once:true});}}
   if(kind==='edit-label')fitFloating(d,map.latLngToContainerPoint?.(locationOf(base)));
   if(kind==='edit-label'){d.append(text('p','Drag the name on the map to move it.','form-hint'));if(movePin){const bar=text('div','','place-move-bar'),name=text('strong',base.name),done=button('Done',()=>{d.classList.remove('moving-place');fields.controls.name.focus?.();});bar.append(name,done);d.append(button('Move on the map',()=>{name.textContent=fields.controls.name.value||base.name;d.classList.add('moving-place');map.closePopup();},'place-move-button'),bar);}}
   const actions=text('div','','dialog-actions'),send=sendButton(admin?'Save':'Send for review',async()=>{
@@ -486,11 +487,14 @@
   if(admin){editDialog(target,kind);return;}const d=showDialog('Suggest a change');d.classList.add('suggest-sheet');d.append(text('p',target.name+' · '+config.title,'form-hint'));
   for(const [icon,title,hint,go] of [['✎','Fix the name or details','Name, type, description or wiki page',()=>editDialog(target,kind)],['⚒','It stands somewhere else','Drag it or tap the right spot on the map',()=>moveDialog(target,kind)],['✕','It should be removed','Not in the game any more, or marked twice',()=>removalDialog(target,kind)],['?','Something else','Tell the cartographers what is wrong',()=>reportDialog(target)]]){const b=button('',()=>new Promise(resolve=>{d.addEventListener('close',()=>resolve(go()),{once:true});d.close();}),'suggest-option');b.append(text('i',icon),text('strong',title),text('small',hint));d.append(b);}d.append(button('Cancel',()=>d.close()));d.addEventListener('close',()=>d.classList.remove('suggest-sheet'),{once:true});
  }
- function moveDialog(target,kind){
-  if(!user){signInDialog();return;}const amendments=[...approvedRows,...pendingRows],state=targetState(target,kind),base=state?.effective||target,from=[base.x,base.y];map.closePopup();clearPreview();reviewLayer=L.layerGroup().addTo(map);
-  const pin=L.marker(locationOf(base),{icon:pinIcon({...base,noteType:kind==='edit-label'?base.kind==='exit'?'exit':'label':undefined,category:base.category||'Personal'}),draggable:true,zIndexOffset:600}).addTo(reviewLayer),bar=text('section','','community-preview move-sheet');bar.id='community-preview';bar.append(text('strong','It stands somewhere else'),text('p','Drag the faded mark, or tap its rightful spot.','form-hint'));$('map-frame').append(bar);
-  const why=field(bar,'Why (optional)','move-comment',textBox(2,500,'Tell the cartographers what changed.')),credit=creditBox(bar);const tap=e=>pin.setLatLng(e.latlng);map.on('click',tap);bar.addEventListener('wiki-done',()=>map.off('click',tap));const actions=text('div','','dialog-actions');actions.append(button('Cancel',clearPreview),sendButton(admin?'Save':'Send for review',async()=>{const to=pixelsOf(pin.getLatLng());if(!bounded(...to,config.minZoom)){status('Keep it inside the map.');return;}await saveOwn({kind:kind==='edit-label'?'move-label':'move-marker',target_id:target.id,map:config.id,level:target.level||config.levelId||null,payload:{name:base.name,from,to},comment:why.value.trim()||null,credit:credit.checked,user_id:user.id,author_name:displayName(user)},amendments);clearPreview();await loadApproved();status(admin?'Saved for the next edition.':'Thanks! The move is waiting for review.');},'The move could not be saved.'));bar.append(actions);
+ let deferredMove=null;
+ function moveDialog(target,kind,destination,values){
+  const amendments=[...approvedRows,...pendingRows],state=targetState(target,kind),base=state?.effective||target;map.closePopup();clearPreview();reviewLayer=L.layerGroup().addTo(map);
+  const pin=L.marker(locationOf(destination?{...base,x:destination[0],y:destination[1]}:base),{icon:pinIcon({...base,atlasLabel:kind==='edit-label',noteType:kind==='edit-label'?base.kind==='exit'?'exit':'label':undefined,category:base.category||'Personal'}),draggable:true,zIndexOffset:600}).addTo(reviewLayer),bar=text('section','','community-preview move-sheet');bar.id='community-preview';bar.append(text('strong','It stands somewhere else'),text('p','Drag the faded mark, or tap its rightful spot.','form-hint'));$('map-frame').append(bar);
+  if(kind==='edit-label'&&labelMoveDraft?.id===target.id){const d=labelMoveDraft.dialog;d.style.visibility='hidden';bar.addEventListener('wiki-done',()=>{d.style.visibility='';d.classList.remove('moving-place');});}
+  const why=field(bar,'Why (optional)','move-comment',textBox(2,500,'Tell the cartographers what changed.')),credit=creditBox(bar);if(values){why.value=values.comment;credit.checked=values.credit;}const tap=e=>pin.setLatLng(e.latlng);map.on('click',tap);bar.addEventListener('wiki-done',()=>map.off('click',tap));const actions=text('div','','dialog-actions');actions.append(button('Cancel',()=>{deferredMove=null;clearPreview();}),sendButton(admin?'Save':'Send for review',async()=>{const row=moveSuggestion(target,kind,pixelsOf(pin.getLatLng()));await saveOwn({...row,comment:why.value.trim()||null,credit:credit.checked,user_id:user.id,author_name:displayName(user)},amendments);clearPreview();await loadApproved();status(admin?'Saved for the next edition.':'Thanks! The move is waiting for review.');},'The move could not be saved.',undefined,()=>{deferredMove={target,kind,destination:pixelsOf(pin.getLatLng()),map:scope(),values:{comment:why.value,credit:credit.checked}};}));bar.append(actions);
  }
+ function moveSuggestion(target,kind,to){if(!Array.isArray(to)||to.length!==2||!bounded(...to,config.minZoom))throw Error('Keep it inside the map.');const base=targetState(target,kind)?.effective||target;return {kind:kind==='edit-label'?'move-label':'move-marker',target_id:target.id,map:config.id,level:target.level||config.levelId||null,payload:{name:base.name,from:[base.x,base.y],to}};}
  // Repeated saves amend only this account's open row; the original base still protects earlier contributions.
  function newestOnTarget(row,rows){const rules=window.atlasReview;return rows.filter(r=>!r.sourceStatus&&['pending','approved'].includes(r.status)&&rules.target(r)===rules.target(row)&&rules.targetKind(r)===rules.targetKind(row)&&r.map===row.map&&(rules.targetKind(row)!=='label'||(r.level||null)===(row.level||null))).sort((a,b)=>Number(b.id)-Number(a.id))[0];}
  // A desk receipt pairs the saved version with its decision's undo; amendments retain their earlier contents.
@@ -535,19 +539,24 @@
   const actions=text('div','','change-actions');actions.append(editButton(target,kind));const row=rows.find(r=>r.status==='pending')||rows[0];if(admin&&row&&!row.sourceStatus){const open=rows.filter(r=>['pending','approved'].includes(r.status)).length;actions.append(button('Review'+(open>1?' ('+open+')':''),()=>{map.closePopup();desk.open(row);}));}actions.append(button('✕ Remove',()=>removalDialog(target,kind),'community-remove'));box.append(actions);n.append(box);
  }
  function creditWords(rows){const groups=new Map();for(const c of rows){const verb=c.what==='added'?'charted':c.what==='moved'?'moved':'improved';if(!groups.has(verb))groups.set(verb,[]);groups.get(verb).push(c.name||null);}return [...groups].map(([verb,names],i)=>{const known=[...new Set(names.filter(Boolean))],unknown=names.filter(n=>!n).length,who=known.length>2?known.slice(0,2).join(', ')+' and '+(known.length===3?'a traveller':(known.length-2)+' travellers'):known.join(' and ');return (i?verb:verb[0].toUpperCase()+verb.slice(1))+' by '+who+(unknown?(who?' and ':'')+(unknown>1?'other travellers':'a traveller'):'');}).join(' · ');}
- window.atlasCommunity={deleteNotice,hoverState(m){const t=targetState(m,'edit-marker');return t&&{rows:t.rows.filter(r=>['pending','approved'].includes(r.status)&&!approvedLive(r)),proposed:t.proposed};},change(target,kind){if(!user)return false;editDialog(target,kind);return true;},isAdmin:()=>admin,reviewOpen:()=>desk.opened,reviewCurrent:token=>desk.currentPreview(token),reviewLabel:()=>desk.opened&&desk.selected?.kind.endsWith('label')?desk.selected.target_id:null,leaveReview:token=>desk.leaveMap(token)&&allowLeave(),closeReview:()=>desk.opened?desk.close():null,afterPositions:go=>{if(dialog.open)dialog.addEventListener('close',go,{once:true});else go();},report:reportDialog,fields:window.atlasFields,refresh:loadApproved,popup(m,n){
+ window.atlasCommunity={deleteNotice,userId:()=>user?.id||null,move:moveDialog,offerPositions,hoverState(m){const t=targetState(m,'edit-marker');return t&&{rows:t.rows.filter(r=>['pending','approved'].includes(r.status)&&!approvedLive(r)),proposed:t.proposed};},change(target,kind){if(!user)return false;editDialog(target,kind);return true;},isAdmin:()=>admin,reviewOpen:()=>desk.opened,reviewCurrent:token=>desk.currentPreview(token),reviewLabel:()=>desk.opened&&desk.selected?.kind.endsWith('label')?desk.selected.target_id:null,leaveReview:token=>desk.leaveMap(token)&&allowLeave(),closeReview:()=>desk.opened?desk.close():null,afterPositions:go=>{if(dialog.open)dialog.addEventListener('close',go,{once:true});else go();},report:reportDialog,fields:window.atlasFields,refresh:loadApproved,popup(m,n){
   if(m.atlasLabel){ledger(m,'edit-label',n);return;}if(m.id.startsWith('personal-')){if(alignmentMode)return;const shared=readSet(sharedKey).has(sharedToken(m));if(!config.zonesFile)n.append(shared?text('p','Shared for review','moved-note'):button('Share with everyone',()=>shareNote(m),'','share'));return;}ledger(m,'edit-marker',n);
  },placePopup(p,n){if(!['label','exit','building','district'].includes(p.kind))return;const target=labelData.labels.find(l=>l.id===p.id)||changeSet().get('label:'+p.id)?.published||p;ledger(target,'edit-label',n);},chipPopup(p,n){ledger(p,'edit-marker',n);}};
  function movedItems(){
   const sent=readSet(sentKey),rows=[];
-  for(const [kind,items,positions] of [['move-marker',originals,publishedPositions],['move-label',labelData.labels,publishedLabelPositions]])for(const m of items){
-   const from=positions.get(m.id),to=[m.x,m.y];if(!from||from.every((v,i)=>v===to[i]))continue;
-   const token=JSON.stringify([scope(),m.level||config.levelId||'',kind,m.id,...to]);if(sent.has(token))continue;
-   rows.push({token,name:m.name,kind,target_id:m.id,map:config.id,level:m.level||config.levelId||null,payload:{from,to,name:m.name}});
+  for(const [kind,items,saved,positions] of [['edit-marker',originals,alignmentPositions,publishedPositions],['edit-label',labelData.labels,alignmentLabelPositions,publishedLabelPositions]])for(const m of items){
+   const from=positions.get(m.id),to=saved[m.id];if(!from||!Array.isArray(to)||to.length!==2||!bounded(...to,config.minZoom)||from.every((v,i)=>v===to[i]))continue;
+   const token=JSON.stringify([scope(),m.level||config.levelId||'',kind==='edit-label'?'move-label':'move-marker',m.id,...to]);if(sent.has(token))continue;
+   rows.push({token,name:m.name,...moveSuggestion(m,kind,to)});
   }return rows;
  }
- let deferredPositions=null;const positionSigninKey='mnmaps-offer-positions-on-signin';
- function offerPositions(){const rows=movedItems();if(!rows.length)return;sendDialog('Suggest positions',rows,false);}
+ let deferredPositions=null;const positionSigninKey='mnmaps-offer-positions-on-signin',positionVisits=new Set();
+ function offerPositions(){const rows=movedItems();if(!rows.length)return;
+  const d=showDialog('You moved '+rows.length+' places on this map in this browser');d.append(text('p','Public places now keep their published positions. Your saved moves are kept until you choose to put them back.'));
+  const list=text('ul','');for(const row of rows)list.append(text('li',row.name));d.append(list);if(!user)d.append(text('p','Sign in to send these moves for review.'));
+  const actions=text('div','','dialog-actions');if(user)actions.append(button('Send them for review',()=>{d.close();sendDialog('Suggest positions',rows,false);}));
+  actions.append(button('Put them back',()=>{try{localStorage.setItem(storageKey('alignment'),'{}');localStorage.setItem(storageKey('label-alignment'),'{}');alignmentPositions={};alignmentLabelPositions={};if(editSnapshot){editSnapshot.positions={};editSnapshot.labels={};}updateAlignmentStatus();d.close();}catch{status('Your browser could not clear these positions. Please try again.',true);}}),button('Later',()=>d.close()));d.append(actions);return true;
+ }
  function notePayload(m){m=normaliseMarker(m);
   const payload={x:m.x,y:m.y,name:m.name,category:m.category,note:m.note,...markerExtras(m)};if(m.noteType==='exit'&&!payload.travel)payload.travel=travelKind(m.name,'',m.travel)||'Exit';
   const bounty=readBounties()[m.id];if(bounty&&m.wikiId===bounty.bounty){payload.bounty=bounty.bounty;if(bounty.priority)payload.priority=true;}
@@ -641,7 +650,7 @@
  }
  // After signing in: the claim asked for from the open form goes at once; bounties placed while signed out are offered
  // once (per note) to claim.
- function afterSignIn(){let resume=false;try{resume=localStorage.getItem(positionSigninKey)===scope();if(resume)localStorage.removeItem(positionSigninKey);}catch{}if(deferredPositions){const queued=deferredPositions;deferredPositions=null;sendDialog(queued.title,queued.rows,false);return;}
+ function afterSignIn(){if(deferredMove){const queued=deferredMove;deferredMove=null;if(queued.map===scope()){if(dialog.open)dialog.close();moveDialog(queued.target,queued.kind,queued.destination,queued.values);return;}}let resume=false;try{resume=localStorage.getItem(positionSigninKey)===scope();if(resume)localStorage.removeItem(positionSigninKey);}catch{}if(deferredPositions){const queued=deferredPositions;deferredPositions=null;sendDialog(queued.title,queued.rows,false);return;}
   if(claimAfterSignIn&&bountyForm&&$('editor').open){claimAfterSignIn=false;setBountyForm(bountyForm.note);$('marker-form').requestSubmit();return;}
   claimAfterSignIn=false;if(resume&&movedItems().length){offerPositions();return;}offerPrivateBounties();
  }
@@ -712,7 +721,7 @@
   }catch(e){status('Saved to your field notes, but your suggestion could not be updated. '+sendError(e,'You can share the note again from its popup.'));}
  }
  function sendDialog(title,rows,sharing){if(!user&&!sharing){deferredPositions={title,rows};try{localStorage.setItem(positionSigninKey,scope());}catch{}signInDialog();return;}
-  const amendments=[...approvedRows,...pendingRows],d=showDialog(title);d.append(text('p',sharing?'Send this note for review before it appears in the community atlas.':'Your positions are saved locally. Choose the changes to send for review.'));
+  const amendments=[...approvedRows,...pendingRows],d=showDialog(title);d.append(text('p',sharing?'Send this note for review before it appears in the community atlas.':'Choose the saved moves to send for review.'));
   const list=text('div','','community-choices'),checks=[];
   for(const row of rows){const label=text('label',''),check=document.createElement('input');check.type='checkbox';check.checked=true;label.append(check,text('span',row.name));list.append(label);checks.push(check);}d.append(list);
   const comment=field(d,'Optional comment','suggestion-comment',textBox(3,500)),credit=creditBox(d);
@@ -721,11 +730,11 @@
    send.disabled=true;let done=0;
    try{
     // Separate inserts: partial success is remembered.
-    let published=0;for(const row of selected){const {token,name,...suggestion}=row;if(await saveOwn({...suggestion,user_id:user.id,author_name:displayName(user),comment:comment.value.trim()||null,credit:credit.checked},amendments))published++;remember(sharing?sharedKey:sentKey,[token]);checks[rows.indexOf(row)].disabled=true;checks[rows.indexOf(row)].checked=false;done++;}
+    let published=0;for(const row of selected){const {token,name,...suggestion}=row;if(!sharing){const target=(suggestion.kind==='move-label'?labelData.labels:originals).find(m=>m.id===suggestion.target_id);if(!target)throw Error('This place is no longer published.');Object.assign(suggestion,moveSuggestion(target,suggestion.kind==='move-label'?'edit-label':'edit-marker',suggestion.payload.to));}if(await saveOwn({...suggestion,user_id:user.id,author_name:displayName(user),comment:comment.value.trim()||null,credit:credit.checked},amendments))published++;remember(sharing?sharedKey:sentKey,[token]);checks[rows.indexOf(row)].disabled=true;checks[rows.indexOf(row)].checked=false;done++;}
     if(done){freshPopup();d.close();status(sentLine(published===done)||'Thanks! Your suggestion is waiting for review.');}
    }catch(e){status(sendError(e,'Some suggestions could not be sent; unsent items remain selected.')+' Your local notes and positions are safe.');freshPopup();}
    finally{if(done)event('suggestion-sent');send.disabled=false;}
-  },'primary');actions.append(button('Not now',()=>{if(!sharing)remember(sentKey,rows.map(r=>r.token));d.close();}),send);d.append(actions);
+  },'primary');actions.append(button('Not now',()=>{d.close();}),send);d.append(actions);
  }
  // Ids present at the last successful sync tell a deleted note from a new one on the other side.
  const baseKey=(uid,key)=>'mnmaps-community-synced-'+uid+'-'+key;
@@ -736,13 +745,33 @@
   if(syncing||!user||!config||syncReady!==syncIdentity())return;
   const job={uid:user.id,map:scope(),notes:personal.map(m=>({...m}))};syncJobs.set(job.uid+':'+job.map,job);clearTimeout(syncTimer);syncTimer=setTimeout(()=>pushJobs(),2000);
  }
+ const privateScope=()=>scope()+'#private';
+ function mergePrivateEntries(local,remote,uid){if(!Array.isArray(remote)||!remote.every(m=>validPrivate(m)&&m.owner===uid))throw Error('Private notes could not be read.');const merged=new Map();for(const m of [...remote,...local]){const old=merged.get(m.id);if(!old||m.updated>old.updated)merged.set(m.id,m);}return [...merged.values()];}
+ function schedulePrivateSync(){
+  if(syncing||!user||!config||privateSyncReady!==syncIdentity())return;
+  const job={uid:user.id,map:privateScope(),notes:privateNotes.filter(m=>m.owner===user.id).map(m=>({...m}))};if(job.map.length>160||payloadBytes(job.notes)>=1000000){quiet('Private notes could not sync. Your local notes are safe.');return;}
+  syncJobs.set(job.uid+':'+job.map,job);clearTimeout(syncTimer);syncTimer=setTimeout(()=>pushJobs(),2000);
+ }
+ async function syncPrivateNotes(serial,push=true){
+  if(!user||!map||loading||alignmentMode||!privateNotesReadable)return;const uid=user.id,key=privateScope(),identity=syncIdentity();privateSyncReady='';
+  try{if(key.length>160)throw Error();const {data,error}=await client.from('user_notes').select('notes').eq('user_id',uid).eq('map',key).maybeSingle();if(error)throw error;if(serial!==mapSerial||user?.id!==uid||key!==privateScope()||alignmentMode)return;
+   const remote=data?.notes||[];
+   // Tombstones and timestamps travel with entries, so an offline deletion beats an older remote note.
+   const merged=mergePrivateEntries(privateNotes.filter(m=>m.owner===uid||m.owner===null).map(m=>({...m,owner:uid})),remote,uid);
+   syncing=true;const saved=persistPrivate([...privateNotes.filter(m=>m.owner!==uid&&m.owner!==null),...merged]);syncing=false;if(!saved)return;
+   privateSyncReady=identity;recoverPrivateTargets();schedulePrivateSync();if(push)await pushJobs();
+  }catch{syncing=false;quiet('Private notes could not sync. Your local notes are safe.');}
+ }
  let pushing=false;
  async function pushJobs(){
-  if(pushing)return;pushing=true;let failed=false;
-  try{for(const [key,job] of syncJobs){if(user?.id!==job.uid){syncJobs.delete(key);continue;}
-   try{const {error}=await client.from('user_notes').upsert({user_id:job.uid,map:job.map,notes:job.notes,updated_at:new Date().toISOString()},{onConflict:'user_id,map'});if(error)throw error;writeBase(job.uid,job.map,job.notes);if(syncJobs.get(key)===job)syncJobs.delete(key);quiet('Notes synced.');}
+  if(pushing)return;pushing=true;let failed=false,progressed=false;
+  try{for(const [key,job] of syncJobs){if(user?.id!==job.uid){syncJobs.delete(key);continue;}if(job.map===scope()&&syncReady!==syncIdentity()||job.map===privateScope()&&privateSyncReady!==syncIdentity())continue;
+   try{let notes=job.notes;if(job.map.endsWith('#private')){const {data,error}=await client.from('user_notes').select('notes').eq('user_id',job.uid).eq('map',job.map).maybeSingle();if(error)throw error;
+     const here=user?.id===job.uid&&job.map===privateScope();notes=mergePrivateEntries(here?privateNotes.filter(m=>m.owner===job.uid):notes,data?.notes||[],job.uid);if(payloadBytes(notes)>=1000000)throw Error();
+     if(here){syncing=true;const saved=persistPrivate([...privateNotes.filter(m=>m.owner!==job.uid),...notes]);syncing=false;if(!saved)throw Error();}}
+    const {error}=await client.from('user_notes').upsert({user_id:job.uid,map:job.map,notes,updated_at:new Date().toISOString()},{onConflict:'user_id,map'});if(error)throw error;writeBase(job.uid,job.map,notes);if(syncJobs.get(key)===job)syncJobs.delete(key);progressed=true;quiet('Notes synced.');}
    catch{failed=true;quiet('Notes could not sync. Your local notes are safe.');}
-  }}finally{pushing=false;if(!failed&&syncJobs.size){clearTimeout(syncTimer);syncTimer=setTimeout(()=>pushJobs(),2000);}}
+  }}finally{pushing=false;if(progressed&&!failed&&syncJobs.size){clearTimeout(syncTimer);syncTimer=setTimeout(()=>pushJobs(),2000);}}
  }
  async function syncNotes(serial){
   if(!user||!map||loading||alignmentMode)return;const uid=user.id,key=scope(),identity=uid+':'+key;syncReady='';
@@ -757,9 +786,10 @@
    syncReady=identity;setupCategoryControls();buildPlaceIndex();drawMarkers();scheduleSync();await pushJobs();
   }catch{syncing=false;quiet('Notes could not sync. Your local notes are safe.');}
  }
+ async function syncMapNotes(serial){await syncPrivateNotes(serial,false);if(serial===mapSerial)await syncNotes(serial);}
  async function onMap(){
-  if(!map||loading)return;const serial=++mapSerial;syncReady='';clearPreview();desk.mapChanged();
-  map.off?.('zoomend',zoomApproved);map.on?.('zoomend',zoomApproved);loadApproved();await syncNotes(serial);
+  if(!map||loading)return;const serial=++mapSerial;syncReady='';privateSyncReady='';clearPreview();desk.mapChanged();
+  map.off?.('zoomend',zoomApproved);map.on?.('zoomend',zoomApproved);loadApproved();await syncMapNotes(serial);if(serial!==mapSerial)return;if(!positionVisits.has(scope())&&!dialog.open&&!desk.opened&&offerPositions())positionVisits.add(scope());
  }
  // Suggestions on the map before they are live. Approved ones wait for the publishing run: admins see them all, and each
  // author their own (the read policy already lets authors read their rows). Admins also see those waiting for review,
@@ -834,9 +864,11 @@
   desk.drawPins();
  }
  function suggestionPopup(row,look){const t=changeSet().forRow(row.id),real=originals.find(m=>m.id===(t?.id||look.id)),n=t?.kind==='label'&&typeof placePopup==='function'?placePopup({...t.published||look,id:t.id}):popup(real||look);const dup=duplicateList(row,jumpTo);if(dup)n.append(dup);return n;}
+ function reviewPrivateNote(row,n){if(row.map!==config.id)return;const t=reviewTarget(row);if(t?.published)privateNoteLine(t.published,t.kind==='label'?'label':'marker',n);}
  function approvedPopup(row,tag){
   const p=row.payload||{},waiting=row.status==='pending',refused=row.status==='rejected',n=text('div','');n.append(text('div',tag+' · '+(refused?'rejected':waiting?'waiting for review':'approved, not live yet'),'tag'),text('h3',p.name||''));if(p.note&&row.kind!=='move-marker'&&p.remove!==true)n.append(text('p',p.note));
   if(p.remove===true)n.append(text('p','Removal'+(removalReasons[p.reason]?': '+removalReasons[p.reason]:'')+(row.comment?'. “'+row.comment+'”':''),'reported-reason'));
+  reviewPrivateNote(row,n);
   n.append(text('p',refused?'Rejected'+(row.reviewed_at?' '+new Date(row.reviewed_at).toLocaleString():'')+'. Sent by '+(row.author_name||'a Discord member')+'.':waiting?'Sent by '+(row.author_name||'a Discord member')+', waiting for review.':'Approved: it goes live with the next publishing run, within the hour. Sent by '+(row.author_name||'a Discord member')+'.','moved-note'));
   if(refused&&row.review_note)n.append(text('p','Review note: '+row.review_note,'reported-reason'));
   const dups=duplicateList(row,jumpTo);if(dups)n.append(dups);
@@ -846,7 +878,7 @@
   return n;}
  async function authChanged(session){
   const next=session?.user||null;if(next?.id===user?.id)return;
-  const serial=++authSerial;user=next;admin=false;syncReady='';accountUI();for(const f of finders)f.update();desk.close(true);if(!user&&dialog.open)dialog.close();clearPreview();freshPopup();
+  const serial=++authSerial;user=next;admin=false;syncReady='';privateSyncReady='';accountUI();for(const f of finders)f.update();desk.close(true);if(!user&&dialog.open)dialog.close();clearPreview();freshPopup();
   if(user){const uid=user.id;try{const {data,error}=await client.from('admins').select('user_id').eq('user_id',uid).maybeSingle();if(error)throw error;if(serial!==authSerial)return;admin=!!data;accountUI();}catch{status('Account permissions could not load. Please try again.');}}
   if(serial===authSerial)await onMap();
   if(serial===authSerial){connectNotices();if(user)afterSignIn();}
@@ -891,16 +923,16 @@
  function version(q,row){return row.updated_at?q.eq('updated_at',row.updated_at):q;}
  async function reviewAction(row,state,note,card,payload,done){if(await desk.decideRow(row,state,note))done?.();}
  async function preview(row){return desk.open(row);}
- desk=window.createReviewDesk({client,isAdmin:()=>admin,getUser:()=>user,normalise:normaliseSuggestion,target:reviewTarget,locations:reviewLocations,places:reviewPlaces,loadApproved,countWaiting,publishButton,bannedList,banDialog,wikiFinder,finders,version,payloadBytes,reasons,removalReasons,nextSerial:()=>++reviewSerial,drawApproved,popup:suggestionPopup,ownEdit:(row,payload,amendments)=>{let credit=false;try{credit=localStorage.getItem(creditKey)==='true';}catch{}return saveOwn({kind:(reviewTarget(row)?.kind||window.atlasReview.targetKind(row))==='label'?'edit-label':'edit-marker',target_id:window.atlasReview.target(row),map:row.map,level:row.level||null,user_id:user.id,author_name:displayName(user),credit,payload},amendments,{receipt:true});}});
+ desk=window.createReviewDesk({client,isAdmin:()=>admin,getUser:()=>user,normalise:normaliseSuggestion,target:reviewTarget,locations:reviewLocations,places:reviewPlaces,loadApproved,countWaiting,publishButton,bannedList,banDialog,wikiFinder,finders,version,payloadBytes,reasons,removalReasons,nextSerial:()=>++reviewSerial,drawApproved,popup:suggestionPopup,privateNote:reviewPrivateNote,ownEdit:(row,payload,amendments)=>{let credit=false;try{credit=localStorage.getItem(creditKey)==='true';}catch{}return saveOwn({kind:(reviewTarget(row)?.kind||window.atlasReview.targetKind(row))==='label'?'edit-label':'edit-marker',target_id:window.atlasReview.target(row),map:row.map,level:row.level||null,user_id:user.id,author_name:displayName(user),credit,payload},amendments,{receipt:true});}});
  connectNotices();accountUI();client.auth.onAuthStateChange((eventName,session)=>{setTimeout(()=>authChanged(session).catch(()=>status('Account could not refresh. Your local notes are safe.')),0);});
  client.auth.getSession().then(({data,error})=>{if(error)throw error;return authChanged(data.session);}).catch(()=>status('Account could not load. Your local notes are safe.'));
  window.addEventListener('atlas:loaded',()=>{for(const f of finders)f.reset();onMap().catch(()=>status('Community data could not load.'));});
- window.addEventListener('atlas:notes',scheduleSync);window.addEventListener('atlas:positions',offerPositions);
+ window.addEventListener('atlas:private-notes',schedulePrivateSync);window.addEventListener('atlas:notes',scheduleSync);window.addEventListener('atlas:positions',offerPositions);
  window.addEventListener('atlas:published',()=>{creditsCache.clear();if(!loading)loadApproved();});
  window.addEventListener('resize',()=>{if(dialog.open&&dialog.classList.contains('place-change'))fitFloating(dialog);});
  window.addEventListener('focus',()=>{if(!loading){reviewMaps.clear();loadApproved();if(admin)countWaiting();if(desk.opened)desk.refresh();}});window.addEventListener('atlas:editing',drawApproved);
- window.addEventListener('atlas:edit-ended',()=>{drawApproved();if(user&&syncReady!==syncIdentity())syncNotes(mapSerial);});
- window.addEventListener('online',()=>{pushJobs();if(user&&map&&!loading&&syncReady!==syncIdentity())syncNotes(mapSerial);});
+ window.addEventListener('atlas:edit-ended',()=>{drawApproved();if(user&&(syncReady!==syncIdentity()||privateSyncReady!==syncIdentity()))syncMapNotes(mapSerial);});
+ window.addEventListener('online',()=>{pushJobs();if(user&&map&&!loading&&(syncReady!==syncIdentity()||privateSyncReady!==syncIdentity()))syncMapNotes(mapSerial);});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)pushJobs();});
  if(map&&!loading)onMap();
 })();

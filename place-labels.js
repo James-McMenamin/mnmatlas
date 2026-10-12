@@ -20,7 +20,7 @@ function boatCard(row){
  n.append(text('p','Route','boat-route-title'),list);
  // Times taken from a wiki page are credited under the card, with its licence.
  const s=row.timesSource;if(s?.url&&/^https:\/\//.test(s.url)){const credit=text('p','Times: ','boat-credit'),page=text('a',(s.title||'page')+' · '+(s.site||'wiki'));page.href=s.url;page.target='_blank';page.rel='noopener';credit.append(page);if(s.license){credit.append(text('span',', '));const lic=text('a',s.license);if(/^https:\/\//.test(s.licenseUrl||'')){lic.href=s.licenseUrl;lic.target='_blank';lic.rel='noopener';}credit.append(lic);}n.append(credit);}
- window.atlasCommunity?.placePopup?.({...row,kind:'label'},n);
+ privateNoteBox(row,'label',n);window.atlasCommunity?.placePopup?.({...row,kind:'label'},n);
  // Pan clear of the title card and toolbar so the whole card shows.
  L.popup({autoPan:true,autoPanPaddingTopLeft:[24,150],autoPanPaddingBottomRight:[70,40],offset:[0,-10],maxHeight:Math.max(180,($('map')?.clientHeight||600)-60)}).setLatLng(locationOf(row)).setContent(n).openOn(map);
 }
@@ -83,6 +83,7 @@ function setupPlaceLabels(data){
    marker.on('dragend',()=>moveAlignedLabel(row.id,marker.getLatLng()));
   }
   if(!alignmentMode&&!target&&!boat&&!singleMap){L.DomEvent.disableClickPropagation(face);face.tabIndex=0;face.setAttribute('role','button');const open=()=>openPlace({...row,kind:'label'});face.addEventListener('click',open);face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});}
+  marker.bindTooltip(()=>{const n=text('div','','marker-hover');n.append(text('h3',row.name));privateNoteLine(row,'label',n);return n;},{direction:'top',offset:[0,-12],className:'marker-card-tooltip'});
   labelPins.set(row.id,marker);
   return {row,face,marker};
  });
@@ -100,7 +101,7 @@ function setupPlaceLabels(data){
   for(const pin of pins.values())if(Number.isFinite(pin.atlasMinZoom)){
    if(showPins&&(alignmentMode||zoom>=pin.atlasMinZoom)){if(!map.hasLayer(pin))pin.addTo(map);}else pin.remove();
   }
-  for(const pin of pins.values())if(pin.options.icon?.options.className==='trainer-pin'){
+  for(const pin of pins.values())if(pin.options.icon?.options.className?.split(' ').includes('trainer-pin')){
    if(showPins&&trainersVisible){if(!map.hasLayer(pin))pin.addTo(map);}else pin.remove();
   }
   const occupied=[...document.querySelectorAll('#map .pin, #map .personal-label, #map .hidden-route, .map-title, .level-controls, .embed-toolbar, .map-tools, .compass, .leaflet-popup')]
