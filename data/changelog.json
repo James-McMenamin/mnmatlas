@@ -2,6 +2,15 @@
  "entries": [
   {
    "date": "2026-10-12",
+   "title": "Faelindral's people on the right board",
+   "text": "The Wanted notices for folk who live up in Faelindral, such as the guild captains and the scouts of Sentinel's Terrace, now hang on Faelindral's board instead of the Evershade Weald one, and those found at the foot of a lift or by the stables moved down to the Weald. Anyone already marked on either map no longer has a notice on the other.",
+   "maps": [
+    "faelindral",
+    "evershade-weald"
+   ]
+  },
+  {
+   "date": "2026-10-12",
    "title": "Tidier camp cards",
    "text": "Resting the pointer on a camp shows its levels and first mobs; a click opens the full card, with the camp's top five drops at the end. Long cards scroll with a visible bar while their buttons stay in place.",
    "maps": []
