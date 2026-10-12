@@ -287,8 +287,10 @@
   if(!file){const r=await fetch('bounties/'+encodeURIComponent(config.id)+'.json');if(r.status===404)throw Error('none');if(!r.ok)throw Error('failed');
    const body=await r.json();file={at:Date.now(),site:Object.hasOwn(wikiSites,body?.site)?body.site:'mnm-wiki',rows:(Array.isArray(body?.rows)?body.rows:[]).filter(r=>r&&typeof r.id==='string'&&typeof r.name==='string'&&/^https:\/\/([a-z0-9-]+\.)*monstersandmemories\.wiki\//.test(String(r.url)))};
    try{localStorage.setItem(wantedKey(config.id),JSON.stringify(file));}catch{}}
-  // Markers suggested since the list was built are left out too.
-  let places=[];try{const index=await (await fetch('data/find-index.json')).json();places=index.filter(p=>p.m===config.id);}catch{places=allMarkers().map(m=>({n:m.name,w:m.wikiId,m:config.id}));}
+  // Markers suggested since the list was built are left out too, on this map or one drawn as the same place
+  // (Faelindral's platforms above Evershade Weald).
+  const here=new Set([config.id,...(config.linkedMaps||[]).map(l=>l.map)]);
+  let places=[];try{const index=await (await fetch('data/find-index.json')).json();places=index.filter(p=>here.has(p.m));}catch{places=allMarkers().map(m=>({n:m.name,w:m.wikiId,m:config.id}));}
   // Instructors whose classes already have a class trainer marker or chip on this map are on it too.
   const trained=mapTrainerClasses(allMarkers(),labelData.trainers);
   return {site:file.site,rows:file.rows.filter(r=>!placedOnMap(r,places)&&!trainerOnMap(r,trained))};

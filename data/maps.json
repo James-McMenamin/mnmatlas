@@ -327,6 +327,30 @@
           "title": "Faelindral (platforms)"
         }
       ],
+      "wikiPlaces": [
+        "Faelindral city",
+        "in Faelindral",
+        "Sentinel's Terrace",
+        "Sentinel's Gaze",
+        "Trader's Terrace",
+        "Ranger's Rest",
+        "Balanced Branch",
+        "Lambent Lantern",
+        "Heartwood Archives",
+        "Well of Order",
+        "Willows Whisper",
+        "Wayward Branch",
+        "Quite Den",
+        "Wayguard Garrison",
+        "Lower Tier",
+        "Kennels",
+        "Beastmaster guild",
+        "shaman guild",
+        "Weaponsmith",
+        "Tanner",
+        "Inn",
+        "archery range"
+      ],
       "city": true
     },
     {
@@ -383,6 +407,12 @@
           "map": "faelindral",
           "title": "Faelindral (platforms)"
         }
+      ],
+      "wikiPlaces": [
+        "bottom of",
+        "base of",
+        "foot of",
+        "stables"
       ]
     },
     {
