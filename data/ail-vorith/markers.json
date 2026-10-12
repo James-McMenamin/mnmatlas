@@ -143,22 +143,6 @@
     "wikiId": "npc-melzorra"
   },
   {
-    "id": "supplier-jul",
-    "name": "Supplier Jul",
-    "category": "Vendor",
-    "vendor": "General goods",
-    "sells": [
-      "Materials",
-      "Shields",
-      "Weapons"
-    ],
-    "x": 4631,
-    "y": 4295,
-    "note": "General supplies.",
-    "wiki": "https://monstersandmemories.wiki/npcs/supplier-jul",
-    "wikiId": "npc-supplier-jul"
-  },
-  {
     "id": "klavel-sul",
     "name": "Klavel Sul",
     "category": "Class trainer",
@@ -1078,5 +1062,17 @@
     "note": "Entrance to runaways hideout.",
     "x": 3404,
     "y": 5009
+  },
+  {
+    "id": "community-410",
+    "community": true,
+    "name": "Supplier Jul",
+    "category": "Vendor",
+    "note": "Located in Foreign Quarter in first house on left.",
+    "x": 4729,
+    "y": 4121,
+    "vendor": "General goods",
+    "wiki": "https://monstersandmemories.wiki/npcs/supplier-jul",
+    "wikiId": "npc-supplier-jul"
   }
 ]

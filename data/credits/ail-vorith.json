@@ -494,5 +494,17 @@
       "name": "riyujyn",
       "what": "added"
     }
+  ],
+  "marker:supplier-jul": [
+    {
+      "name": "satoukurotama",
+      "what": "removed"
+    }
+  ],
+  "marker:community-410": [
+    {
+      "name": "satoukurotama",
+      "what": "added"
+    }
   ]
 }

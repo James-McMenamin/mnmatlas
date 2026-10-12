@@ -307,7 +307,7 @@
  },
  {
   "id": "humanoid-10-15-1",
-  "name": "Humanoids",
+  "name": "Bandits",
   "category": "Mob camp",
   "levels": [
    10,
@@ -317,11 +317,19 @@
   "y": 3023,
   "approximate": true,
   "note": "",
-  "minZoom": 3
+  "minZoom": 3,
+  "mobs": [
+   {
+    "name": "A bandit",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-bandit",
+    "wikiId": "npc-a-bandit"
+   }
+  ],
+  "community": true
  },
  {
   "id": "humanoid-10-15-2",
-  "name": "Humanoids",
+  "name": "Bandits",
   "category": "Mob camp",
   "levels": [
    10,
@@ -331,7 +339,15 @@
   "y": 2912,
   "approximate": true,
   "note": "",
-  "minZoom": 3
+  "minZoom": 3,
+  "mobs": [
+   {
+    "name": "A bandit",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-bandit",
+    "wikiId": "npc-a-bandit"
+   }
+  ],
+  "community": true
  },
  {
   "id": "generic-1-5-3",
