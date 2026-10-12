@@ -196,7 +196,8 @@ function tidyActions(n){
  const actions=text('div','','popup-actions');
  for(const el of [...n.children]){if(el.matches('button:not(.level-link)'))actions.append(el);else if(el.matches('.community-actions')){actions.append(...el.children);el.remove();}}
  for(const b of actions.querySelectorAll('button'))actionIcon(b);
- if(actions.children.length)n.append(actions);return n;
+ // The details scroll on their own; the actions stay put under them.
+ if(actions.children.length){const body=text('div','','popup-body');body.append(...(n.childNodes||n.children));n.append(body,actions);}return n;
 }
 // A short card in the wiki's own order: its tag line, level, location, race and class, the first loot items, the start
 // of its summary, each linking back to the wiki, with its credit.
