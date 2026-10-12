@@ -738,8 +738,10 @@
  }
  // Ids present at the last successful sync tell a deleted note from a new one on the other side.
  const baseKey=(uid,key)=>'mnmaps-community-synced-'+uid+'-'+key;
- function readBase(uid,key){try{const ids=JSON.parse(localStorage.getItem(baseKey(uid,key))||'null');return Array.isArray(ids)?new Set(ids):null;}catch{return null;}}
- function writeBase(uid,key,notes){try{localStorage.setItem(baseKey(uid,key),JSON.stringify(notes.map(m=>m.id)));}catch{}}
+ // The last synced copy of each note (older browsers kept only the ids): a side that still matches it did not change the note since.
+ const noteSum=m=>JSON.stringify(Object.keys(m).sort().map(k=>[k,m[k]]));
+ function readBase(uid,key){try{const v=JSON.parse(localStorage.getItem(baseKey(uid,key))||'null');return Array.isArray(v)?new Map(v.map(id=>[id,null])):v&&typeof v==='object'?new Map(Object.entries(v)):null;}catch{return null;}}
+ function writeBase(uid,key,notes){try{localStorage.setItem(baseKey(uid,key),JSON.stringify(Object.fromEntries(notes.map(m=>[m.id,noteSum(m)]))));}catch{}}
  function syncIdentity(){return user?user.id+':'+scope():'';}
  function scheduleSync(){
   if(syncing||!user||!config||syncReady!==syncIdentity())return;
@@ -780,7 +782,8 @@
    // A note on one side only was either added there (keep it) or deleted on the other side since the last sync (drop it).
    const base=readBase(uid,key),localIds=new Set(personal.map(m=>m.id)),remoteIds=new Set(remote.map(m=>m.id)),merged=new Map();
    for(const m of remote)if(localIds.has(m.id)||!base?.has(m.id))merged.set(m.id,m);
-   for(const m of personal)if(remoteIds.has(m.id)||!base?.has(m.id))merged.set(m.id,m);
+   // On both sides: a copy unchanged since the last sync gives way to the other side's edit.
+   for(const m of personal)if(remoteIds.has(m.id)||!base?.has(m.id)){const there=merged.get(m.id),was=base?.get(m.id);if(there&&was&&noteSum(m)===was&&noteSum(there)!==was)continue;merged.set(m.id,m);}
    if(merged.size>2000)throw Error();
    syncing=true;const saved=persist([...merged.values()]);syncing=false;if(!saved)return;
    syncReady=identity;setupCategoryControls();buildPlaceIndex();drawMarkers();scheduleSync();await pushJobs();
