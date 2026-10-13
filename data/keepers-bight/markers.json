@@ -267,26 +267,28 @@
  {
   "id": "bear-cave-npcs",
   "name": "Poacher Wilna",
-  "category": "Notable NPC",
+  "category": "Named mob",
   "x": 3972,
   "y": 4512,
   "minZoom": 3,
   "approximate": true,
   "note": "In the Bear Cave.",
   "wiki": "https://monstersandmemories.wiki/npcs/poacher-wilna",
-  "wikiId": "npc-poacher-wilna"
+  "wikiId": "npc-poacher-wilna",
+  "community": true
  },
  {
   "id": "bear-cave-npcs-fendris-the-forsaken",
   "name": "Fendris the Forsaken",
-  "category": "Notable NPC",
+  "category": "Named mob",
   "x": 3994,
   "y": 4512,
   "minZoom": 3,
   "approximate": true,
   "note": "In the Bear Cave.",
   "wiki": "https://monstersandmemories.wiki/npcs/fendris-the-forsaken",
-  "wikiId": "npc-fendris-the-forsaken"
+  "wikiId": "npc-fendris-the-forsaken",
+  "community": true
  },
  {
   "id": "lumberjacks",
@@ -619,5 +621,14 @@
   "y": 5854,
   "wiki": "https://monstersandmemories.wiki/npcs/faelar-thistlebrook",
   "wikiId": "npc-faelar-thistlebrook"
+ },
+ {
+  "id": "community-482",
+  "community": true,
+  "name": "Sacristan Lorik",
+  "category": "Vendor",
+  "note": "Sells Ritual Oil (1gp 23sp)",
+  "x": 2114,
+  "y": 4295
  }
 ]

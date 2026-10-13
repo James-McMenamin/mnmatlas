@@ -72,5 +72,23 @@
       "name": null,
       "what": "added"
     }
+  ],
+  "marker:bear-cave-npcs-fendris-the-forsaken": [
+    {
+      "name": null,
+      "what": "edited"
+    }
+  ],
+  "marker:bear-cave-npcs": [
+    {
+      "name": null,
+      "what": "edited"
+    }
+  ],
+  "marker:community-482": [
+    {
+      "name": null,
+      "what": "added"
+    }
   ]
 }
