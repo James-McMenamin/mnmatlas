@@ -2,6 +2,8 @@ begin;
 
 -- Review decisions carry the version that was opened, so a newer correction stays waiting.
 alter table public.suggestions add column if not exists updated_at timestamptz not null default now();
+-- The personal note a shared note came from (kept by the guard below); see schema.sql.
+alter table public.suggestions add column if not exists note_id text;
 create or replace function public.stamp_suggestion_update()
 returns trigger language plpgsql set search_path = '' as $$
 begin
@@ -75,7 +77,7 @@ begin
  -- Only the account-deletion transaction may anonymise accepted rows and clear their foreign key.
  if current_setting('atlas.deleting_account', true) = old.user_id::text then return new; end if;
  new.id=old.id; new.created_at=old.created_at; new.user_id=old.user_id; new.author_name=old.author_name;
- new.map=old.map; new.kind=old.kind; new.target_id=old.target_id;
+ new.map=old.map; new.kind=old.kind; new.target_id=old.target_id; new.note_id=old.note_id;
  new.comment=nullif(public.clean_text(new.comment,true),'');
  if jsonb_typeof(new.payload->'name')='string' then new.payload=jsonb_set(new.payload,'{name}',to_jsonb(public.clean_text(new.payload->>'name')));end if;
  if jsonb_typeof(new.payload->'note')='string' then new.payload=jsonb_set(new.payload,'{note}',to_jsonb(public.clean_text(new.payload->>'note',true)));end if;
