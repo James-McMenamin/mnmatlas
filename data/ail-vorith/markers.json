@@ -1128,5 +1128,73 @@
     "classes": [
       "Inquisitor"
     ]
+  },
+  {
+    "id": "community-476",
+    "community": true,
+    "name": "exile camp",
+    "category": "Mob camp",
+    "note": "",
+    "x": 3332,
+    "y": 5833,
+    "levels": [
+      15,
+      16
+    ],
+    "mobs": []
+  },
+  {
+    "id": "community-477",
+    "community": true,
+    "name": "Goblin/Researcher camp",
+    "category": "Mob camp",
+    "note": "",
+    "x": 1975,
+    "y": 2281,
+    "levels": [
+      8,
+      12
+    ],
+    "mobs": [
+      {
+        "name": "A Deepgulp scavenger",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-deepgulp-scavenger",
+        "wikiId": "npc-1790076501781-orey6"
+      },
+      {
+        "name": "A Deepgulp warrior",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-deepgulp-warrior",
+        "wikiId": "npc-1790076502237-wipid"
+      },
+      {
+        "name": "A Deepgulp hunter",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-deepgulp-hunter",
+        "wikiId": "npc-1790076501781-gd6wf"
+      },
+      {
+        "name": "A Deepgulp shaman",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-deepgulp-shaman",
+        "wikiId": "npc-1790076501781-tssr8"
+      },
+      {
+        "name": "A Deepgulp berserker",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-deepgulp-berserker",
+        "wikiId": "npc-1790076501781-s23p7"
+      },
+      {
+        "name": "A Deepgulp mystic",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-deepgulp-mystic",
+        "wikiId": "npc-1790076501781-36d4h"
+      }
+    ]
+  },
+  {
+    "id": "community-478",
+    "community": true,
+    "name": "Researcher Dranit",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 2557,
+    "y": 2045
   }
 ]
