@@ -442,16 +442,6 @@
   "wikiId": "npc-captain-hale"
  },
  {
-  "id": "community-378",
-  "community": true,
-  "name": "Shady Merchant",
-  "category": "Vendor",
-  "note": "",
-  "x": 3608,
-  "y": 5852,
-  "vendor": "Shady merchant"
- },
- {
   "id": "community-380",
   "community": true,
   "name": "Mirella Nighthorn",
@@ -510,5 +500,124 @@
     "wikiId": "npc-a-sangrel-striker"
    }
   ]
+ },
+ {
+  "id": "community-462",
+  "community": true,
+  "name": "Sangrels",
+  "category": "Mob camp",
+  "note": "",
+  "x": 5592,
+  "y": 5434,
+  "levels": [
+   16,
+   18
+  ],
+  "mobs": [
+   {
+    "name": "A Sangrel arcanist",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-arcanist",
+    "wikiId": "npc-a-sangrel-arcanist"
+   },
+   {
+    "name": "A Sangrel striker",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-striker",
+    "wikiId": "npc-a-sangrel-striker"
+   },
+   {
+    "name": "A Sangrel grappler",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-grappler",
+    "wikiId": "npc-a-sangrel-grappler"
+   },
+   {
+    "name": "A Sangrel entangler",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-entangler",
+    "wikiId": "npc-a-sangrel-entangler"
+   },
+   {
+    "name": "A Sangrel hunter",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-hunter",
+    "wikiId": "npc-a-sangrel-hunter"
+   },
+   {
+    "name": "A Sangrel shadowblade",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-shadowblade",
+    "wikiId": "npc-a-sangrel-shadowblade"
+   }
+  ],
+  "shape": {
+   "form": "outline",
+   "kind": "area",
+   "points": [
+    [
+     5486,
+     5064
+    ],
+    [
+     5614,
+     5094
+    ],
+    [
+     5694,
+     5532
+    ],
+    [
+     5676,
+     5706
+    ],
+    [
+     5532,
+     5816
+    ],
+    [
+     5534,
+     5398
+    ]
+   ]
+  }
+ },
+ {
+  "id": "community-465",
+  "community": true,
+  "name": "Felgin Ironwhisker",
+  "category": "Quest",
+  "note": "",
+  "x": 4894,
+  "y": 5586,
+  "wiki": "https://monstersandmemories.wiki/npcs/felgin-ironwhisker",
+  "wikiId": "npc-felgin-ironwhisker"
+ },
+ {
+  "id": "community-466",
+  "community": true,
+  "name": "Alysse Selegrass",
+  "category": "Vendor",
+  "note": "",
+  "x": 4914,
+  "y": 5560,
+  "wiki": "https://monstersandmemories.wiki/npcs/alysse-selegrass",
+  "wikiId": "npc-alysse-selegrass"
+ },
+ {
+  "id": "community-467",
+  "community": true,
+  "name": "Lloyd Matthias",
+  "category": "Vendor",
+  "note": "",
+  "x": 4872,
+  "y": 5558,
+  "wiki": "https://monstersandmemories.wiki/npcs/lloyd-matthias",
+  "wikiId": "npc-lloyd-matthias"
+ },
+ {
+  "id": "community-468",
+  "community": true,
+  "name": "Faelar Thistlebrook",
+  "category": "Vendor",
+  "note": "",
+  "x": 3586,
+  "y": 5854,
+  "wiki": "https://monstersandmemories.wiki/npcs/faelar-thistlebrook",
+  "wikiId": "npc-faelar-thistlebrook"
  }
 ]

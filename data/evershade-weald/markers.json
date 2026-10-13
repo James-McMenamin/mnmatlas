@@ -223,18 +223,6 @@
   "minZoom": 3.25
  },
  {
-  "id": "shady-merchant-west",
-  "name": "Shady merchant — west",
-  "category": "Vendor",
-  "vendor": "Shady merchant",
-  "x": 1707,
-  "y": 2646,
-  "approximate": true,
-  "note": "In between the caravans, near the lift.",
-  "minZoom": 3.25,
-  "community": true
- },
- {
   "id": "shady-merchant-east",
   "name": "Shady merchant — east",
   "category": "Vendor",
@@ -462,12 +450,16 @@
   "id": "community-311",
   "community": true,
   "name": "Watcher Aquafis",
-  "category": "Notable NPC",
+  "category": "Named mob",
   "note": "Back of the cave",
   "x": 4095,
   "y": 1794,
   "wiki": "https://monstersandmemories.wiki/npcs/watcher-aquafis",
-  "wikiId": "npc-watcher-aquafis"
+  "wikiId": "npc-watcher-aquafis",
+  "levels": [
+   13,
+   13
+  ]
  },
  {
   "id": "community-314",
@@ -642,5 +634,29 @@
    }
   ],
   "wiki": "https://monstersandmemories.wiki/npcs/npc-a-calafreyan-soldier"
+ },
+ {
+  "id": "community-460",
+  "community": true,
+  "name": "A shady trader",
+  "category": "Vendor",
+  "note": "",
+  "x": 1904,
+  "y": 2545,
+  "vendor": "Shady merchant",
+  "wiki": "https://monstersandmemories.wiki/npcs/a-shady-trader",
+  "wikiId": "npc-a-shady-trader"
+ },
+ {
+  "id": "community-461",
+  "community": true,
+  "name": "A fisherman (Faelindral)",
+  "category": "Vendor",
+  "note": "",
+  "x": 1816,
+  "y": 2585,
+  "vendor": "Fishmonger",
+  "wiki": "https://monstersandmemories.wiki/npcs/a-fisherman-faelindral",
+  "wikiId": "npc-a-fisherman-faelindral"
  }
 ]

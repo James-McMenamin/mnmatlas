@@ -45,6 +45,10 @@
     {
       "name": "karnix91",
       "what": "added"
+    },
+    {
+      "name": "karnix91",
+      "what": "edited"
     }
   ],
   "marker:skeletons-wolves-4-6": [
@@ -93,6 +97,10 @@
     {
       "name": "karnix91",
       "what": "edited"
+    },
+    {
+      "name": "karnix91",
+      "what": "removed"
     }
   ],
   "marker:community-395": [
@@ -124,6 +132,18 @@
     }
   ],
   "marker:community-427": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:community-460": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:community-461": [
     {
       "name": "karnix91",
       "what": "added"

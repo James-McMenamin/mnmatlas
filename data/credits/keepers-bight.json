@@ -15,6 +15,10 @@
     {
       "name": null,
       "what": "added"
+    },
+    {
+      "name": null,
+      "what": "removed"
     }
   ],
   "marker:community-380": [
@@ -33,6 +37,40 @@
     {
       "name": null,
       "what": "moved"
+    }
+  ],
+  "marker:community-462": [
+    {
+      "name": null,
+      "what": "added"
+    },
+    {
+      "name": null,
+      "what": "reshaped"
+    }
+  ],
+  "marker:community-465": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-466": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-467": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-468": [
+    {
+      "name": null,
+      "what": "added"
     }
   ]
 }

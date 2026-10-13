@@ -620,5 +620,38 @@
   "x": 1781,
   "y": 1567,
   "wiki": "https://monstersandmemories.wiki/npcs/moon-dances"
+ },
+ {
+  "id": "community-449",
+  "community": true,
+  "name": "Aerin Mossfang",
+  "category": "Quest",
+  "note": "",
+  "x": 2095,
+  "y": 1153,
+  "wiki": "https://monstersandmemories.wiki/npcs/aerin-mossfang",
+  "wikiId": "npc-aerin-mossfang"
+ },
+ {
+  "id": "community-450",
+  "community": true,
+  "name": "Baewyn Mossfang",
+  "category": "Quest",
+  "note": "",
+  "x": 2122,
+  "y": 1063,
+  "wiki": "https://monstersandmemories.wiki/npcs/baewyn-mossfang",
+  "wikiId": "npc-baewyn-mossfang"
+ },
+ {
+  "id": "community-451",
+  "community": true,
+  "name": "Elyndiir Nightshade",
+  "category": "Quest",
+  "note": "",
+  "x": 1604,
+  "y": 1857,
+  "wiki": "https://monstersandmemories.wiki/npcs/elyndiir-nightshade",
+  "wikiId": "npc-elyndiir-nightshade"
  }
 ]
