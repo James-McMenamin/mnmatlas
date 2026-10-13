@@ -111,6 +111,10 @@
     {
       "name": "warmtofu",
       "what": "added"
+    },
+    {
+      "name": "dargawn",
+      "what": "edited"
     }
   ],
   "marker:community-60": [
@@ -336,6 +340,24 @@
   "marker:community-436": [
     {
       "name": "dargawn",
+      "what": "added"
+    }
+  ],
+  "marker:community-441": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-442": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-443": [
+    {
+      "name": null,
       "what": "added"
     }
   ]

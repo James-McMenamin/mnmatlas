@@ -465,5 +465,50 @@
   "y": 769,
   "wiki": "https://monstersandmemories.wiki/npcs/mirella-nighthorn",
   "wikiId": "npc-mirella-nighthorn"
+ },
+ {
+  "id": "community-407",
+  "community": true,
+  "name": "Sangrels camp",
+  "category": "Mob camp",
+  "note": "",
+  "x": 2229,
+  "y": 798,
+  "levels": [
+   22,
+   26
+  ],
+  "mobs": [
+   {
+    "name": "A Sangrel arcanist",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-arcanist",
+    "wikiId": "npc-a-sangrel-arcanist"
+   },
+   {
+    "name": "A Sangrel entangler",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-entangler",
+    "wikiId": "npc-a-sangrel-entangler"
+   },
+   {
+    "name": "A Sangrel grappler",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-grappler",
+    "wikiId": "npc-a-sangrel-grappler"
+   },
+   {
+    "name": "A Sangrel hunter",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-hunter",
+    "wikiId": "npc-a-sangrel-hunter"
+   },
+   {
+    "name": "A Sangrel shadowblade",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-shadowblade",
+    "wikiId": "npc-a-sangrel-shadowblade"
+   },
+   {
+    "name": "A Sangrel striker",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-sangrel-striker",
+    "wikiId": "npc-a-sangrel-striker"
+   }
+  ]
  }
 ]

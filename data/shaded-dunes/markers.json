@@ -387,5 +387,20 @@
   "approximate": true,
   "note": "",
   "minZoom": 3
+ },
+ {
+  "id": "community-446",
+  "community": true,
+  "name": "Toma the Two-Faced",
+  "category": "Named mob",
+  "note": "",
+  "x": 2283,
+  "y": 3885,
+  "levels": [
+   8,
+   8
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/toma-the-two-faced",
+  "wikiId": "npc-toma-the-two-faced"
  }
 ]

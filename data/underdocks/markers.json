@@ -504,7 +504,7 @@
     "id": "community-59",
     "community": true,
     "name": "Draznax",
-    "category": "Personal",
+    "category": "Quest",
     "note": "",
     "x": 4179,
     "y": 4938,
@@ -943,5 +943,68 @@
     "level": "lower",
     "wiki": "https://monstersandmemories.wiki/npcs/sporcinius",
     "wikiId": "npc-sporcinius"
+  },
+  {
+    "id": "community-441",
+    "community": true,
+    "name": "Elder skellies",
+    "category": "Mob camp",
+    "note": "",
+    "x": 789,
+    "y": 3974,
+    "level": "lower",
+    "levels": [
+      8,
+      12
+    ],
+    "mobs": [
+      {
+        "name": "An elder shadowbone",
+        "wiki": "https://monstersandmemories.wiki/npcs/an-elder-shadowbone",
+        "wikiId": "npc-an-elder-shadowbone"
+      }
+    ]
+  },
+  {
+    "id": "community-442",
+    "community": true,
+    "name": "Greater skellies",
+    "category": "Mob camp",
+    "note": "",
+    "x": 1717,
+    "y": 4362,
+    "level": "lower",
+    "levels": [
+      6,
+      10
+    ],
+    "mobs": [
+      {
+        "name": "A greater shadowbone",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-greater-shadowbone",
+        "wikiId": "npc-a-greater-shadowbone"
+      }
+    ]
+  },
+  {
+    "id": "community-443",
+    "community": true,
+    "name": "Hunters",
+    "category": "Mob camp",
+    "note": "",
+    "x": 3444,
+    "y": 1032,
+    "level": "lower",
+    "levels": [
+      6,
+      10
+    ],
+    "mobs": [
+      {
+        "name": "An undercap hunter",
+        "wiki": "https://monstersandmemories.wiki/npcs/an-undercap-hunter",
+        "wikiId": "npc-an-undercap-hunter"
+      }
+    ]
   }
 ]

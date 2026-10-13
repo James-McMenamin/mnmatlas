@@ -99,20 +99,6 @@
   "wikiId": "npc-krev-thistlehook"
  },
  {
-  "id": "lake-goblins-34-1",
-  "name": "Lake goblins",
-  "category": "Mob camp",
-  "levels": [
-   34,
-   34
-  ],
-  "x": 4756,
-  "y": 5429,
-  "approximate": true,
-  "note": "In the lake.",
-  "minZoom": 3
- },
- {
   "id": "sojourners-1",
   "name": "Sojourners and Ail’trist humans",
   "category": "Mob camp",

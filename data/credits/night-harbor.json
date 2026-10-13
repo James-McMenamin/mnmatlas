@@ -592,5 +592,17 @@
       "name": null,
       "what": "removed"
     }
+  ],
+  "marker:community-447": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-448": [
+    {
+      "name": null,
+      "what": "added"
+    }
   ]
 }

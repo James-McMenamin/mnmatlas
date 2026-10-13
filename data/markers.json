@@ -1298,5 +1298,27 @@
     ],
     "wiki": "https://monstersandmemories.wiki/npcs/noura-the-tailor",
     "wikiId": "npc-noura-the-tailor"
+  },
+  {
+    "id": "community-447",
+    "community": true,
+    "name": "A cook",
+    "category": "Vendor",
+    "note": "",
+    "x": 1690,
+    "y": 921,
+    "vendor": "Cook",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-cook",
+    "wikiId": "npc-a-cook"
+  },
+  {
+    "id": "community-448",
+    "community": true,
+    "name": "a butcher",
+    "category": "Vendor",
+    "note": "",
+    "x": 1723,
+    "y": 918,
+    "vendor": "Butcher"
   }
 ]
