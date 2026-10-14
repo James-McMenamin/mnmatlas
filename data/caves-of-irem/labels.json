@@ -60,8 +60,8 @@
   {
    "id": "skrivar-camp",
    "name": "Skri'Var Camp",
-   "x": 6801,
-   "y": 6249,
+   "x": 6824,
+   "y": 6300,
    "kind": "district",
    "priority": 70,
    "minZoom": 2.5

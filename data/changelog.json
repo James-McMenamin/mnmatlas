@@ -2,6 +2,14 @@
  "entries": [
   {
    "date": "2026-10-14",
+   "title": "The Caves of Irem, retouched",
+   "text": "Fresh survey corrections on the Caves of Irem chart: the boat passage at the Great Cavern Sea gate is open water again, the gate's buried walls and stray rock seams are gone, the Giant Den's rim reads as solid rock with the Skri'Var huts now in view, and a few flat-topped columns and a crooked platform were redrawn true.",
+   "maps": [
+    "caves-of-irem"
+   ]
+  },
+  {
+   "date": "2026-10-14",
    "title": "Night Harbor: a back way out of Blackfeather",
    "text": "The Eastern sand terraces under Blackfeather now show the ramp and passage that lead out to the North Gate yard, with a sign at the opening. The rock that was drawn across the exit is gone, so the way out reads as open sand.",
    "maps": [
