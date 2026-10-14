@@ -419,9 +419,9 @@
       "kind": "exit",
       "priority": 60,
       "minZoom": 3.25,
-      "x": 1802,
-      "y": 832,
-      "arrow": "northeast",
+      "x": 1781,
+      "y": 845,
+      "arrow": "east",
       "linkedArea": "east-terrace",
       "tier": "exit",
       "toMap": "night-harbor"
