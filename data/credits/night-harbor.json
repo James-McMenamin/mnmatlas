@@ -513,6 +513,10 @@
     {
       "name": null,
       "what": "moved"
+    },
+    {
+      "name": null,
+      "what": "edited"
     }
   ],
   "marker:wiki-53": [
@@ -602,6 +606,78 @@
   "marker:community-448": [
     {
       "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-479": [
+    {
+      "name": "lassejj",
+      "what": "added"
+    }
+  ],
+  "marker:community-483": [
+    {
+      "name": "reare_xapz",
+      "what": "added"
+    }
+  ],
+  "marker:community-486": [
+    {
+      "name": "vulthoom.",
+      "what": "added"
+    }
+  ],
+  "marker:community-487": [
+    {
+      "name": "vulthoom.",
+      "what": "added"
+    }
+  ],
+  "marker:community-488": [
+    {
+      "name": "vulthoom.",
+      "what": "added"
+    }
+  ],
+  "marker:community-489": [
+    {
+      "name": "fictionalname",
+      "what": "added"
+    }
+  ],
+  "marker:community-490": [
+    {
+      "name": "baradad",
+      "what": "added"
+    }
+  ],
+  "marker:community-491": [
+    {
+      "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-492": [
+    {
+      "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-493": [
+    {
+      "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-495": [
+    {
+      "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-496": [
+    {
+      "name": "tonio1432",
       "what": "added"
     }
   ]

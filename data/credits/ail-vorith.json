@@ -3,12 +3,20 @@
     {
       "name": null,
       "what": "moved"
+    },
+    {
+      "name": "darkhayn",
+      "what": "edited"
     }
   ],
   "marker:toilmistress-rallvessa": [
     {
       "name": null,
       "what": "moved"
+    },
+    {
+      "name": "darkhayn",
+      "what": "edited"
     }
   ],
   "marker:community-24": [
@@ -559,6 +567,42 @@
     {
       "name": "darkhayn",
       "what": "edited"
+    }
+  ],
+  "marker:m-yal-wehear": [
+    {
+      "name": "darkhayn",
+      "what": "edited"
+    }
+  ],
+  "marker:provost-xan-shorn": [
+    {
+      "name": "darkhayn",
+      "what": "edited"
+    }
+  ],
+  "marker:apprentice-esveth": [
+    {
+      "name": "darkhayn",
+      "what": "edited"
+    }
+  ],
+  "marker:magnificent-vhaspire": [
+    {
+      "name": "darkhayn",
+      "what": "edited"
+    }
+  ],
+  "marker:solitary-vhaldrek": [
+    {
+      "name": "darkhayn",
+      "what": "edited"
+    }
+  ],
+  "marker:community-543": [
+    {
+      "name": "darkhayn",
+      "what": "added"
     }
   ]
 }

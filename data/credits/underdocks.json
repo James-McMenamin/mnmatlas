@@ -17,6 +17,10 @@
     {
       "name": "_arinna",
       "what": "edited"
+    },
+    {
+      "name": null,
+      "what": "removed"
     }
   ],
   "marker:class-necromancer-cleric-shadowknight": [
@@ -83,6 +87,10 @@
     {
       "name": null,
       "what": "edited"
+    },
+    {
+      "name": "marauderxxx",
+      "what": "removed"
     }
   ],
   "label:wiki-west-raft#lower": [
@@ -102,6 +110,10 @@
     }
   ],
   "marker:class-archer-warrior-ranger": [
+    {
+      "name": null,
+      "what": "edited"
+    },
     {
       "name": null,
       "what": "edited"
@@ -281,6 +293,10 @@
     {
       "name": "baradad",
       "what": "added"
+    },
+    {
+      "name": null,
+      "what": "edited"
     }
   ],
   "marker:community-244": [
@@ -356,6 +372,86 @@
     }
   ],
   "marker:community-443": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-485": [
+    {
+      "name": "satoukurotama",
+      "what": "added"
+    },
+    {
+      "name": null,
+      "what": "edited"
+    }
+  ],
+  "marker:community-533": [
+    {
+      "name": "the.bob.father",
+      "what": "added"
+    }
+  ],
+  "marker:community-548": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-549": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-550": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-551": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-552": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-553": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-554": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-555": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    },
+    {
+      "name": null,
+      "what": "edited"
+    }
+  ],
+  "marker:community-556": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-557": [
     {
       "name": null,
       "what": "added"

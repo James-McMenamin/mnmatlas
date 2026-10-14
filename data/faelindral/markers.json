@@ -344,33 +344,6 @@
   "note": "Notable NPC symbol on Maggot's Faelindral map. The map does not give the NPC's name."
  },
  {
-  "id": "maggot-npc-06",
-  "name": "Notable NPC — The Balanced Branch",
-  "category": "Notable NPC",
-  "x": 1843.8,
-  "y": 1594.96,
-  "approximate": true,
-  "note": "Notable NPC symbol on Maggot's Faelindral map. The map does not give the NPC's name."
- },
- {
-  "id": "maggot-npc-07",
-  "name": "Notable NPC — Wayward Branch Inn",
-  "category": "Notable NPC",
-  "x": 1227.0,
-  "y": 1625.24,
-  "approximate": true,
-  "note": "Notable NPC symbol on Maggot's Faelindral map. The map does not give the NPC's name."
- },
- {
-  "id": "maggot-npc-08",
-  "name": "Notable NPC — Heartwood Archives",
-  "category": "Notable NPC",
-  "x": 1433.8,
-  "y": 1961.66,
-  "approximate": true,
-  "note": "Notable NPC symbol on Maggot's Faelindral map. The map does not give the NPC's name."
- },
- {
   "id": "maggot-npc-09",
   "name": "Notable NPC — Lower Tier south platform",
   "category": "Notable NPC",
@@ -653,5 +626,52 @@
   "y": 1857,
   "wiki": "https://monstersandmemories.wiki/npcs/elyndiir-nightshade",
   "wikiId": "npc-elyndiir-nightshade"
+ },
+ {
+  "id": "community-452",
+  "community": true,
+  "name": "Gaereth Ashenpath",
+  "category": "Quest",
+  "note": "",
+  "x": 1764,
+  "y": 1137,
+  "wiki": "https://monstersandmemories.wiki/npcs/gaereth-ashenpath",
+  "wikiId": "npc-gaereth-ashenpath"
+ },
+ {
+  "id": "community-454",
+  "community": true,
+  "name": "Eraeldor Lowmist",
+  "category": "Quest",
+  "note": "",
+  "x": 1820,
+  "y": 1564,
+  "wiki": "https://monstersandmemories.wiki/npcs/eraeldor-lowmist",
+  "wikiId": "npc-eraeldor-lowmist"
+ },
+ {
+  "id": "community-456",
+  "community": true,
+  "name": "Mierra Willowshade",
+  "category": "Class trainer",
+  "note": "teaches cooking",
+  "x": 1224,
+  "y": 1589,
+  "classes": [
+   "Archer"
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/mierra-willowshade",
+  "wikiId": "npc-mierra-willowshade"
+ },
+ {
+  "id": "community-458",
+  "community": true,
+  "name": "Researcher Fairgrove",
+  "category": "Quest",
+  "note": "",
+  "x": 1434,
+  "y": 1988,
+  "wiki": "https://monstersandmemories.wiki/npcs/researcher-fairgrove",
+  "wikiId": "npc-researcher-fairgrove"
  }
 ]

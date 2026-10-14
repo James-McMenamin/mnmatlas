@@ -83,18 +83,20 @@
   {
     "id": "magnificent-vhaspire",
     "name": "Magnificent Vhaspire",
-    "category": "Personal",
+    "category": "Notable NPC",
     "x": 4807,
     "y": 4476,
-    "note": "Hardcore."
+    "note": "Hardcore.",
+    "community": true
   },
   {
     "id": "solitary-vhaldrek",
     "name": "Solitary Vhaldrek",
-    "category": "Personal",
+    "category": "Notable NPC",
     "x": 4846,
     "y": 4466,
-    "note": "Self Found."
+    "note": "Solo Self Found.",
+    "community": true
   },
   {
     "id": "tailoring-ruzzuna",
@@ -271,10 +273,11 @@
   {
     "id": "m-yal-wehear",
     "name": "M'yal Wehear",
-    "category": "Personal",
+    "category": "Notable NPC",
     "x": 4387,
     "y": 4140,
-    "note": "Trainer upstairs at the Obsidian Academy; class not stated on the community map."
+    "note": "Trainer upstairs at the Obsidian Academy; class not stated on the community map.",
+    "community": true
   },
   {
     "id": "vaslir-naiyth",
@@ -335,23 +338,25 @@
   {
     "id": "provost-xan-shorn",
     "name": "Provost Xan'shorn",
-    "category": "Personal",
+    "category": "Notable NPC",
     "x": 4498,
     "y": 4167,
-    "note": "Paths; meaning to confirm in game."
+    "note": "Paths; meaning to confirm in game.",
+    "community": true
   },
   {
     "id": "apprentice-esveth",
     "name": "Apprentice Esveth",
-    "category": "Personal",
+    "category": "Notable NPC",
     "x": 4620,
     "y": 3920,
-    "note": "Service not specified on the community map."
+    "note": "",
+    "community": true
   },
   {
     "id": "toilmaster-vorith",
     "name": "Toilmaster Vorith",
-    "category": "Personal",
+    "category": "Notable NPC",
     "x": 5096,
     "y": 3911,
     "note": "At the bridge. Starter quest.",
@@ -360,7 +365,7 @@
   {
     "id": "toilmistress-rallvessa",
     "name": "Toilmistress Rallvessa",
-    "category": "Personal",
+    "category": "Notable NPC",
     "x": 5065,
     "y": 3785,
     "note": "At the bridge.",
@@ -1209,6 +1214,131 @@
     "levels": [
       20,
       20
+    ]
+  },
+  {
+    "id": "community-543",
+    "community": true,
+    "name": "Elemental/Skull",
+    "category": "Mob camp",
+    "note": "",
+    "x": 3504,
+    "y": 3696,
+    "shape": {
+      "form": "outline",
+      "kind": "area",
+      "points": [
+        [
+          3197,
+          3770
+        ],
+        [
+          3212,
+          3699
+        ],
+        [
+          3280,
+          3639
+        ],
+        [
+          3323,
+          3636
+        ],
+        [
+          3386,
+          3629
+        ],
+        [
+          3419,
+          3590
+        ],
+        [
+          3519,
+          3573
+        ],
+        [
+          3567,
+          3571
+        ],
+        [
+          3612,
+          3607
+        ],
+        [
+          3654,
+          3608
+        ],
+        [
+          3702,
+          3603
+        ],
+        [
+          3787,
+          3602
+        ],
+        [
+          3911,
+          3635
+        ],
+        [
+          3816,
+          3710
+        ],
+        [
+          3663,
+          3726
+        ],
+        [
+          3607,
+          3813
+        ],
+        [
+          3509,
+          3750
+        ],
+        [
+          3426,
+          3802
+        ],
+        [
+          3368,
+          3829
+        ],
+        [
+          3267,
+          3836
+        ],
+        [
+          3210,
+          3820
+        ]
+      ]
+    },
+    "levels": [
+      8,
+      11
+    ],
+    "mobs": [
+      {
+        "name": "A rogue elemental",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-rogue-elemental",
+        "wikiId": "npc-a-rogue-elemental"
+      },
+      {
+        "name": "A spectral remnant",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-spectral-remnant",
+        "wikiId": "npc-a-spectral-remnant"
+      },
+      {
+        "name": "A separated skull",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-separated-skull",
+        "wikiId": "npc-a-separated-skull"
+      },
+      {
+        "name": "A stray elemental",
+        "wiki": "https://monstersandmemories.wiki/npcs/a-stray-elemental",
+        "wikiId": "npc-a-stray-elemental"
+      }
     ]
   }
 ]

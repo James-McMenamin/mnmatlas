@@ -203,14 +203,15 @@
  {
   "id": "sporeweaver-underveil",
   "name": "Sporeweaver Underveil",
-  "category": "Notable NPC",
+  "category": "Quest",
   "x": 2981,
   "y": 1895,
   "approximate": true,
   "note": "Inside the mushroom cave.",
   "minZoom": 3,
   "wiki": "https://monstersandmemories.wiki/npcs/sporeweaver-underveil",
-  "wikiId": "npc-sporeweaver-underveil"
+  "wikiId": "npc-sporeweaver-underveil",
+  "community": true
  },
  {
   "id": "stable",
@@ -511,8 +512,8 @@
   "name": "Polietta Two-tone (level 10)",
   "category": "Quest",
   "note": "",
-  "x": 1634,
-  "y": 1590,
+  "x": 1769,
+  "y": 1540,
   "wiki": "https://monstersandmemories.wiki/npcs/polietta-two-tone",
   "wikiId": "npc-polietta-two-tone"
  },
@@ -658,5 +659,49 @@
   "vendor": "Fishmonger",
   "wiki": "https://monstersandmemories.wiki/npcs/a-fisherman-faelindral",
   "wikiId": "npc-a-fisherman-faelindral"
+ },
+ {
+  "id": "community-471",
+  "community": true,
+  "name": "Daegolar the Pauper",
+  "category": "Quest",
+  "note": "",
+  "x": 1829,
+  "y": 2518,
+  "wiki": "https://monstersandmemories.wiki/npcs/daegolar-the-pauper",
+  "wikiId": "npc-daegolar-the-pauper"
+ },
+ {
+  "id": "community-472",
+  "community": true,
+  "name": "Guard Pippi Pinecone",
+  "category": "Quest",
+  "note": "",
+  "x": 1989,
+  "y": 2380,
+  "wiki": "https://monstersandmemories.wiki/npcs/guard-pippi-pinecone",
+  "wikiId": "npc-guard-pippi-pinecone"
+ },
+ {
+  "id": "community-473",
+  "community": true,
+  "name": "Scout Stonebranch",
+  "category": "Quest",
+  "note": "",
+  "x": 1846,
+  "y": 2680,
+  "wiki": "https://monstersandmemories.wiki/npcs/scout-stonebranch",
+  "wikiId": "npc-scout-stonebranch"
+ },
+ {
+  "id": "community-475",
+  "community": true,
+  "name": "Scout Amberward",
+  "category": "Quest",
+  "note": "",
+  "x": 2879,
+  "y": 2111,
+  "wiki": "https://monstersandmemories.wiki/npcs/scout-amberward",
+  "wikiId": "npc-scout-amberward"
  }
 ]

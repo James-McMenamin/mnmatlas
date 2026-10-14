@@ -73,6 +73,10 @@
     {
       "name": "doctorrobinson",
       "what": "added"
+    },
+    {
+      "name": "ripfresco",
+      "what": "moved"
     }
   ],
   "marker:wolves-cave": [
@@ -144,6 +148,36 @@
     }
   ],
   "marker:community-461": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:sporeweaver-underveil": [
+    {
+      "name": "karnix91",
+      "what": "edited"
+    }
+  ],
+  "marker:community-471": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:community-472": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:community-473": [
+    {
+      "name": "karnix91",
+      "what": "added"
+    }
+  ],
+  "marker:community-475": [
     {
       "name": "karnix91",
       "what": "added"

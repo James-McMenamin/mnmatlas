@@ -111,13 +111,15 @@
   },
   {
     "id": "wiki-15",
-    "name": "Shady merchant — North Gate",
+    "name": "A suspicious salesman",
     "category": "Vendor",
     "vendor": "Shady merchant",
     "x": 1840,
     "y": 1081,
     "note": "",
-    "community": true
+    "community": true,
+    "wiki": "https://monstersandmemories.wiki/npcs/a-suspicious-salesman",
+    "wikiId": "npc-a-suspicious-salesman"
   },
   {
     "id": "wiki-16",
@@ -1320,5 +1322,146 @@
     "x": 1723,
     "y": 918,
     "vendor": "Butcher"
+  },
+  {
+    "id": "community-479",
+    "community": true,
+    "name": "a curious jackal (levels 5–6)",
+    "category": "Quest",
+    "note": "",
+    "x": 529,
+    "y": 1269,
+    "wiki": "https://monstersandmemories.wiki/npcs/a-curious-jackal",
+    "wikiId": "npc-a-curious-jackal"
+  },
+  {
+    "id": "community-483",
+    "community": true,
+    "name": "Grubbfist (level 9)",
+    "category": "Named mob",
+    "note": "",
+    "x": 1707,
+    "y": 635,
+    "levels": [
+      9,
+      9
+    ],
+    "wiki": "https://monstersandmemories.wiki/npcs/grubbfist",
+    "wikiId": "npc-grubbfist"
+  },
+  {
+    "id": "community-486",
+    "community": true,
+    "name": "Mirembe Tiifu",
+    "category": "Quest",
+    "note": "",
+    "x": 1695,
+    "y": 1910,
+    "wiki": "https://monstersandmemories.wiki/npcs/mirembe-tiifu",
+    "wikiId": "npc-mirembe-tiifu"
+  },
+  {
+    "id": "community-487",
+    "community": true,
+    "name": "Malory Moreland",
+    "category": "Quest",
+    "note": "In the library.",
+    "x": 1539,
+    "y": 927,
+    "wiki": "https://monstersandmemories.wiki/npcs/malory-moreland",
+    "wikiId": "npc-malory-moreland"
+  },
+  {
+    "id": "community-488",
+    "community": true,
+    "name": "Sexton Harding",
+    "category": "Quest",
+    "note": "",
+    "x": 1739,
+    "y": 1033,
+    "wiki": "https://monstersandmemories.wiki/npcs/sexton-harding",
+    "wikiId": "npc-sexton-harding"
+  },
+  {
+    "id": "community-489",
+    "community": true,
+    "name": "Fisherman Abduh",
+    "category": "Tradeskill",
+    "note": "Fisherman Abduh on the end of the dock",
+    "x": 1573,
+    "y": 2031,
+    "trade": "Fishing",
+    "wiki": "https://monstersandmemories.wiki/npcs/fisherman-abduh",
+    "wikiId": "npc-fisherman-abduh"
+  },
+  {
+    "id": "community-490",
+    "community": true,
+    "name": "Gatekeeper Nusder (level Red to 15)",
+    "category": "Quest",
+    "note": "Red Mantle Keep, next to the catacombs gate",
+    "x": 1471,
+    "y": 1139,
+    "wiki": "https://monstersandmemories.wiki/npcs/gatekeeper-nusder",
+    "wikiId": "npc-gatekeeper-nusder"
+  },
+  {
+    "id": "community-491",
+    "community": true,
+    "name": "Chef Belle",
+    "category": "Vendor",
+    "note": "",
+    "x": 1996,
+    "y": 1177,
+    "vendor": "Cook",
+    "wiki": "https://monstersandmemories.wiki/npcs/chef-belle",
+    "wikiId": "npc-chef-belle"
+  },
+  {
+    "id": "community-492",
+    "community": true,
+    "name": "Chef Daisy",
+    "category": "Vendor",
+    "note": "",
+    "x": 1973,
+    "y": 1177,
+    "vendor": "Cook",
+    "wiki": "https://monstersandmemories.wiki/npcs/chef-daisy",
+    "wikiId": "npc-chef-daisy"
+  },
+  {
+    "id": "community-493",
+    "community": true,
+    "name": "A barkeep",
+    "category": "Vendor",
+    "note": "",
+    "x": 1966,
+    "y": 1188,
+    "vendor": "Barkeep",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-barkeep",
+    "wikiId": "npc-a-barkeep"
+  },
+  {
+    "id": "community-495",
+    "community": true,
+    "name": "A property merchant",
+    "category": "Vendor",
+    "note": "",
+    "x": 1822,
+    "y": 1218,
+    "vendor": "Property merchant",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-property-merchant",
+    "wikiId": "npc-a-property-merchant"
+  },
+  {
+    "id": "community-496",
+    "community": true,
+    "name": "Guild Registrar (Night Harbor)",
+    "category": "Quest",
+    "note": "",
+    "x": 1765,
+    "y": 1226,
+    "wiki": "https://monstersandmemories.wiki/npcs/guild-registrar-night-harbor",
+    "wikiId": "npc-guild-registrar-night-harbor"
   }
 ]

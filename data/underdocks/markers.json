@@ -283,7 +283,7 @@
   },
   {
     "id": "class-archer-warrior-ranger",
-    "name": "Archer / Fighter / Ranger trainers",
+    "name": "Fighter / Ranger trainers",
     "x": 4527,
     "y": 3759,
     "level": "lower",
@@ -296,7 +296,8 @@
       "Ranger"
     ],
     "wiki": "https://monstersandmemories.wiki/npcs/archer-brann",
-    "wikiId": "npc-1790076523473-qxhtb"
+    "wikiId": "npc-1790076523473-qxhtb",
+    "community": true
   },
   {
     "id": "wiki-east-bank",
@@ -356,17 +357,6 @@
     "classes": [
       "Rogue"
     ]
-  },
-  {
-    "id": "trade-blacksmithing",
-    "name": "Blacksmithing / Smelting — harbour island",
-    "category": "Tradeskill",
-    "x": 3466,
-    "y": 4487,
-    "level": "lower",
-    "note": "The Balanced Blade.\nOn mezzanine floor below the exchange. Follow signs for Forge Row.\n- Blacksmithing Trainer\n- Weaponsmith Vendor\n- Used Weapon Vendor\n- a Patternmaker",
-    "community": true,
-    "trade": "Blacksmithing / Smelting"
   },
   {
     "id": "trade-cooking",
@@ -470,17 +460,6 @@
     "x": 2652,
     "y": 4874,
     "note": "Western shore; exact shop entrance to confirm.",
-    "level": "lower",
-    "approximate": true
-  },
-  {
-    "id": "wiki-butchers",
-    "name": "Butchers",
-    "category": "Vendor",
-    "vendor": "Butcher",
-    "x": 3673,
-    "y": 4120,
-    "note": "",
     "level": "lower",
     "approximate": true
   },
@@ -835,7 +814,7 @@
     "community": true,
     "name": "Senior Apprentice Syrsil",
     "category": "Quest",
-    "note": "Found in the tavern, can be given Vharkith's Order (from Belot, named Deepcut Bandit) for some exp and faction with a deep elf house.",
+    "note": "Found in the lowest level beneath the tavern, can be given Vharkith's Order (from Belot, named Deepcut Bandit) for some exp and faction with a deep elf house.",
     "x": 3841,
     "y": 4651,
     "level": "lower",
@@ -1006,5 +985,160 @@
         "wikiId": "npc-an-undercap-hunter"
       }
     ]
+  },
+  {
+    "id": "community-485",
+    "community": true,
+    "name": "Blacksmith Hargrul",
+    "category": "Tradeskill",
+    "note": "The Balanced Blade.\nOn mezzanine floor below the exchange. Follow signs for Forge Row.\n- Blacksmithing Trainer\n- Weaponsmith Vendor\n- Used Weapon Vendor\n- a Patternmaker",
+    "x": 3457,
+    "y": 4422,
+    "level": "lower",
+    "trade": "Blacksmithing / Smelting",
+    "wiki": "https://monstersandmemories.wiki/npcs/blacksmith-hargrul",
+    "wikiId": "npc-1790076524014-sbecd"
+  },
+  {
+    "id": "community-533",
+    "community": true,
+    "name": "Wererats",
+    "category": "Mob camp",
+    "note": "Wererats lvl 5-9 camp\nFaction gain for Night Harbor",
+    "x": 3825,
+    "y": 2253,
+    "level": "lower",
+    "levels": [
+      5,
+      9
+    ],
+    "mobs": []
+  },
+  {
+    "id": "community-548",
+    "community": true,
+    "name": "Stevran Understock",
+    "category": "Vendor",
+    "note": "",
+    "x": 3581,
+    "y": 4615,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/stevran-understock",
+    "wikiId": "npc-1790076534264-d7cpf"
+  },
+  {
+    "id": "community-549",
+    "community": true,
+    "name": "Innkeeper Farda",
+    "category": "Quest",
+    "note": "",
+    "x": 4468,
+    "y": 3492,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/innkeeper-farda",
+    "wikiId": "npc-innkeeper-farda"
+  },
+  {
+    "id": "community-550",
+    "community": true,
+    "name": "Sir Vosirek",
+    "category": "Quest",
+    "note": "2nd Floor",
+    "x": 4402,
+    "y": 3705,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/sir-vosirek",
+    "wikiId": "npc-sir-vosirek"
+  },
+  {
+    "id": "community-551",
+    "community": true,
+    "name": "Soren Akedd",
+    "category": "Quest",
+    "note": "1st Floor, in Temple foyer",
+    "x": 5473,
+    "y": 4240,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/soren-akedd",
+    "wikiId": "npc-soren-akedd"
+  },
+  {
+    "id": "community-552",
+    "community": true,
+    "name": "Abbot Harrow",
+    "category": "Notable NPC",
+    "note": "In crypt down the ramp in the temple",
+    "x": 5648,
+    "y": 4198,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/abbot-harrow",
+    "wikiId": "npc-abbot-harrow"
+  },
+  {
+    "id": "community-553",
+    "community": true,
+    "name": "Acolyte Vryar",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 5264,
+    "y": 3940,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/acolyte-vryar",
+    "wikiId": "npc-acolyte-vryar"
+  },
+  {
+    "id": "community-554",
+    "community": true,
+    "name": "Lady Tabitha",
+    "category": "Notable NPC",
+    "note": "South ramp from Temple foyer, halfway up on South side.",
+    "x": 5619,
+    "y": 4373,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/lady-tabitha",
+    "wikiId": "npc-lady-tabitha"
+  },
+  {
+    "id": "community-555",
+    "community": true,
+    "name": "Telar Nur'gta",
+    "category": "Vendor",
+    "note": "Dark Elf merchant, 2nd floor",
+    "x": 4826,
+    "y": 4445,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/telar-nurgta",
+    "wikiId": "npc-telar-nur-gta"
+  },
+  {
+    "id": "community-556",
+    "community": true,
+    "name": "Korien Nock",
+    "category": "Class trainer",
+    "note": "",
+    "x": 4500,
+    "y": 3705,
+    "level": "lower",
+    "classes": [
+      "Archer"
+    ],
+    "wiki": "https://monstersandmemories.wiki/npcs/korien-nock",
+    "wikiId": "npc-1790076528774-wcf00"
+  },
+  {
+    "id": "community-557",
+    "community": true,
+    "name": "An abominable ghoul",
+    "category": "Named mob",
+    "note": "In area with elder shadowbones, spawns on marker and paths counter-clockwise around perimeter of elder shadowbone spawn area",
+    "x": 606,
+    "y": 4243,
+    "level": "lower",
+    "levels": [
+      18,
+      18
+    ],
+    "wiki": "https://monstersandmemories.wiki/npcs/an-abominable-ghoul",
+    "wikiId": "npc-an-abominable-ghoul"
   }
 ]

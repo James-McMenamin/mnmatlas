@@ -330,5 +330,25 @@
   "note": "Lvl 28+ orcs",
   "x": 3657,
   "y": 6204
+ },
+ {
+  "id": "community-532",
+  "community": true,
+  "name": "A Defiled Asp",
+  "category": "Mob camp",
+  "note": "",
+  "x": 4606,
+  "y": 7972,
+  "levels": [
+   32,
+   35
+  ],
+  "mobs": [
+   {
+    "name": "A defiled asp",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-defiled-asp",
+    "wikiId": "npc-a-defiled-asp"
+   }
+  ]
  }
 ]
