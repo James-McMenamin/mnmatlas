@@ -11,7 +11,9 @@ window.atlasReview=(()=>{
   for(const b of [...buckets.values()].sort((a,b)=>mapName(a.map).localeCompare(mapName(b.map))||a.map.localeCompare(b.map)||floorOrder(a.map,a.level)-floorOrder(b.map,b.level)||a.level.localeCompare(b.level))){
    const sorted=b.rows.sort((a,b)=>Number(a.id)-Number(b.id)),parents=sorted.map((_,i)=>i),find=i=>parents[i]===i?i:parents[i]=find(parents[i]);
    // Connected neighbours make one place cluster, even when a third row bridges two spots.
-   if(spot)for(let i=0;i<sorted.length;i++)for(let j=0;j<i;j++){const a=locate(sorted[i]),c=locate(sorted[j]);if(target(sorted[i])&&targetKind(sorted[i])===targetKind(sorted[j])&&target(sorted[i])===target(sorted[j])||a?.every(Number.isFinite)&&c?.every(Number.isFinite)&&Math.hypot(a[0]-c[0],a[1]-c[1])<=15)parents[find(i)]=find(j);}
+   // Each row is located once: locating can be costly, and pairs grow with the square of the queue.
+   if(spot){const at=sorted.map(r=>{const p=locate(r);return p?.every(Number.isFinite)?p:null;}),ids=sorted.map(target),kinds=sorted.map(targetKind);
+    for(let i=0;i<sorted.length;i++)for(let j=0;j<i;j++){const a=at[i],c=at[j];if(ids[i]&&kinds[i]===kinds[j]&&ids[i]===ids[j]||a&&c&&Math.hypot(a[0]-c[0],a[1]-c[1])<=15)parents[find(i)]=find(j);}}
    const clusters=new Map();for(let i=0;i<sorted.length;i++){const key=spot?find(i):0;if(!clusters.has(key))clusters.set(key,[]);clusters.get(key).push(sorted[i]);}
    for(const cluster of clusters.values())groups.push({...b,rows:cluster});
   }

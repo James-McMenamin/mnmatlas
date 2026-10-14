@@ -160,9 +160,11 @@
  function reviewTarget(row){
   let current=null;if(row.map===config.id){if(!currentReviewSet||currentReviewSet.serial!==approvedSerial||currentReviewSet.map!==config.id||currentReviewSet.level!==config.levelId)currentReviewSet={serial:approvedSerial,map:config.id,level:config.levelId,set:changeSet()};current=currentReviewSet.set.forRow(row.id);if(current&&!current.missing)return current;}
   // A floor correction needs the mark on its old floor as well as its destination.
-  const data=reviewMaps.get(row.map),from=data?window.atlasChanges.buildChanges({...data,mapId:row.map,levelId:row.level,onError:(row,error)=>desk.rowError(row,error),publishedPositions:new Map(data.markers.map(m=>[m.id,[m.x,m.y]])),publishedLabelPositions:new Map(data.labels.map(l=>[l.id,[l.x,l.y]]))}).forRow(row.id):null;
+  const data=reviewMaps.get(row.map),from=data?otherMapChanges(data,row.map,row.level).forRow(row.id):null;
   return from||current||(row.map===config.id?targetState({id:row.target_id||'community-'+row.id},row.kind.endsWith('label')?'edit-label':'edit-marker'):null);
  }
+ // One change set per map and floor for each fetched queue; rebuilding it per lookup froze the desk with a long queue.
+ function otherMapChanges(data,mapId,levelId){if(data.sets?.rows!==data.rows)data.sets={rows:data.rows,byLevel:new Map()};const key=levelId||'';let set=data.sets.byLevel.get(key);if(!set){set=window.atlasChanges.buildChanges({...data,mapId,levelId,onError:(row,error)=>desk.rowError(row,error),publishedPositions:new Map(data.markers.map(m=>[m.id,[m.x,m.y]])),publishedLabelPositions:new Map(data.labels.map(l=>[l.id,[l.x,l.y]]))});data.sets.byLevel.set(key,set);}return set;}
  function reviewPlaces(id,level){return (id===config.id?labelData.labels:reviewMaps.get(id)?.labels||[]).filter(r=>!level||!r.level||r.level===level);}
  function connectNotices(){window.atlasNotices?.setAccount(user,{closeAccount,points:myPoints,kind:desk.kind,mapName:desk.mapName,show:showOwn,change:changeOwn,withdraw:withdrawOwn,rows:async()=>{const uid=user?.id,rows=[];if(!uid)return rows;for(let offset=0;;offset+=500){const {data,error}=await client.from('suggestions').select('*').eq('user_id',uid).order('created_at',{ascending:false}).range(offset,offset+499);if(error)throw error;rows.push(...(data||[]).map(normaliseSuggestion));if(!data||data.length<500)break;}return rows;}});}
  let ownSerial=0;
@@ -871,8 +873,10 @@
   const serial=++approvedSerial;let approved=[],pending=[],rejected=[],published=[];
   if(user&&config&&!config.zonesFile){
    const read=async(state,since)=>{let q=client.from('suggestions').select('*').eq('status',state).eq('map',config.id);if(since)q=q.gte(state==='published'?'updated_at':'reviewed_at',since).order(state==='published'?'updated_at':'reviewed_at',{ascending:false}).order('id',{ascending:false});let {data,error}=await q.limit(500);if(error&&state==='published'&&since&&/updated_at/.test(error.message||error.details||'')){({data,error}=await client.from('suggestions').select('*').eq('status',state).eq('map',config.id).gte('reviewed_at',since).order('reviewed_at',{ascending:false}).order('id',{ascending:false}).limit(500));}if(error)throw error;return Array.isArray(data)?data.map(normaliseSuggestion):[];};
-   try{const since=await publishedSince();approved=await read('approved');pending=await read('pending');published=await read('published',since);}catch{}
-   if(admin)try{rejected=await read('rejected',await publishedSince());}catch{}}
+   // The reads run side by side: the review desk waits on this after every decision.
+   const since=await publishedSince(),gone=admin?read('rejected',since).catch(()=>[]):null;
+   try{[approved,pending,published]=await Promise.all([read('approved'),read('pending'),read('published',since)]);}catch{}
+   if(gone)rejected=await gone;}
   let labels=[];try{const source=(config.levels||[]).filter(l=>l.labelsFile&&l.labelsFile!==config.labelsFile);labels=(await Promise.all(source.map(async l=>{const data=await fetchData(l.labelsFile,{labels:[]});return (data.labels||[]).map(p=>({...p,level:p.level||l.id}));}))).flat();}catch{}
   const credits=await creditsForMap();if(serial!==approvedSerial)return;const signature=JSON.stringify([mapSerial,loadSerial,originals,labelData,approved,pending,rejected,published,labels,credits]);currentReviewSet=null;window.atlasNotices?.refresh();if(signature===loadedSignature){freshPopup();return;}loadedSignature=signature;mapCredits=credits;publishedMapLabels=labels;approvedRows=[...approved,...published];pendingRows=pending;rejectedRows=rejected;cachedChanges=null;approvedRows=[...approved,...published.filter(r=>!approvedLive(r)).map(r=>({...r,status:'approved',sourceStatus:'published'}))];cachedChanges=null;drawApproved();freshPopup();
  }
