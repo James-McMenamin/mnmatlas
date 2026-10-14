@@ -97,7 +97,7 @@
         },
         {
           "map": "caves-of-irem",
-          "title": "Caves of Irem"
+          "place": "boat-route"
         },
         {
           "map": "great-cavern-sea",
@@ -142,6 +142,22 @@
       "arrow": "east",
       "toMap": "night-harbor",
       "toPlace": "place-37"
+    },
+    {
+      "id": "to-caves-of-irem",
+      "name": "to Caves of Irem",
+      "x": 260,
+      "y": 1040,
+      "level": "lower",
+      "kind": "exit",
+      "tier": "exit",
+      "priority": 90,
+      "minZoom": 2,
+      "arrow": "northwest",
+      "approximate": true,
+      "note": "The river runs on to the Caves of Irem.",
+      "toMap": "caves-of-irem",
+      "toPlace": "to-underdocks"
     }
   ],
   "trainers": [

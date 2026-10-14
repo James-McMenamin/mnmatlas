@@ -1,6 +1,19 @@
 {
  "entries": [
   {
+   "date": "2026-10-14",
+   "title": "The Caves of Irem charted",
+   "text": "A new chart of the Caves of Irem: the buried sea beneath the Shaded Dunes, the glowing Bluecaps and Redcaps, the Pyramid Complex, the Cave of 1000 Eyes and the Green Lake. Its passages now lead on to the Great Cavern Sea, the Underdocks, the Shaded Dunes, the Ancient Crypt and the Tomb of the Last Wyrmsbane, and the Deep boat's board shows where it sails through.",
+   "maps": [
+    "caves-of-irem",
+    "great-cavern-sea",
+    "underdocks",
+    "shaded-dunes",
+    "ancient-crypt",
+    "ail-vorith"
+   ]
+  },
+  {
    "date": "2026-10-13",
    "title": "Shared notes join the map",
    "text": "A note you shared that is now on the public map no longer stays behind as a second, personal pin: the next time you open that map signed in, it is folded into the public marker. Anything you wrote that the marker does not say is kept as your private note on it. Notes still waiting for review stay yours as before.",

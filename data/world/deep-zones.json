@@ -4055,7 +4055,7 @@
   {
    "id": "caves-of-irem",
    "name": "Caves of Irem",
-   "charted": false,
+   "charted": true,
    "polygon": [
     [
      141.0,
@@ -4961,7 +4961,8 @@
      141.0,
      2954.5
     ]
-   ]
+   ],
+   "toMap": "caves-of-irem"
   },
   {
    "id": "underdocks",

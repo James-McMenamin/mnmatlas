@@ -116,7 +116,9 @@
       "minZoom": 2,
       "approximate": true,
       "note": "",
-      "arrow": "west"
+      "arrow": "west",
+      "toMap": "caves-of-irem",
+      "toPlace": "from-ancient-crypt"
     }
   ],
   "trainers": [],

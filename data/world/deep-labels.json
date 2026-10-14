@@ -27,7 +27,8 @@
    "y": 2319,
    "kind": "zone",
    "priority": 60,
-   "community": true
+   "community": true,
+   "toMap": "caves-of-irem"
   },
   {
    "id": "zone-underdocks",

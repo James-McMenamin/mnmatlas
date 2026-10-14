@@ -87,7 +87,8 @@
    "approximate": true,
    "note": "The way to the Caves of Irem, and on to the Underdocks by the river.",
    "toMap": "caves-of-irem",
-   "community": true
+   "community": true,
+   "toPlace": "to-great-cavern-sea"
   },
   {
    "id": "to-ail-vorith",
@@ -144,7 +145,7 @@
     },
     {
      "map": "caves-of-irem",
-     "title": "Caves of Irem"
+     "place": "boat-route"
     },
     {
      "map": "great-cavern-sea",

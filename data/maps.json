@@ -950,6 +950,42 @@
       "legacyStorage": {}
     },
     {
+      "id": "caves-of-irem",
+      "title": "Caves of Irem",
+      "subtitle": "A traveller’s chart",
+      "cartoucheKicker": "A buried sea of the Deep, beneath the Shaded Dunes",
+      "breadcrumb": "Monsters & Memories / Caves of Irem",
+      "description": "An illustrated fan atlas of the Caves of Irem: the underground sea and its glowing mushroom forest, the Pyramid Complex, the Cave of 1000 Eyes, the Green Lake and the roads to the Great Cavern Sea and the Underdocks, with place names and personal field notes.",
+      "width": 8064,
+      "height": 10112,
+      "minZoom": 0,
+      "maxNativeZoom": 6,
+      "maxZoom": 7,
+      "coordinateZoom": 6,
+      "tileSize": 256,
+      "tileRevision": "v1",
+      "tilePath": "assets/tiles/caves-of-irem/{z}/{x}/{y}.webp",
+      "markersFile": "data/caves-of-irem/markers.json",
+      "labelsFile": "data/caves-of-irem/labels.json",
+      "hiddenAreasFile": null,
+      "defaultView": {
+        "mode": "fit",
+        "padding": 18,
+        "placeZoom": 4.5
+      },
+      "attribution": {
+        "map": "Illustrated fan atlas · Not an official game map",
+        "text": "Place names and exits adapted from Naawa’s community map, CC BY-SA 4.0 · approximate",
+        "sourceTitle": "Naawa’s Caves of Irem wiki map",
+        "sourceUrl": "https://monstersandmemories.miraheze.org/wiki/File:Caves_of_Irem_By_Naawa.png",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "changes": "Place names and exits adapted from Naawa's Caves of Irem map (CC BY-SA 4.0); positions adjusted to this map."
+      },
+      "hiddenPrimaryStack": null,
+      "legacyStorage": {}
+    },
+    {
       "id": "tel-ekir",
       "title": "Tel Ekir",
       "subtitle": "The hidden canyon sanctuary",

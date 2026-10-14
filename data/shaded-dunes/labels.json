@@ -122,7 +122,9 @@
    "kind": "exit",
    "priority": 90,
    "minZoom": 2,
-   "arrow": "north"
+   "arrow": "north",
+   "toMap": "caves-of-irem",
+   "toPlace": "to-shaded-dunes"
   },
   {
    "id": "to-infested-crypt",
