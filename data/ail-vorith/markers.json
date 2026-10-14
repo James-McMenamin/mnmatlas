@@ -58,10 +58,11 @@
   {
     "id": "miral-the-dark-elf",
     "name": "Miral the Dark Elf",
-    "category": "Personal",
+    "category": "Notable NPC",
     "x": 4294,
     "y": 3964,
-    "note": "Service not specified on the community map."
+    "note": "quest npc",
+    "community": true
   },
   {
     "id": "survival-thirvol",
@@ -1196,5 +1197,18 @@
     "note": "",
     "x": 2557,
     "y": 2045
+  },
+  {
+    "id": "community-484",
+    "community": true,
+    "name": "Nyxa'ira",
+    "category": "Named mob",
+    "note": "Found in pool room after clearing room several times, drops balanced chain hood.",
+    "x": 3132,
+    "y": 4549,
+    "levels": [
+      20,
+      20
+    ]
   }
 ]
