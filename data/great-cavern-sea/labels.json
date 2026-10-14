@@ -93,14 +93,12 @@
   {
    "id": "to-ail-vorith",
    "name": "to Ail'Vorith",
-   "x": 6826,
-   "y": 3031,
+   "x": 6455,
+   "y": 2944,
    "kind": "exit",
    "priority": 95,
    "minZoom": 1,
    "arrow": "east",
-   "approximate": true,
-   "note": "",
    "toMap": "ail-vorith"
   },
   {
