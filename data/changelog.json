@@ -1,6 +1,14 @@
 {
  "entries": [
   {
+   "date": "2026-10-15",
+   "title": "The Great Cavern Sea darkens",
+   "text": "The waters of the Great Cavern Sea are charted again in the deep, still navy of the other Deep waters, a new little dock appears on the islet where the ship moors, and the road to Ail'Vorith is now marked at the gate itself, under its glowing rune.",
+   "maps": [
+    "great-cavern-sea"
+   ]
+  },
+  {
    "date": "2026-10-14",
    "title": "Quest givers get their own pin",
    "text": "The folk who hand out tasks now wear a Quest NPC pin, a figure with an exclamation mark, with its own filter in the Search menu. Over seventy of them across the atlas have been re-pinned; quest spots such as Tig's measuring markers keep the Quest pin.",

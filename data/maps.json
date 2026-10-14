@@ -928,7 +928,7 @@
       "maxZoom": 7,
       "coordinateZoom": 6,
       "tileSize": 256,
-      "tileRevision": "v1",
+      "tileRevision": "v2",
       "tilePath": "assets/tiles/great-cavern-sea/{z}/{x}/{y}.webp",
       "markersFile": "data/great-cavern-sea/markers.json",
       "labelsFile": "data/great-cavern-sea/labels.json",
