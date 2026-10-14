@@ -7,7 +7,7 @@
   "y": 7290,
   "minZoom": 3,
   "approximate": true,
-  "note": "Bank at Zaedin’s Landing. Approximate location; to confirm in game."
+  "note": "Bank at Zaedin’s Landing."
  },
  {
   "id": "zaedin-merchants",
@@ -17,7 +17,7 @@
   "y": 7400,
   "minZoom": 3,
   "approximate": true,
-  "note": "Merchants at Zaedin’s Landing: a gnome general goods merchant, a dwarf used weapons dealer and a wood elf exotic cook. Approximate location; to confirm in game."
+  "note": "Merchants at Zaedin’s Landing: a gnome general goods merchant, a dwarf used weapons dealer and a wood elf exotic cook."
  },
  {
   "id": "zaedin-barkeep",
@@ -27,7 +27,7 @@
   "y": 7215,
   "minZoom": 3,
   "approximate": true,
-  "note": "At Zaedin’s Landing. Approximate location; to confirm in game."
+  "note": "At Zaedin’s Landing."
  },
  {
   "id": "zaedin-quests",
@@ -37,7 +37,7 @@
   "y": 7130,
   "minZoom": 3,
   "approximate": true,
-  "note": "Quest givers at Zaedin’s Landing: “Dealing with the Blacktide Orcs” and “Fizzle Screwtape’s Critical Research” (40+), and the Landing Loop quest. Approximate location; to confirm in game."
+  "note": "Quest givers at Zaedin’s Landing: “Dealing with the Blacktide Orcs” and “Fizzle Screwtape’s Critical Research” (40+), and the Landing Loop quest."
  },
  {
   "id": "zaedin-appraiser",
@@ -47,7 +47,7 @@
   "y": 7330,
   "minZoom": 3,
   "approximate": true,
-  "note": "Behind a locked gate at Zaedin’s Landing. Approximate location; to confirm in game."
+  "note": "Behind a locked gate at Zaedin’s Landing."
  },
  {
   "id": "black-shoals-witchguard",
@@ -57,7 +57,7 @@
   "y": 2050,
   "minZoom": 3,
   "approximate": true,
-  "note": "Black Shoals Fortress: witchguard signifers, serverats, princeps, cultors, velites and sacramirs, with obedient sniffers. Approximate location; to confirm in game.",
+  "note": "Black Shoals Fortress: witchguard signifers, serverats, princeps, cultors, velites and sacramirs, with obedient sniffers.",
   "levels": [
    38,
    41
@@ -71,7 +71,7 @@
   "y": 1900,
   "minZoom": 3,
   "approximate": true,
-  "note": "Black Shoals Fortress: Witchguard Hellblade, Witchguard Primus, Witchguard Kruurgal, Herald of Muurtu, High-Priest of Muurtu, Champion of Muurtu, High-Sister Sarinius and High-Mother Haathala. Approximate location; to confirm in game."
+  "note": "Black Shoals Fortress: Witchguard Hellblade, Witchguard Primus, Witchguard Kruurgal, Herald of Muurtu, High-Priest of Muurtu, Champion of Muurtu, High-Sister Sarinius and High-Mother Haathala."
  },
  {
   "id": "pirate-island-camp",
@@ -81,7 +81,7 @@
   "y": 13150,
   "minZoom": 3,
   "approximate": true,
-  "note": "Pirate Island: Cossa pirates, sea witches, a fire giant wanderer, contrabanders, scoundrels and cultists. Approximate location; to confirm in game."
+  "note": "Pirate Island: Cossa pirates, sea witches, a fire giant wanderer, contrabanders, scoundrels and cultists."
  },
  {
   "id": "pirate-island-named",
@@ -91,7 +91,7 @@
   "y": 13050,
   "minZoom": 3,
   "approximate": true,
-  "note": "Pirate Island, with Mrvath Cinderhand, Sharkie, Madame Vespera, Gallows Krane and the Ghost of Selam. Approximate location; to confirm in game."
+  "note": "Pirate Island, with Mrvath Cinderhand, Sharkie, Madame Vespera, Gallows Krane and the Ghost of Selam."
  },
  {
   "id": "barkeep-glior",
@@ -101,7 +101,7 @@
   "y": 12800,
   "minZoom": 3,
   "approximate": true,
-  "note": "Pirate Island: merchant and quest giver (“Ghost Haul”, “Crates for Zahara”). Approximate location; to confirm in game."
+  "note": "Pirate Island: merchant and quest giver (“Ghost Haul”, “Crates for Zahara”)."
  },
  {
   "id": "werejackal-named",
@@ -111,7 +111,7 @@
   "y": 10900,
   "minZoom": 3,
   "approximate": true,
-  "note": "Werejackal Island (levels about 42–44), with Sister Elsi. Approximate location; to confirm in game."
+  "note": "Werejackal Island (levels about 42–44), with Sister Elsi."
  },
  {
   "id": "brother-luka",
@@ -121,7 +121,7 @@
   "y": 10800,
   "minZoom": 3,
   "approximate": true,
-  "note": "Werejackal Island: “Pelts for the Festival” (30+). Approximate location; to confirm in game."
+  "note": "Werejackal Island: “Pelts for the Festival” (30+)."
  },
  {
   "id": "realtor-wafai",
@@ -131,6 +131,6 @@
   "y": 10380,
   "minZoom": 3,
   "approximate": true,
-  "note": "Player Island: sells housing; a realtor nearby sells housing keys. Approximate location; to confirm in game."
+  "note": "Player Island: sells housing; a realtor nearby sells housing keys."
  }
 ]

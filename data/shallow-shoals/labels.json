@@ -58,6 +58,15 @@
    "minZoom": 2.5
   },
   {
+   "id": "smugglers-isle",
+   "name": "Smugglers Isle",
+   "x": 4750,
+   "y": 5170,
+   "kind": "district",
+   "priority": 70,
+   "minZoom": 1.5
+  },
+  {
    "id": "to-keepers-bight",
    "name": "to Keeper’s Bight",
    "x": 6830,
@@ -137,7 +146,7 @@
      "place": "place-36"
     }
    ],
-   "note": "The boat between Keeper’s Bight and Night Harbor stops in Shallow Shoals for less than an hour of game time (type /time in game). The wiki lists two docks here, at Zaedin’s Landing and at Player Island. Position approximate.",
+   "note": "The boat between Keeper’s Bight and Night Harbor stops in Shallow Shoals for less than an hour of game time (type /time in game). The wiki lists two docks here, at Zaedin’s Landing and at Player Island.",
    "timesSource": {
     "title": "Boats",
     "site": "Monsters and Memories Wiki",
@@ -171,7 +180,7 @@
      "place": "place-36"
     }
    ],
-   "note": "The boat between Keeper’s Bight and Night Harbor stops in Shallow Shoals for less than an hour of game time (type /time in game). The wiki lists two docks here, at Zaedin’s Landing and at Player Island. Position approximate.",
+   "note": "The boat between Keeper’s Bight and Night Harbor stops in Shallow Shoals for less than an hour of game time (type /time in game). The wiki lists two docks here, at Zaedin’s Landing and at Player Island.",
    "timesSource": {
     "title": "Boats",
     "site": "Monsters and Memories Wiki",
