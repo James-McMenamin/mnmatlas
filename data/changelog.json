@@ -2,6 +2,14 @@
  "entries": [
   {
    "date": "2026-10-14",
+   "title": "Shallow Shoals is charted",
+   "text": "The island sea between Keeper’s Bight and Fallen Pass now has its own map: Zaedin’s Landing with its bank and merchants, Black Shoals Fortress, Pirate Island, Player Island and the smaller islands, with clear shallows over the sand shelf. Its exits lead to Keeper’s Bight, the Vale of Zintar and Fallen Pass, and the boat between Keeper’s Bight and Night Harbor now shows its Shallow Shoals stop.",
+   "maps": [
+    "shallow-shoals"
+   ]
+  },
+  {
+   "date": "2026-10-14",
    "title": "The Caves of Irem charted",
    "text": "A new chart of the Caves of Irem: the buried sea beneath the Shaded Dunes, the glowing Bluecaps and Redcaps, the Pyramid Complex, the Cave of 1000 Eyes and the Green Lake. Its passages now lead on to the Great Cavern Sea, the Underdocks, the Shaded Dunes, the Ancient Crypt and the Tomb of the Last Wyrmsbane, and the Deep boat's board shows where it sails through.",
    "maps": [

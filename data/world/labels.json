@@ -60,7 +60,8 @@
    "x": 499,
    "y": 1065,
    "kind": "zone",
-   "priority": 60
+   "priority": 60,
+   "toMap": "shallow-shoals"
   },
   {
    "id": "zone-keepers-bight",

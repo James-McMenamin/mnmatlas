@@ -1,0 +1,185 @@
+{
+ "map": "shallow-shoals",
+ "tileRevision": "v1",
+ "coordinateZoom": 6,
+ "labels": [
+  {
+   "id": "shallow-shoals",
+   "name": "Shallow Shoals",
+   "x": 3600,
+   "y": 6450,
+   "kind": "district",
+   "priority": 100,
+   "minZoom": 0.5
+  },
+  {
+   "id": "zaedins-landing",
+   "name": "Zaedin’s Landing",
+   "x": 1530,
+   "y": 6930,
+   "kind": "district",
+   "priority": 85,
+   "minZoom": 1.5
+  },
+  {
+   "id": "black-shoals-fortress",
+   "name": "Black Shoals Fortress",
+   "x": 5450,
+   "y": 1470,
+   "kind": "district",
+   "priority": 80,
+   "minZoom": 1.5
+  },
+  {
+   "id": "player-island",
+   "name": "Player Island",
+   "x": 4560,
+   "y": 9880,
+   "kind": "district",
+   "priority": 75,
+   "minZoom": 1.5
+  },
+  {
+   "id": "pirate-island",
+   "name": "Pirate Island",
+   "x": 3420,
+   "y": 12420,
+   "kind": "district",
+   "priority": 80,
+   "minZoom": 1.5
+  },
+  {
+   "id": "ain-gott",
+   "name": "Ain Gott",
+   "x": 3120,
+   "y": 10620,
+   "kind": "district",
+   "priority": 55,
+   "minZoom": 2.5
+  },
+  {
+   "id": "to-keepers-bight",
+   "name": "to Keeper’s Bight",
+   "x": 6830,
+   "y": 2800,
+   "kind": "exit",
+   "priority": 95,
+   "minZoom": 1,
+   "arrow": "east",
+   "toMap": "keepers-bight"
+  },
+  {
+   "id": "to-vale-of-zintar",
+   "name": "to Vale of Zintar",
+   "x": 6830,
+   "y": 11500,
+   "kind": "exit",
+   "priority": 95,
+   "minZoom": 1,
+   "arrow": "east",
+   "toMap": "vale-of-zintar",
+   "toPlace": "to-shallow-shoals"
+  },
+  {
+   "id": "to-fallen-pass",
+   "name": "to Fallen Pass",
+   "x": 3500,
+   "y": 14650,
+   "kind": "exit",
+   "priority": 95,
+   "minZoom": 1,
+   "arrow": "south",
+   "toMap": "fallen-pass"
+  },
+  {
+   "id": "to-grimtide-sanctum",
+   "name": "Grimtide Sanctum",
+   "x": 6390,
+   "y": 4990,
+   "kind": "exit",
+   "priority": 90,
+   "minZoom": 1.5,
+   "arrow": "down",
+   "toMap": "grimtide-sanctum"
+  },
+  {
+   "id": "to-hidden-grotto",
+   "name": "Hidden Grotto",
+   "x": 2106,
+   "y": 11690,
+   "kind": "exit",
+   "priority": 85,
+   "minZoom": 2,
+   "arrow": "down"
+  },
+  {
+   "id": "boat-zaedins-landing",
+   "name": "Boat dock",
+   "x": 1340,
+   "y": 7330,
+   "kind": "exit",
+   "priority": 85,
+   "minZoom": 1.5,
+   "arrow": "west",
+   "toMap": "night-harbor",
+   "toPlace": "place-36",
+   "route": [
+    {
+     "map": "keepers-bight",
+     "place": "boat-night-harbor"
+    },
+    {
+     "map": "shallow-shoals",
+     "place": "boat-zaedins-landing"
+    },
+    {
+     "map": "night-harbor",
+     "place": "place-36"
+    }
+   ],
+   "note": "The boat between Keeper’s Bight and Night Harbor stops in Shallow Shoals for less than an hour of game time (type /time in game). The wiki lists two docks here, at Zaedin’s Landing and at Player Island. Position approximate.",
+   "timesSource": {
+    "title": "Boats",
+    "site": "Monsters and Memories Wiki",
+    "url": "https://monstersandmemories.miraheze.org/wiki/Boats",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+   }
+  },
+  {
+   "id": "boat-player-island",
+   "name": "Boat dock",
+   "x": 4150,
+   "y": 10260,
+   "kind": "exit",
+   "priority": 85,
+   "minZoom": 1.5,
+   "arrow": "west",
+   "toMap": "night-harbor",
+   "toPlace": "place-36",
+   "route": [
+    {
+     "map": "keepers-bight",
+     "place": "boat-night-harbor"
+    },
+    {
+     "map": "shallow-shoals",
+     "place": "boat-player-island"
+    },
+    {
+     "map": "night-harbor",
+     "place": "place-36"
+    }
+   ],
+   "note": "The boat between Keeper’s Bight and Night Harbor stops in Shallow Shoals for less than an hour of game time (type /time in game). The wiki lists two docks here, at Zaedin’s Landing and at Player Island. Position approximate.",
+   "timesSource": {
+    "title": "Boats",
+    "site": "Monsters and Memories Wiki",
+    "url": "https://monstersandmemories.miraheze.org/wiki/Boats",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+   }
+  }
+ ],
+ "trainers": []
+}

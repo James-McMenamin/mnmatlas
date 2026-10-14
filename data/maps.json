@@ -1196,6 +1196,48 @@
       },
       "hiddenPrimaryStack": null,
       "legacyStorage": {}
+    },
+    {
+      "id": "shallow-shoals",
+      "title": "Shallow Shoals",
+      "subtitle": "A traveller’s chart",
+      "cartoucheKicker": "The islands off the coast between Keeper’s Bight and Fallen Pass",
+      "breadcrumb": "Monsters & Memories / Shallow Shoals",
+      "description": "An illustrated fan atlas of Shallow Shoals: the island archipelago with Zaedin’s Landing, Black Shoals Fortress, Pirate Island and Player Island, with place names and personal field notes.",
+      "width": 6976,
+      "height": 14784,
+      "minZoom": 0,
+      "maxNativeZoom": 6,
+      "maxZoom": 7,
+      "coordinateZoom": 6,
+      "tileSize": 256,
+      "tileRevision": "v1",
+      "tilePath": "assets/tiles/shallow-shoals/{z}/{x}/{y}.webp",
+      "markersFile": "data/shallow-shoals/markers.json",
+      "labelsFile": "data/shallow-shoals/labels.json",
+      "hiddenAreasFile": null,
+      "defaultView": {
+        "mode": "fit",
+        "padding": 18,
+        "placeZoom": 5
+      },
+      "extraCategories": {
+        "Notable NPC": [
+          "●",
+          "#2388aa"
+        ]
+      },
+      "attribution": {
+        "map": "Illustrated fan atlas · Not an official game map",
+        "text": "Island names and exits after ElusiveGarden's Shallow Shoals map; people and creatures from the community wiki (CC BY-SA 4.0)",
+        "sourceTitle": "Shallow Shoals, Monsters and Memories community wiki",
+        "sourceUrl": "https://monstersandmemories.miraheze.org/wiki/Shallow_Shoals",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "changes": "Island names and exits checked against ElusiveGarden's Shallow Shoals map; people and creatures placed from the community wiki's island lists; positions approximate."
+      },
+      "hiddenPrimaryStack": null,
+      "legacyStorage": {}
     }
   ]
 }
