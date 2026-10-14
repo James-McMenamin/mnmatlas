@@ -58,7 +58,7 @@
   {
     "id": "miral-the-dark-elf",
     "name": "Miral the Dark Elf",
-    "category": "Notable NPC",
+    "category": "Quest NPC",
     "x": 4294,
     "y": 3964,
     "note": "quest npc",
@@ -356,7 +356,7 @@
   {
     "id": "toilmaster-vorith",
     "name": "Toilmaster Vorith",
-    "category": "Notable NPC",
+    "category": "Quest NPC",
     "x": 5096,
     "y": 3911,
     "note": "At the bridge. Starter quest.",

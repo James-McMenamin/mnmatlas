@@ -32,7 +32,7 @@
  {
   "id": "zaedin-quests",
   "name": "Captain Harkan Saafir, Fizzle Screwtape, Nadim Al-Saraf",
-  "category": "Quest",
+  "category": "Quest NPC",
   "x": 1505,
   "y": 7130,
   "minZoom": 3,
@@ -96,7 +96,7 @@
  {
   "id": "barkeep-glior",
   "name": "Barkeep Glior",
-  "category": "Quest",
+  "category": "Quest NPC",
   "x": 3500,
   "y": 12800,
   "minZoom": 3,
@@ -116,7 +116,7 @@
  {
   "id": "brother-luka",
   "name": "Brother Luka",
-  "category": "Quest",
+  "category": "Quest NPC",
   "x": 3080,
   "y": 10800,
   "minZoom": 3,

@@ -2,7 +2,7 @@
  {
   "id": "penshaw-red-mantle",
   "name": "Detective Brunsworth",
-  "category": "Notable NPC",
+  "category": "Quest NPC",
   "x": 2702,
   "y": 2884,
   "minZoom": 3,
@@ -14,7 +14,7 @@
  {
   "id": "penshaw-red-mantle-reeve-thurston-winter",
   "name": "Reeve Thurston Winter",
-  "category": "Notable NPC",
+  "category": "Quest NPC",
   "x": 2724,
   "y": 2884,
   "minZoom": 3,
@@ -26,7 +26,7 @@
  {
   "id": "krelvya-drynn",
   "name": "Krelvya Drynn (level 60+)",
-  "category": "Notable NPC",
+  "category": "Quest NPC",
   "x": 2380,
   "y": 3044,
   "minZoom": 3,
@@ -60,7 +60,7 @@
  {
   "id": "harbor-office",
   "name": "Harbormaster Greywake",
-  "category": "Notable NPC",
+  "category": "Quest NPC",
   "x": 2093,
   "y": 3023,
   "minZoom": 3,
@@ -72,7 +72,7 @@
  {
   "id": "harbor-office-customs-agent-priorton",
   "name": "Customs Agent Priorton",
-  "category": "Notable NPC",
+  "category": "Quest NPC",
   "x": 2115,
   "y": 3023,
   "minZoom": 3,
@@ -94,7 +94,7 @@
  {
   "id": "farmers",
   "name": "Brenna McMiller",
-  "category": "Notable NPC",
+  "category": "Quest NPC",
   "x": 2695,
   "y": 3694,
   "minZoom": 3,
@@ -106,7 +106,7 @@
  {
   "id": "farmers-calen-mcmiller",
   "name": "Calen McMiller",
-  "category": "Notable NPC",
+  "category": "Quest NPC",
   "x": 2717,
   "y": 3694,
   "minZoom": 3,
@@ -293,7 +293,7 @@
  {
   "id": "lumberjacks",
   "name": "Brother Gurrom",
-  "category": "Notable NPC",
+  "category": "Quest NPC",
   "x": 3745,
   "y": 2693,
   "minZoom": 3,
@@ -305,7 +305,7 @@
  {
   "id": "lumberjacks-brother-juro",
   "name": "Brother Juro",
-  "category": "Notable NPC",
+  "category": "Quest NPC",
   "x": 3767,
   "y": 2693,
   "minZoom": 3,
@@ -317,7 +317,7 @@
  {
   "id": "wood-elves",
   "name": "Ranger Valegazer",
-  "category": "Notable NPC",
+  "category": "Quest NPC",
   "x": 3678,
   "y": 613,
   "minZoom": 3,
@@ -425,7 +425,7 @@
   "id": "community-308",
   "community": true,
   "name": "Captain Hale",
-  "category": "Quest",
+  "category": "Quest NPC",
   "note": "At the docks of Penshaw. Hale is in the last ship, farthest out from the lifts.",
   "x": 1896,
   "y": 3232,
@@ -582,7 +582,7 @@
   "id": "community-465",
   "community": true,
   "name": "Felgin Ironwhisker",
-  "category": "Quest",
+  "category": "Quest NPC",
   "note": "",
   "x": 4894,
   "y": 5586,
