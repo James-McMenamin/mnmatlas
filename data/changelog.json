@@ -2,6 +2,22 @@
  "entries": [
   {
    "date": "2026-10-14",
+   "title": "Quest givers get their own pin",
+   "text": "The folk who hand out tasks now wear a Quest NPC pin, a figure with an exclamation mark, with its own filter in the Search menu. Over seventy of them across the atlas have been re-pinned; quest spots such as Tig's measuring markers keep the Quest pin.",
+   "maps": [
+    "night-harbor",
+    "underdocks",
+    "ail-vorith",
+    "faelindral",
+    "evershade-weald",
+    "sungreet-strand",
+    "shaded-dunes",
+    "keepers-bight",
+    "shallow-shoals"
+   ]
+  },
+  {
+   "date": "2026-10-14",
    "title": "The Caves of Irem, retouched",
    "text": "Fresh survey corrections on the Caves of Irem chart: the boat passage at the Great Cavern Sea gate is open water again, the gate's buried walls and stray rock seams are gone, the Giant Den's rim reads as solid rock with the Skri'Var huts now in view, and a few flat-topped columns and a crooked platform were redrawn true.",
    "maps": [
