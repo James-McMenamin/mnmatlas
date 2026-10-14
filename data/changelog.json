@@ -2,6 +2,14 @@
  "entries": [
   {
    "date": "2026-10-14",
+   "title": "Night Harbor: a back way out of Blackfeather",
+   "text": "The Eastern sand terraces under Blackfeather now show the ramp and passage that lead out to the North Gate yard, with a sign at the opening. The rock that was drawn across the exit is gone, so the way out reads as open sand.",
+   "maps": [
+    "night-harbor"
+   ]
+  },
+  {
+   "date": "2026-10-14",
    "title": "Shallow Shoals is charted",
    "text": "The island sea between Keeper’s Bight and Fallen Pass now has its own map: Zaedin’s Landing with its bank and merchants, Black Shoals Fortress, Pirate Island, Player Island and the smaller islands, with clear shallows over the sand shelf. Its exits lead to Keeper’s Bight, the Vale of Zintar and Fallen Pass, and the boat between Keeper’s Bight and Night Harbor now shows its Shallow Shoals stop.",
    "maps": [
