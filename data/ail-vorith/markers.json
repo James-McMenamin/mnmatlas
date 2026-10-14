@@ -435,14 +435,14 @@
     "name": "Fletching Trainer",
     "category": "Tradeskill",
     "note": "",
-    "x": 3252,
-    "y": 2690,
+    "x": 3302,
+    "y": 2662,
     "trade": "Fletching"
   },
   {
     "id": "community-46",
     "community": true,
-    "name": "Blacksmith",
+    "name": "Blacksmith Kulzzavhol",
     "category": "Tradeskill",
     "note": "",
     "x": 3370,
@@ -844,19 +844,6 @@
     "x": 3305,
     "y": 3022,
     "vendor": "Blacksmithing vendor"
-  },
-  {
-    "id": "community-279",
-    "community": true,
-    "name": "a pattern vendor",
-    "category": "Vendor",
-    "note": "",
-    "x": 3312,
-    "y": 3041,
-    "vendor": "Blacksmithing vendor",
-    "sells": [
-      "Recipes"
-    ]
   },
   {
     "id": "community-280",
@@ -1340,5 +1327,132 @@
         "wikiId": "npc-a-stray-elemental"
       }
     ]
+  },
+  {
+    "id": "community-563",
+    "community": true,
+    "name": "Marshal Xyvher",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 3468,
+    "y": 2686
+  },
+  {
+    "id": "community-565",
+    "community": true,
+    "name": "a used weapons dealer",
+    "category": "Vendor",
+    "note": "",
+    "x": 4364,
+    "y": 3027,
+    "vendor": "Used weapons dealer"
+  },
+  {
+    "id": "community-568",
+    "community": true,
+    "name": "Innekeeper X'ison",
+    "category": "Vendor",
+    "note": "",
+    "x": 4675,
+    "y": 2931,
+    "vendor": "Innkeeper"
+  },
+  {
+    "id": "community-569",
+    "community": true,
+    "name": "Messara",
+    "category": "Vendor",
+    "note": "",
+    "x": 4227,
+    "y": 2261,
+    "vendor": "Bag merchant"
+  },
+  {
+    "id": "community-570",
+    "community": true,
+    "name": "Dirmav Ves'trinok",
+    "category": "Vendor",
+    "note": "",
+    "x": 4227,
+    "y": 2112
+  },
+  {
+    "id": "community-572",
+    "community": true,
+    "name": "Andala Thulne",
+    "category": "Vendor",
+    "note": "",
+    "x": 3261,
+    "y": 2683,
+    "vendor": "Fletcher"
+  },
+  {
+    "id": "community-573",
+    "community": true,
+    "name": "Kelssina Maezzinar",
+    "category": "Vendor",
+    "note": "furniture materials",
+    "x": 3316,
+    "y": 2994
+  },
+  {
+    "id": "community-575",
+    "community": true,
+    "name": "a smelting trainer",
+    "category": "Tradeskill",
+    "note": "",
+    "x": 3382,
+    "y": 3039,
+    "trade": "Blacksmithing / Smelting"
+  },
+  {
+    "id": "community-577",
+    "community": true,
+    "name": "a smelting supplier",
+    "category": "Vendor",
+    "note": "",
+    "x": 3354,
+    "y": 3016,
+    "vendor": "Smelting vendor"
+  },
+  {
+    "id": "community-579",
+    "community": true,
+    "name": "Feresek Murivhar",
+    "category": "Vendor",
+    "note": "copper and bronze schematics",
+    "x": 3320,
+    "y": 3013,
+    "vendor": "Blacksmithing vendor"
+  },
+  {
+    "id": "community-580",
+    "community": true,
+    "name": "Nullemak Vrinsinar",
+    "category": "Vendor",
+    "note": "Iron and Steel schematics",
+    "x": 3335,
+    "y": 3022,
+    "vendor": "Blacksmithing vendor"
+  },
+  {
+    "id": "community-581",
+    "community": true,
+    "name": "a mining trainer",
+    "category": "Tradeskill",
+    "note": "",
+    "x": 3359,
+    "y": 3082,
+    "trade": "Mining"
+  },
+  {
+    "id": "community-582",
+    "community": true,
+    "name": "a reagent vendor",
+    "category": "Vendor",
+    "note": "wizard reagent vendor",
+    "x": 3800,
+    "y": 3229,
+    "vendor": "Reagent vendor"
   }
 ]
