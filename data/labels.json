@@ -412,6 +412,19 @@
       "tier": "exit",
       "toMap": "underdocks",
       "toPlace": "upper-to-night-harbor"
+    },
+    {
+      "id": "place-38",
+      "name": "to North Gate yard",
+      "kind": "exit",
+      "priority": 60,
+      "minZoom": 3.25,
+      "x": 1802,
+      "y": 832,
+      "arrow": "northeast",
+      "linkedArea": "east-terrace",
+      "tier": "exit",
+      "toMap": "night-harbor"
     }
   ],
   "trainers": [

@@ -46,7 +46,9 @@ function setupPlaceLabels(data){
   // A boat dock opens a card with its departure times and every stop on the route, instead of jumping to one map.
   const boat=row.kind==='exit'&&Array.isArray(row.route)&&row.route.length>1;
   const floorTarget=(config.levels||[]).some(l=>l.id===row.toLevel);
-  const target=!boat&&(row.kind==='exit'||row.kind==='zone')&&!alignmentMode&&registry.maps.find(c=>c.id===row.toMap);
+  // An exit into another part of the same map (out of a hidden passage) is an in-zone sign, not a link.
+  const sameMap=row.kind==='exit'&&row.toMap===config.id;
+  const target=!boat&&!sameMap&&(row.kind==='exit'||row.kind==='zone')&&!alignmentMode&&registry.maps.find(c=>c.id===row.toMap);
   const face=text(target?'a':'span',row.kind==='exit'?'':row.name,'place-name '+row.kind+(target||boat&&!alignmentMode?' linked':'')+(boat?' boat':''));
   if(boat){
    face.append(boatSeal(),text('span',' '+row.name,'exit-name'));
@@ -60,13 +62,13 @@ function setupPlaceLabels(data){
    // Published exits may also go up or down (ladders, roof cracks); unknown arrows fall back to a plain one.
    const glyph=exitArrows[row.arrow]||{up:'⤒',down:'⤓'}[row.arrow]||'→';
    const side=/west/.test(row.arrow)?'west':/east/.test(row.arrow)?'east':['south','down'].includes(row.arrow)?'south':'north';
-   face.classList.add('to-'+side);if(!target&&!floorTarget&&!alignmentMode)face.classList.add('unmapped');
-   const travel=travelKind(row.name,'',row.travel),inside=(config.linkedMaps||[]).some(l=>l.map===row.toMap&&l.map!==config.id);
+   face.classList.add('to-'+side);if(!target&&!floorTarget&&!sameMap&&!alignmentMode)face.classList.add('unmapped');
+   const travel=travelKind(row.name,'',row.travel),inside=sameMap||(config.linkedMaps||[]).some(l=>l.map===row.toMap&&l.map!==config.id);
    if(inside)face.classList.add('travel');
    // A plain exit's seal is its compass arrow, as before; a travel sign shows its icon, with a small up or down mark when set.
    const seal=text('b',travel?'':glyph,'exit-arrow');if(travel){seal.append(travelSvg(travel));seal.title=travel;if(row.arrow==='up'||row.arrow==='down')seal.append(text('small',glyph,'travel-direction'));}
    face.append(seal,text('span',' '+row.name,'exit-name'));
-   if(!target&&!floorTarget&&!alignmentMode)face.append(text('small','not mapped yet','exit-soon'));
+   if(!target&&!floorTarget&&!sameMap&&!alignmentMode)face.append(text('small','not mapped yet','exit-soon'));
   }
   // Exit names that lead to another published map open it, at the matching exit when given.
   if(target){
