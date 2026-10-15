@@ -11,8 +11,7 @@
    "kind": "district",
    "priority": 80,
    "minZoom": 0,
-   "approximate": true,
-   "note": "Area number from community descriptions; confirm in game."
+   "note": ""
   },
   {
    "id": "area-2-pond",
@@ -22,8 +21,7 @@
    "kind": "district",
    "priority": 80,
    "minZoom": 0,
-   "approximate": true,
-   "note": "Area number from community descriptions; confirm in game."
+   "note": ""
   },
   {
    "id": "area-3-firepits",
@@ -33,8 +31,7 @@
    "kind": "district",
    "priority": 80,
    "minZoom": 0,
-   "approximate": true,
-   "note": "Area number from community descriptions; confirm in game."
+   "note": ""
   },
   {
    "id": "area-4-braziers",
@@ -44,8 +41,7 @@
    "kind": "district",
    "priority": 80,
    "minZoom": 0,
-   "approximate": true,
-   "note": "Area number from community descriptions; confirm in game."
+   "note": ""
   },
   {
    "id": "area-5-ice-ring",
@@ -55,8 +51,7 @@
    "kind": "district",
    "priority": 80,
    "minZoom": 0,
-   "approximate": true,
-   "note": "Area number from community descriptions; confirm in game."
+   "note": ""
   },
   {
    "id": "area-6-mushroom-ruins",
@@ -66,8 +61,7 @@
    "kind": "district",
    "priority": 80,
    "minZoom": 0,
-   "approximate": true,
-   "note": "Area number from community descriptions; confirm in game."
+   "note": ""
   },
   {
    "id": "exit-evershade-weald",
@@ -78,8 +72,7 @@
    "priority": 95,
    "minZoom": 1.5,
    "arrow": "north",
-   "approximate": true,
-   "note": "Portal back to the Weald; arrival point approximate.",
+   "note": "Portal back to the Weald.",
    "toMap": "evershade-weald",
    "toPlace": "to-glinting-hollow"
   }
