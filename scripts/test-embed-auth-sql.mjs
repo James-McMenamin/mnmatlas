@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
-import {execFileSync} from 'node:child_process';
-import {mkdtempSync,writeFileSync} from 'node:fs';
+import {execFileSync,execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+import {mkdtempSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {createServer} from 'node:net';
@@ -15,7 +17,7 @@ try{
  const args=['-h','127.0.0.1','-p',String(port),'-U','atlas_fixture','-d','postgres','-v','ON_ERROR_STOP=1','-qAt'];
  const sql=text=>run('psql',[...args,'-c',text]).trim();
  sql("create role anon;create role authenticated;create role service_role;create schema auth;create table auth.users(id uuid primary key);insert into auth.users values('00000000-0000-0000-0000-000000000001');");
- run('psql',[...args,'-f',new URL('../supabase/embed-auth.sql',import.meta.url).pathname.replace(/^\/([A-Za-z]:)/,'$1')]);
+ run('psql',[...args,'-f',fileURLToPath(new URL('../supabase/embed-auth.sql',import.meta.url))]);
  const user='00000000-0000-0000-0000-000000000001';
  const issue=hash=>sql(`set role service_role;select public.issue_embed_auth_code('${JSON.stringify({code_hash:hash,partner:'fixture',nonce:'n'.repeat(40),user_id:user,discord_id:'123456789012345678',expires_at:new Date(Date.now()+60000).toISOString()})}'::jsonb);`);
  issue('first');
@@ -23,6 +25,18 @@ try{
  assert.equal(redeem('first','wrong'),'');assert.equal(redeem('first','n'.repeat(40),'wrong'),'');assert.equal(redeem('first'),'123456789012345678');assert.equal(redeem('first'),'');
  issue('expired');sql("update public.embed_auth_codes set expires_at=now()-interval '1 second'");assert.equal(redeem('expired'),'');
  for(const role of ['anon','authenticated'])for(const operation of ['select * from public.embed_auth_codes',"select * from public.redeem_embed_auth_code('x','fixture','n')"]){assert.throws(()=>sql(`set role ${role};${operation}`));}
+
+ // A transaction-start timestamp must not extend a code beyond its real expiry.
+ issue('transaction-expiry');sql("update public.embed_auth_codes set expires_at=clock_timestamp()+interval '0.1 seconds'");
+ assert.equal(sql("begin;select pg_sleep(0.2);select discord_id from public.redeem_embed_auth_code('transaction-expiry','fixture','"+'n'.repeat(40)+"');commit;"),'');
+ sql('delete from public.embed_auth_codes');
+ const concurrent=Array.from({length:12},(_,i)=>{
+  const row={code_hash:'parallel-'+i,partner:'fixture',nonce:('n'+i).padEnd(40,'n'),user_id:user,discord_id:'123456789012345678',expires_at:new Date(Date.now()+60000).toISOString()};
+  return promisify(execFile)(executable('psql'),[...args,'-c',"begin;set role service_role;select public.issue_embed_auth_code('"+JSON.stringify(row)+"'::jsonb);select pg_sleep(0.1);commit;"],{encoding:'utf8'});
+ });
+ const outcomes=await Promise.allSettled(concurrent);
+ assert.equal(outcomes.filter(r=>r.status==='fulfilled').length,10);assert.equal(sql('select count(*) from public.embed_auth_codes'),'10');
+ sql('delete from public.embed_auth_codes');
  issue('cascade');sql(`delete from auth.users where id='${user}'`);assert.equal(sql('select count(*) from public.embed_auth_codes'),'0');
  console.log('PASS PostgreSQL: migration, service-only grants, nonce/audience, one-use redemption, expiration, anonymous/authenticated denial, account deletion cascade');
 }catch(error){console.error('Fixture evidence retained at '+root);throw error}

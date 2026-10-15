@@ -27,10 +27,10 @@ assert.equal((await handle(new Request('https://atlas.example',{method:'POST',bo
 console.log('PASS backend: verified identity, trusted origins, secret, nonce/audience binding, expiration, atomic single use, malformed requests');
 
 const source=await readFile(new URL('../embed-auth.js',import.meta.url),'utf8');
-function fixture({enabled=true,accept=true}={}){
+function fixture({enabled=true,accept=true,sessionUser='synthetic-user',stallSession=false}={}){
  let receive,approved=0,fetched=0;const replies=[],parent={postMessage:(data,origin)=>replies.push({data,origin})},host={parent,addEventListener:(name,fn)=>receive=fn,removeEventListener:()=>receive=null};
- const scope=vm.createContext({window:{},URL,Date,Map,setTimeout,clearTimeout,fetch:()=>{throw Error('unexpected')}});vm.runInContext(source,scope);
- const dispose=scope.window.installAtlasEmbedAuth({host,client:{auth:{getSession:async()=>({data:{session:{access_token:'private-atlas-token'}}})}},settings:{embedAuthPartners:enabled?[{id:partner.id,origin:partner.origin}]:[],supabaseUrl:'https://project.example',supabaseKey:'public'},approve:async()=>{approved++;return accept},fetcher:async(url,req)=>{fetched++;assert.equal(req.headers.Authorization,'Bearer private-atlas-token');const body=JSON.parse(req.body);return {ok:true,json:async()=>({code:'1'.repeat(72),nonce:body.nonce,expiresAt:Date.now()+60000})}}});
+ const scope=vm.createContext({window:{},URL,Date,Map,AbortController,setTimeout,clearTimeout,fetch:()=>{throw Error('unexpected')}});vm.runInContext(source,scope);
+ const dispose=scope.window.installAtlasEmbedAuth({host,client:{auth:{getSession:async()=>stallSession?new Promise(()=>{}):({data:{session:{access_token:'private-atlas-token',user:{id:sessionUser}}}})}},settings:{embedAuthPartners:enabled?[{id:partner.id,origin:partner.origin}]:[],supabaseUrl:'https://project.example',supabaseKey:'public'},approve:async()=>{approved++;return accept?'synthetic-user':false},fetcher:async(url,req)=>{fetched++;assert.equal(req.headers.Authorization,'Bearer private-atlas-token');const body=JSON.parse(req.body);return {ok:true,json:async()=>({code:'1'.repeat(72),nonce:body.nonce,expiresAt:Date.now()+60000})}}});
  const event=(overrides={})=>({origin:partner.origin,source:parent,data:{type:'mnmatlas:signin',version:1,requestId:nonce},...overrides});
  return {event,get receive(){return receive},replies,dispose,get approved(){return approved},get fetched(){return fetched}};
 }
@@ -41,7 +41,7 @@ await f.receive(f.event());assert.equal(f.fetched,1);f.dispose();assert.equal(f.
 f=fixture({accept:false});await f.receive(f.event());assert.equal(f.fetched,0);assert.equal(f.replies[0].data.error,'cancelled');
 console.log('PASS embed: disabled default, exact parent/origin, nonce validation, consent, replay guard, code-only response, cancellation, disposal');
 const sql=await readFile(new URL('../supabase/embed-auth.sql',import.meta.url),'utf8');
-assert.match(sql,/revoke all on public\.embed_auth_codes from public, anon, authenticated/);assert.match(sql,/delete from public\.embed_auth_codes c where c\.code_hash=wanted_hash and c\.partner=wanted_partner and c\.nonce=wanted_nonce and c\.expires_at>now\(\)/);
+assert.match(sql,/revoke all on public\.embed_auth_codes from public, anon, authenticated/);assert.match(sql,/delete from public\.embed_auth_codes c where c\.code_hash=wanted_hash and c\.partner=wanted_partner and c\.nonce=wanted_nonce and c\.expires_at>clock_timestamp\(\)/);
 console.log('PASS SQL contract: restricted table access and atomic bound delete-return redemption (live database checks still required)');
 // Exercise the deployed adapter against a synthetic Supabase Auth and REST service.
 const {stripTypeScriptTypes}=await import('node:module');
@@ -58,3 +58,7 @@ let response=await deployed(new Request('https://atlas.example',{method:'POST',h
 assert.equal(response.status,200);assert.equal(rpcCalls.length,1);assert(rpcCalls[0].url.endsWith('/rpc/issue_embed_auth_code'));assert.equal(rpcCalls[0].body.grant_payload.discord_id,'123456789012345678');assert.equal(rpcCalls[0].body.grant_payload.code_hash.length,64);
 authOK=false;response=await deployed(new Request('https://atlas.example',{method:'POST',headers:{origin:'https://www.mnmatlas.com',authorization:'Bearer synthetic'},body:JSON.stringify({action:'issue',partner:partner.id,nonce})}));assert.equal(response.status,401);assert.equal(rpcCalls.length,1);
 console.log('PASS deployment adapter: Auth-verified Discord identity, hashed grant persistence, backend-only service credential and rejected invalid session');
+
+f=fixture({sessionUser:'different-account'});await f.receive(f.event());assert.equal(f.fetched,0);assert.equal(f.replies[0].data.error,'account-changed');
+f=fixture({stallSession:true});const stalled=f.receive(f.event());await new Promise(resolve=>setImmediate(resolve));f.dispose();await stalled;assert.equal(f.fetched,0);assert.equal(f.replies.length,0);
+console.log('PASS review regressions: account changes cannot issue grants; disposal terminates a stalled session lookup without a late reply');

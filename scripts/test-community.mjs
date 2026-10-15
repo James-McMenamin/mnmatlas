@@ -789,8 +789,10 @@ await case2c('named-mob-change-suggestion',async()=>{
  const e=environment({supabaseUrl:'http://fixture',supabaseKey:'test'},'localhost',{user:{id:'synthetic-account'}});await settle();
  const partner={id:'companion',origin:'https://companion.example',name:'Companion'};
  const own=()=>e.body.querySelectorAll('dialog').find(d=>d!==e.context.$('community-dialog'));
- let pending=e.context.embedAuthHooks.approve(partner);assert(own()?.open);await own().querySelectorAll('button').find(b=>b.textContent==='Continue with Discord').onclick();assert.equal(await pending,true);assert.equal(own(),undefined);
+ let pending=e.context.embedAuthHooks.approve(partner);assert(own()?.open);await own().querySelectorAll('button').find(b=>b.textContent==='Continue with Discord').onclick();assert.equal(await pending,'synthetic-account');assert.equal(own(),undefined);
  pending=e.context.embedAuthHooks.approve(partner);own().querySelectorAll('button').find(b=>b.textContent==='Cancel').onclick();assert.equal(await pending,false);
+ pending=e.context.embedAuthHooks.approve(partner);e.authenticate({user:{id:'replacement-account',user_metadata:{full_name:'Replacement fixture'}}});await e.tick(0);let finished=false;pending.then(()=>finished=true);own().querySelectorAll('button').find(b=>b.textContent==='Continue with Discord').onclick();await settle();assert.equal(finished,false);own().querySelectorAll('button').find(b=>b.textContent==='Continue with Discord').onclick();assert.equal(await pending,'replacement-account');
+
  pending=e.context.embedAuthHooks.approve(partner);await e.tick(300000);assert.equal(await pending,false);assert.equal(own(),undefined);
  const unsigned=environment({supabaseUrl:'http://fixture',supabaseKey:'test'},'localhost');await settle();let opened=0;unsigned.context.screen={availWidth:1200,availHeight:900};unsigned.context.setInterval=()=>1;unsigned.context.clearInterval=()=>{};unsigned.context.window.open=()=>{opened++;return {closed:false}};
  pending=unsigned.context.embedAuthHooks.approve(partner);const consent=unsigned.body.querySelectorAll('dialog').find(d=>d!==unsigned.context.$('community-dialog'));consent.querySelectorAll('button').find(b=>b.textContent==='Continue with Discord').onclick();assert.equal(opened,1);consent.querySelectorAll('button').find(b=>b.textContent==='Cancel').onclick();assert.equal(await pending,false);

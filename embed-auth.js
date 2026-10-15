@@ -1,34 +1,71 @@
 'use strict';
 // Parent pages receive a redeemable code only, never an Atlas or Discord token.
-window.installAtlasEmbedAuth=function({client,settings,approve,fetcher=fetch,host=window}){
- const partners=Array.isArray(settings.embedAuthPartners)?settings.embedAuthPartners:[];
- const valid=partners.filter(p=>{try{return typeof p.id==='string'&&new URL(p.origin).origin===p.origin&&p.origin.startsWith('https://')}catch{return false}});
- if(host.parent===host||!valid.length)return ()=>{};
- let pending=null;
- const seen=new Map();
- async function receive(event){
-  if(event.source!==host.parent)return;
-  const partner=valid.find(p=>p.origin===event.origin),d=event.data;
-  if(!partner||!d||d.type!=='mnmatlas:signin'||d.version!==1||typeof d.requestId!=='string'||!/^[a-zA-Z0-9_-]{32,128}$/.test(d.requestId))return;
-  const key=partner.id+':'+d.requestId;
-  for(const [id,at] of seen)if(Date.now()-at>300000)seen.delete(id);
-  if(seen.has(key)||pending)return;
-  if(seen.size>=100)return;
-  seen.set(key,Date.now());const job={};pending=job;
-  const reply=value=>event.source.postMessage({type:'mnmatlas:signin-result',version:1,requestId:d.requestId,...value},event.origin);
-  let timer;const timeout=new Promise(resolve=>{timer=setTimeout(()=>resolve(false),300000)});
-  try{
-   const accepted=await Promise.race([approve(partner),timeout]);
-   if(pending!==job)return;
-   if(!accepted){reply({error:'cancelled'});return;}
-   const {data,error}=await client.auth.getSession();if(error||!data?.session?.access_token){reply({error:'sign-in-required'});return;}
-   const response=await fetcher(settings.supabaseUrl.replace(/\/$/,'')+'/functions/v1/embed-handoff',{method:'POST',headers:{'Content-Type':'application/json',apikey:settings.supabaseKey,Authorization:'Bearer '+data.session.access_token},body:JSON.stringify({action:'issue',partner:partner.id,nonce:d.requestId})});
-   if(!response.ok)throw Error('issue');const result=await response.json();
-   if(typeof result.code!=='string'||!/^[a-zA-Z0-9-]{64,128}$/.test(result.code)||result.nonce!==d.requestId||!Number.isFinite(result.expiresAt)||result.expiresAt<=Date.now())throw Error('response');
-   if(pending===job)reply({code:result.code,expiresAt:result.expiresAt});
-  }catch{if(pending===job)reply({error:'unavailable'})}
-  finally{clearTimeout(timer);if(pending===job)pending=null;}
+window.installAtlasEmbedAuth = function({client, settings, approve, fetcher = fetch, host = window}) {
+ const partners = Array.isArray(settings.embedAuthPartners) ? settings.embedAuthPartners : [];
+ const valid = partners.filter(partner => {
+  try {
+   return typeof partner.id === 'string' && new URL(partner.origin).origin === partner.origin && partner.origin.startsWith('https://');
+  } catch { return false; }
+ });
+ if (host.parent === host || !valid.length) return () => {};
+ let pending = null;
+ const seen = new Map();
+ async function receive(event) {
+  if (event.source !== host.parent) return;
+  const partner = valid.find(row => row.origin === event.origin);
+  const request = event.data;
+  if (!partner || !request || request.type !== 'mnmatlas:signin' || request.version !== 1 ||
+      typeof request.requestId !== 'string' || !/^[a-zA-Z0-9_-]{32,128}$/.test(request.requestId)) return;
+  const key = partner.id + ':' + request.requestId;
+  for (const [id, time] of seen) if (Date.now() - time > 300000) seen.delete(id);
+  if (seen.has(key) || pending || seen.size >= 100) return;
+  seen.set(key, Date.now());
+  const controller = new AbortController();
+  const job = {controller};
+  pending = job;
+  const reply = value => event.source.postMessage({
+   type: 'mnmatlas:signin-result', version: 1, requestId: request.requestId, ...value
+  }, event.origin);
+  let timeout;
+  const cancelled = new Promise(resolve => controller.signal.addEventListener('abort', () => resolve(null), {once: true}));
+  timeout = setTimeout(() => controller.abort(), 300000);
+  try {
+   const approvedUser = await Promise.race([approve(partner, {signal: controller.signal}), cancelled]);
+   if (pending !== job) return;
+   if (!approvedUser || controller.signal.aborted) { reply({error: 'cancelled'}); return; }
+   const sessionResult = await Promise.race([client.auth.getSession(), cancelled]);
+   if (controller.signal.aborted || pending !== job) return;
+   const session = sessionResult?.data?.session;
+   if (sessionResult?.error || !session?.access_token) { reply({error: 'sign-in-required'}); return; }
+   // Consent is for the account displayed to the visitor, not a replacement session.
+   if (session.user?.id !== approvedUser) { reply({error: 'account-changed'}); return; }
+   const network = async () => {
+    const response = await fetcher(settings.supabaseUrl.replace(/\/$/, '') + '/functions/v1/embed-handoff', {
+     method: 'POST', signal: controller.signal,
+     headers: {'Content-Type': 'application/json', apikey: settings.supabaseKey, Authorization: 'Bearer ' + session.access_token},
+     body: JSON.stringify({action: 'issue', partner: partner.id, nonce: request.requestId})
+    });
+    if (!response.ok) throw Error('issue');
+    return response.json();
+   };
+   const result = await Promise.race([network(), cancelled]);
+   if (controller.signal.aborted || pending !== job) return;
+   if (typeof result?.code !== 'string' || !/^[a-zA-Z0-9-]{64,128}$/.test(result.code) ||
+       result.nonce !== request.requestId || !Number.isFinite(result.expiresAt) || result.expiresAt <= Date.now()) throw Error('response');
+   reply({code: result.code, expiresAt: result.expiresAt});
+  } catch {
+   if (pending === job && !controller.signal.aborted) reply({error: 'unavailable'});
+  } finally {
+   clearTimeout(timeout);
+   controller.abort();
+   if (pending === job) pending = null;
+  }
  }
- host.addEventListener('message',receive);
- return ()=>{pending=null;host.removeEventListener('message',receive)};
+ host.addEventListener('message', receive);
+ return () => {
+  const job = pending;
+  pending = null;
+  job?.controller.abort();
+  host.removeEventListener('message', receive);
+ };
 };

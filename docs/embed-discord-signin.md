@@ -7,7 +7,7 @@ It is disabled by default. Deploying the function alone does not trust any compa
 ## Flow
 
 1. The companion backend creates a cryptographically random nonce (32 random bytes, base64url) and binds it to the initiating browser's session and login attempt. The account button sends the request below to its Atlas iframe.
-2. Atlas verifies the immediate parent window and an exact, configured HTTPS origin, then asks the visitor to share their Discord identity with that companion. If needed, the visitor signs into Discord through the existing Atlas popup. They press Continue again after returning. This deliberate Atlas-side gesture avoids popup blocking and makes the identity-sharing consent explicit.
+2. Atlas verifies the immediate parent window and an exact, configured HTTPS origin, then asks the visitor to share their Discord identity with that companion. If needed, the visitor signs into Discord through the existing Atlas popup. On return, Continue displays the signed-in identity; a further Continue confirms sharing that account. This deliberate Atlas-side gesture avoids popup blocking and makes the identity-sharing consent explicit.
 3. The iframe calls the new Edge Function with its own Supabase session. The function verifies the session with Supabase Auth, finds its linked Discord identity, and stores a hashed, 60-second, single-use code bound to the companion and nonce. Only the code returns to the parent.
 4. The companion posts that code to its own backend. Its backend validates the saved nonce and initiating browser session, then redeems the code directly with Atlas using its partner secret. Redemption atomically deletes the grant. The reply contains the Atlas user ID and verified Discord ID, with no Atlas roles, notes or tokens.
 5. The companion uses the Discord ID as its account key and creates its own session. It must never link accounts by display name or email alone. Existing Atlas permissions and note ownership stay unchanged.
@@ -22,7 +22,7 @@ The Atlas session and companion session have independent logout. This version do
 - Deploy `embed-handoff` with JWT verification disabled at the gateway, since the function verifies Atlas sessions on issue and a partner credential on redemption. The handler rejects unsigned issuance and browser redemption itself.
 - Add `embedAuthPartners: [{id:'grimoire',name:'Grimoire',origin:'https://monstersandmemories.info'}]` to `atlasConfig` only after the backend is ready. These public entries deliberately contain no secret. Origins must be exact HTTPS origins, with no paths or wildcard. Configure any additional host separately.
 - Keep HTTPS, existing Discord provider configuration and the existing `signin.html` redirect. No new OAuth redirect is required.
-- Rotation: update the partner's backend secret and the function secret together. Removing a partner from the backend rejects outstanding codes immediately. Removing the public entry disables new host-triggered prompts after reload. Codes expire in 60 seconds and are cleaned on subsequent issuance; an account can have at most 10 outstanding grants.
+- Rotation: update the partner's backend secret and the function secret together. Removing a partner from the backend rejects outstanding codes immediately. Removing the public entry disables new host-triggered prompts after reload. Codes expire in 60 seconds and are cleaned through an expiry index on subsequent issuance; an account can have at most 10 outstanding grants, enforced under a per-account transaction lock.
 
 ## Parent page example
 
@@ -50,7 +50,7 @@ window.addEventListener('message', result);
 frame.contentWindow.postMessage({type:'mnmatlas:signin',version:1,requestId}, atlasOrigin);
 ```
 
-The parent should time out the attempt after five minutes, remove its listener, and offer normal login on failure. A reload/navigation may cancel an in-progress attempt. A second request is ignored while consent is pending. A completed request ID cannot prompt again in that iframe for five minutes.
+The parent should time out the attempt after five minutes, remove its listener, and offer normal login on failure. A reload/navigation may cancel an in-progress attempt. The bridge aborts after five minutes or disposal, and backend Auth/REST calls have ten-second timeouts. Account changes after consent are rejected. A second request is ignored while consent is pending. A completed request ID cannot prompt again in that iframe for five minutes.
 
 ## Companion backend redemption
 
