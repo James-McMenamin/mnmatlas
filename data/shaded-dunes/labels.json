@@ -144,6 +144,17 @@
    "kind": "district",
    "priority": 100,
    "minZoom": 0.5
+  },
+  {
+   "id": "community-647",
+   "community": true,
+   "name": "Fake sand wall",
+   "kind": "building",
+   "priority": 50,
+   "minZoom": 0,
+   "note": "",
+   "x": 2320,
+   "y": 1558
   }
  ],
  "trainers": []
