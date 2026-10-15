@@ -90,4 +90,4 @@ Optional accounts use the locally bundled [Supabase client](https://supabase.com
 
 MnM Atlas is an unofficial fan project and is not affiliated with the creators of Monsters & Memories.
 
-Personal notes also support **Camping spot**, shown with a tent, separately from a Mob camp. Resource node notes use the existing Herbs, Wood and Ore types. Optional shared sign-in for embedded partners is a [discussion proposal](docs/authenticated-embeds-proposal.md), not an enabled feature.
+Personal notes also support **Camping spot**, shown with a tent, separately from a Mob camp.
