@@ -13,7 +13,7 @@ function boatCard(row){
  for(const stop of row.route){
   const id=typeof stop==='string'?stop:stop?.map,c=registry.maps.find(m=>m.id===id),li=document.createElement('li');if(!id)continue;
   if(id===config.id)li.append(text('strong',(c?.title||id)+' · you are here'));
-  else if(c){const b=text('button',c.title);b.type='button';b.onclick=()=>{map.closePopup();const url=mapLink(c.id);if(stop.place)url.searchParams.set('place',stop.place);goToMap(c.id,url);};li.append(b);}
+  else if(c){const b=text('button',c.title);b.type='button';b.onclick=()=>{map.closePopup();const url=mapLink(c.id);if(stop.place)url.searchParams.set('place',stop.place);goToMap(c.id,url,{quiet:true});};li.append(b);}
   else li.append(text('span',(stop.title||id)+' (not mapped yet)'));
   list.append(li);
  }
@@ -75,7 +75,7 @@ function setupPlaceLabels(data){
    const url=mapLink(target.id);if(row.toPlace)url.searchParams.set('place',row.toPlace);
    face.href=url.href;face.title='Open the '+target.title+' map';if(singleMap){face.target='_blank';face.rel='noopener';face.title+=' in MnM Atlas';}
    L.DomEvent.disableClickPropagation(face);
-   face.addEventListener('click',e=>{if(singleMap||e.button||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();if(window.atlasCommunity?.reviewOpen?.())openPlace({...row,kind:'label'});else goToMap(target.id,url);});
+   face.addEventListener('click',e=>{if(singleMap||e.button||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();if(window.atlasCommunity?.reviewOpen?.())openPlace({...row,kind:'label'});else goToMap(target.id,url,{quiet:true});});
   }
   const icon=L.divIcon({className:'place-name-anchor',html:face,iconSize:[0,0],iconAnchor:[0,0]});
   const marker=L.marker(locationOf(row),{icon,pane:'placeNames',alt:row.name,interactive:!singleMap,keyboard:!singleMap,draggable:alignmentMode,bubblingMouseEvents:false});

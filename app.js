@@ -31,7 +31,10 @@ const siteRoot=new URL('./',document.currentScript?.src||document.baseURI);
 function mapAddress(id){return registry?.maps.find(c=>c.id===id)?.entry?new URL(siteRoot.href):new URL(encodeURIComponent(id)+'/',siteRoot);}
 // The address another map opens at from this page: inside the same embed, or the full atlas from a single-map embed.
 function mapLink(id){const url=mapAddress(id);if(embedParam!==null&&!singleMap)url.searchParams.set('embed',embedParam);return url;}
-function goToMap(id,url=mapLink(id)){if(singleMap){window.open(url.href,'_blank','noopener');return;}history.pushState({map:id},'',url);ownView=true;loadMap(id,new URL(url));}
+// Travelling (an exit sign, a lift, a Go to button) arrives quietly: the view goes to the matching spot and it glows,
+// but its card stays closed. A shared ?place= link or a search result still opens the card.
+let quietArrival=false;
+function goToMap(id,url=mapLink(id),{quiet=false}={}){if(singleMap){window.open(url.href,'_blank','noopener');return;}history.pushState({map:id},'',url);ownView=true;quietArrival=quiet;loadMap(id,new URL(url));}
 function mapIdOf(url){const first=url.pathname.startsWith(siteRoot.pathname)?url.pathname.slice(siteRoot.pathname.length).split('/')[0].toLowerCase():'';return registry.maps.some(c=>c.id===first)?first:url.searchParams.get('map')||registry.defaultMap;}
 const compact=()=>isEmbed||mobileLayout.matches;
 let disposeZones=()=>{},disposeBackdrop=()=>{};
@@ -136,7 +139,7 @@ function refreshSearch(){$('clear-search').hidden=!$('search').value;drawMarkers
 function copyButton(place){return button('Copy link',()=>copyLink(place),'copy-place','copy');}
 function switchAt(m){const destination=originals.find(row=>row.id===m.toMarker);if(destination)changeLevel(m.toLevel,{...destination,kind:'marker',quiet:m.switchOnClick&&!alignmentMode});}
 // Arriving through a floor link: no popup, just a short glow on the landing marker.
-function flashPin(id){const el=pins.get(id)?.getElement();if(!el)return;el.classList.remove('just-arrived');void el.offsetWidth;el.classList.add('just-arrived');setTimeout(()=>el.classList.remove('just-arrived'),1700);}
+function flashPin(id){const el=(pins.get(id)||labelPins.get(id))?.getElement();if(!el)return;el.classList.remove('just-arrived');void el.offsetWidth;el.classList.add('just-arrived');setTimeout(()=>el.classList.remove('just-arrived'),1700);}
 // A marker's wiki page opens in a new tab; an embed on another site may hide it (wiki-links.js).
 function wikiButton(m){const link=wikiLinkFor(m);return link?externalLink('Read on '+link.name+' ↗',link.href,'wiki-link'):null;}
 const noteKind=m=>m.noteType==='label'?'Area label':m.noteType==='exit'?'Zone exit':m.category;
@@ -254,7 +257,7 @@ function popup(m){const n=text('div',''),card=npcCardFor(m),title=text('h3',card
  // With a wiki card the wiki comes first; the atlas's own note and actions follow.
  if(m.category==='Mob camp')n.append(campCard(m));else if(card)n.append(npcCard(card,m));else if(namedLevelText(m))n.append(text('p',namedLevelText(m),'npc-tags'));if(m.note){if(card){const ours=text('section','','npc-section npc-ours');ours.append(text('h4','Atlas note','npc-heading'),text('p',m.note));n.append(ours);}else n.append(text('p',m.note));}const wiki=!card&&wikiButton(m);if(wiki)n.append(wiki);n.append(copyButton(m));if(m.toLevel){const floor=config.levels?.find(l=>l.id===m.toLevel);n.append(button((m.direction==='up'?'Go up to ':'Go down to ')+(floor?.title||floor?.name||m.toLevel),()=>switchAt(m),'level-link'));}
  // A lift to a linked map (Evershade Weald and Faelindral) goes to the matching lift there.
- {const to=!m.noteType&&m.toPlace&&registry.maps.find(c=>c.id===m.toMap);if(to)n.append(button((m.direction==='up'?'Go up to ':m.direction==='down'?'Go down to ':'Go to ')+to.title,()=>{const url=mapLink(to.id);url.searchParams.set('place',m.toPlace);goToMap(to.id,url);},'level-link'));}
+ {const to=!m.noteType&&m.toPlace&&registry.maps.find(c=>c.id===m.toMap);if(to)n.append(button((m.direction==='up'?'Go up to ':m.direction==='down'?'Go down to ':'Go to ')+to.title,()=>{const url=mapLink(to.id);url.searchParams.set('place',m.toPlace);goToMap(to.id,url,{quiet:true});},'level-link'));}
 const leads=m.noteType==='exit'&&!alignmentMode&&registry.maps.find(c=>c.id===m.toMap);if(leads)n.append(button('Go to '+leads.title,()=>openMap(leads.id),'level-link'));
  if(!m.noteType&&m.toMap&&!m.toPlace){const to=registry.maps.find(c=>c.id===m.toMap);if(to)n.append(button('Go to '+to.title,()=>openMap(to.id),'level-link'));}
  if(m.id.startsWith('personal-'))n.append(...(m.shape?[button('Edit shape',()=>editNoteShape(m.id),'','shape')]:[]),button('Edit note',()=>openEditor(m),'','edit'),button('Delete',()=>confirmDelete(m),'popup-delete','delete'));
@@ -269,7 +272,7 @@ function labelEditPopup(row){
  window.atlasCommunity?.placePopup?.({...row,kind:'label'},n);
  L.popup({autoPan:false,offset:[0,-8]}).setLatLng(locationOf(row)).setContent(n).openOn(map);
 }
-function placePopup(p){const n=text('div',''),row=labelData.labels.find(l=>l.id===p.id)||p;const destination=registry.maps.find(c=>c.id===row.toMap),floor=config.levels?.find(l=>l.id===row.toLevel);n.append(text('div',p.kind==='hidden'?'Hidden area':row.kind==='exit'?'Zone exit':'Place name','tag'),text('h3',p.name));if(p.note)n.append(text('p',p.note));if(destination)n.append(button('Go to '+destination.title,()=>{const url=mapLink(destination.id);if(row.toPlace)url.searchParams.set('place',row.toPlace);goToMap(destination.id,url);},'level-link'));if(floor)n.append(button('Go to '+(floor.title||floor.name||floor.id),()=>changeLevel(row.toLevel,originals.find(m=>m.id===row.toMarker)),'level-link'));const wiki=wikiButton(p);if(wiki)n.append(wiki);if(p.community)n.append(text('p','Community contribution','community-note'));n.append(copyButton(p));if(labelData.labels.some(l=>l.id===p.id))privateNoteBox(row,'label',n);if(!singleMap)window.atlasCommunity?.placePopup?.(p,n);return tidyActions(n);}
+function placePopup(p){const n=text('div',''),row=labelData.labels.find(l=>l.id===p.id)||p;const destination=registry.maps.find(c=>c.id===row.toMap),floor=config.levels?.find(l=>l.id===row.toLevel);n.append(text('div',p.kind==='hidden'?'Hidden area':row.kind==='exit'?'Zone exit':'Place name','tag'),text('h3',p.name));if(p.note)n.append(text('p',p.note));if(destination)n.append(button('Go to '+destination.title,()=>{const url=mapLink(destination.id);if(row.toPlace)url.searchParams.set('place',row.toPlace);goToMap(destination.id,url,{quiet:true});},'level-link'));if(floor)n.append(button('Go to '+(floor.title||floor.name||floor.id),()=>changeLevel(row.toLevel,originals.find(m=>m.id===row.toMarker)),'level-link'));const wiki=wikiButton(p);if(wiki)n.append(wiki);if(p.community)n.append(text('p','Community contribution','community-note'));n.append(copyButton(p));if(labelData.labels.some(l=>l.id===p.id))privateNoteBox(row,'label',n);if(!singleMap)window.atlasCommunity?.placePopup?.(p,n);return tidyActions(n);}
 // Makes a marker shown on the map again: its type on, pins shown, no search or vendor filter hiding it.
 function revealMarker(m){enabled.add(m.category);showPins=true;$('search').value='';$('clear-search').hidden=true;setVendorGroup('');updateCategoryButtons();drawMarkers();}
 function setVendorGroup(value){vendorGroup=value;const pick=$('vendor-filter-select');if(pick)pick.value=value;}
@@ -332,7 +335,7 @@ function drawMarkers(){
   const opens=!own&&!alignmentMode&&typeof m.toMap==='string'&&!m.toPlace&&registry.maps.find(c=>c.id===m.toMap);
   // A lift, stairway or bridge to a linked map (Evershade Weald and Faelindral) goes to the matching spot there.
   const crosses=!own&&!alignmentMode&&!m.noteType&&typeof m.toMap==='string'&&m.toPlace&&registry.maps.find(c=>c.id===m.toMap);
-  const cross=()=>{const url=mapLink(crosses.id);url.searchParams.set('place',m.toPlace);goToMap(crosses.id,url);};
+  const cross=()=>{const url=mapLink(crosses.id);url.searchParams.set('place',m.toPlace);goToMap(crosses.id,url,{quiet:true});};
   // A pin that travels when clicked (an exit to another map, stairs or a lift set to go there) just travels outside edit
   // mode: Leaflet's own click-to-open is taken off, so its card no longer flashes up before the new map or floor loads.
   // Search results and the review desk still open its card through choose().
@@ -597,9 +600,10 @@ function wheelAfterClick(){
 }
 function applyLocation(url){
  applyingView=true;activePlace=null;sharedPin?.remove();sharedPin=null;map.closePopup();
- const q=url.searchParams,wanted=q.get('place');let warning='';
+ const q=url.searchParams,wanted=q.get('place'),quiet=quietArrival;let warning='';quietArrival=false;
  const values=['x','y','z'].map(k=>q.has(k)&&q.get(k).trim()!==''?Number(q.get(k)):NaN);
- if(wanted){const p=findPlace(wanted);if(p){if(p.kind==='marker')revealMarker(p);const z=Number.isFinite(values[2])&&values[2]>=config.minZoom&&values[2]<=config.maxZoom?values[2]:config.defaultView.placeZoom;openPlace(p,z);applyingView=false;return;}warning='That place was not found on this map.';}
+ if(wanted){const p=findPlace(wanted);if(p&&quiet){if(p.kind==='marker'&&atLevel(p)&&!pins.has(p.id))revealMarker(p);const z=Number.isFinite(values[2])&&values[2]>=config.minZoom&&values[2]<=config.maxZoom?values[2]:config.defaultView.placeZoom;if(!atLevel(p)){applyingView=false;changeLevel(p.level,{...p,quiet:true},z);return;}map.setView(locationOf(p),z,{animate:false});applyingView=false;scheduleUrl();setTimeout(()=>flashPin(p.id),120);return;}
+  if(p){if(p.kind==='marker')revealMarker(p);const z=Number.isFinite(values[2])&&values[2]>=config.minZoom&&values[2]<=config.maxZoom?values[2]:config.defaultView.placeZoom;openPlace(p,z);applyingView=false;return;}warning='That place was not found on this map.';}
  if(bounded(...values)){map.setView(locationOf({x:values[0],y:values[1]}),values[2],{animate:false});if(!ownView)sharedPin=L.circleMarker(locationOf({x:values[0],y:values[1]}),{radius:6,color:'rgb(113,61,25)',weight:2,fillColor:'#fff1cb',fillOpacity:.8,interactive:false}).addTo(map);}
  else{
   const legacy=('#'+(url.href.split('#')[1]||'')).match(/^#view=([\d.]+),(-?[\d.]+),(-?[\d.]+)$/),p=legacy?.slice(1).map(Number);
