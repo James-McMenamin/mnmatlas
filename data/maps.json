@@ -1238,6 +1238,41 @@
       },
       "hiddenPrimaryStack": null,
       "legacyStorage": {}
+    },
+    {
+      "id": "glinting-hollow",
+      "title": "Glinting Hollow",
+      "subtitle": "A traveller’s chart",
+      "cartoucheKicker": "Six fae hollows beyond the Evershade Weald",
+      "breadcrumb": "Monsters & Memories / Glinting Hollow",
+      "description": "An illustrated fan atlas of Glinting Hollow, the fae caves reached by a druid portal from the Evershade Weald: six hollows of pine forest, pond, firepits, braziers, ice and glowing mushrooms, with place names and personal field notes.",
+      "width": 5184,
+      "height": 3488,
+      "minZoom": 0,
+      "maxNativeZoom": 5,
+      "maxZoom": 7,
+      "coordinateZoom": 5,
+      "tileSize": 256,
+      "tileRevision": "v1",
+      "tilePath": "assets/tiles/glinting-hollow/{z}/{x}/{y}.webp",
+      "markersFile": "data/glinting-hollow/markers.json",
+      "labelsFile": "data/glinting-hollow/labels.json",
+      "hiddenAreasFile": null,
+      "defaultView": {
+        "mode": "fit",
+        "padding": 18,
+        "placeZoom": 4
+      },
+      "attribution": {
+        "map": "Illustrated fan atlas · Not an official game map",
+        "text": "Area names after community descriptions · approximate",
+        "sourceTitle": "",
+        "sourceUrl": "",
+        "license": "",
+        "licenseUrl": ""
+      },
+      "hiddenPrimaryStack": null,
+      "legacyStorage": {}
     }
   ]
 }

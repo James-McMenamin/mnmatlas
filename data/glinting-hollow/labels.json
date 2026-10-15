@@ -1,0 +1,88 @@
+{
+ "map": "glinting-hollow",
+ "tileRevision": "v1",
+ "coordinateZoom": 5,
+ "labels": [
+  {
+   "id": "area-1-forest",
+   "name": "Area 1 · Forest",
+   "x": 762,
+   "y": 1215,
+   "kind": "district",
+   "priority": 80,
+   "minZoom": 0,
+   "approximate": true,
+   "note": "Area number from community descriptions; confirm in game."
+  },
+  {
+   "id": "area-2-pond",
+   "name": "Area 2 · Pond",
+   "x": 2522,
+   "y": 1215,
+   "kind": "district",
+   "priority": 80,
+   "minZoom": 0,
+   "approximate": true,
+   "note": "Area number from community descriptions; confirm in game."
+  },
+  {
+   "id": "area-3-firepits",
+   "name": "Area 3 · Firepits",
+   "x": 4282,
+   "y": 1215,
+   "kind": "district",
+   "priority": 80,
+   "minZoom": 0,
+   "approximate": true,
+   "note": "Area number from community descriptions; confirm in game."
+  },
+  {
+   "id": "area-4-braziers",
+   "name": "Area 4 · Braziers",
+   "x": 762,
+   "y": 2948,
+   "kind": "district",
+   "priority": 80,
+   "minZoom": 0,
+   "approximate": true,
+   "note": "Area number from community descriptions; confirm in game."
+  },
+  {
+   "id": "area-5-ice-ring",
+   "name": "Area 5 · Ice ring",
+   "x": 2522,
+   "y": 2948,
+   "kind": "district",
+   "priority": 80,
+   "minZoom": 0,
+   "approximate": true,
+   "note": "Area number from community descriptions; confirm in game."
+  },
+  {
+   "id": "area-6-mushroom-ruins",
+   "name": "Area 6 · Mushroom ruins",
+   "x": 4282,
+   "y": 2948,
+   "kind": "district",
+   "priority": 80,
+   "minZoom": 0,
+   "approximate": true,
+   "note": "Area number from community descriptions; confirm in game."
+  },
+  {
+   "id": "exit-evershade-weald",
+   "name": "to Evershade Weald",
+   "x": 762,
+   "y": 885,
+   "kind": "exit",
+   "priority": 95,
+   "minZoom": 1.5,
+   "arrow": "north",
+   "approximate": true,
+   "note": "Portal back to the Weald; arrival point approximate.",
+   "toMap": "evershade-weald",
+   "toPlace": "to-glinting-hollow"
+  }
+ ],
+ "trainers": []
+}

@@ -87,7 +87,8 @@
    "x": 1947,
    "y": 260,
    "kind": "zone",
-   "priority": 60
+   "priority": 60,
+   "toMap": "glinting-hollow"
   },
   {
    "id": "zone-scarwood",

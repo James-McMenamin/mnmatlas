@@ -83,7 +83,9 @@
    "kind": "exit",
    "priority": 95,
    "minZoom": 1.5,
-   "arrow": "northwest"
+   "arrow": "northwest",
+   "toMap": "glinting-hollow",
+   "toPlace": "exit-evershade-weald"
   },
   {
    "id": "to-keepers-bight",
