@@ -2,6 +2,15 @@
  "entries": [
   {
    "date": "2026-10-15",
+   "title": "Sunken Resort is charted",
+   "text": "Beneath a Scarwood lake, the flooded halls of Sunken Resort join the atlas across four floors. Follow the bowl-room stairs and the well down to the wisp and elemental caves, find the two air pockets, and turn the new relief view to see how the floors stack.",
+   "maps": [
+    "sunken-resort",
+    "scarwood"
+   ]
+  },
+  {
+   "date": "2026-10-15",
    "title": "Glinting Hollow is charted",
    "text": "The six fae hollows behind the druid portal of the Evershade Weald are on the atlas: the pine forest, the lily pond, the firepits under the great web, the snowy brazier grove, the ice ring and the glowing mushroom ruins. Step through the portal sign in the Weald to visit them.",
    "maps": [

@@ -1,0 +1,47 @@
+.relief-view{position:relative;width:100%;height:300px;overflow:hidden;border-radius:3px;background:radial-gradient(ellipse at 48% 38%,#f2e1ba,#e2c993 85%);color:var(--foreground,#eadcc1);font:11px/1.35 var(--body,Inter,system-ui,sans-serif);isolation:isolate}
+.relief-view-canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab;outline-offset:-3px}
+.relief-view-status{position:absolute;inset:40% 15px auto;text-align:center;background:var(--card,#211a13);padding:10px;border-radius:3px}
+.relief-view-status[hidden],.floor-plan-actions[hidden]{display:none!important}
+.floor-plan-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+/* One plate, using the same dimensions and colours as the atlas map tools. */
+.floor-plan-toolbar{display:flex;flex-direction:column;padding:3px;border:1px solid var(--amber-border,#765533);border-radius:var(--radius,3px);background:var(--card,#241c14);box-shadow:var(--shadow,0 8px 32px #0d0a0866);color:var(--foreground,#eadcc1)}
+.floor-plan-actions{display:contents}
+#map-frame .floor-plan-toolbar button,.relief-view-toolbar button,#map-frame .floor-stack-head .floor-stack-size,#map-frame .floor-stack-head .floor-plan-actions button{position:relative;display:grid;place-items:center;flex:none;width:var(--plan-tool-width,36px);height:var(--plan-tool-height,35px);min-height:0;padding:0;border:0;border-radius:var(--radius,3px);background:transparent;color:var(--foreground,#eadcc1);cursor:pointer;line-height:1}
+#map-frame .floor-plan-toolbar button:hover,.relief-view-toolbar button:hover,#map-frame .floor-stack-head button:hover{background:var(--muted,#30261e);color:var(--primary,#d0852f)}
+.floor-plan-toolbar svg,.floor-stack-head svg{display:block;width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.floor-plan-toolbar button:focus-visible,.floor-stack-head button:focus-visible,.relief-view-canvas:focus-visible{outline:2px solid var(--primary,#ffd27a);outline-offset:-2px}
+.relief-view-toolbar{position:absolute;right:7px;top:7px;z-index:2;flex-direction:row}
+.relief-view-state{position:absolute;right:1px;bottom:1px;display:grid;place-items:center;width:11px;height:11px;border-radius:3px;background:var(--card,#241c14);color:var(--primary,#d0852f);font:700 11px/1 var(--body,system-ui);pointer-events:none}
+.relief-view-others[data-state=faded] svg{opacity:.65}
+.relief-view-others[data-state=hidden] svg{opacity:.4}
+/* Corner frame exchanges the illustrated plan and the existing live map. */
+#map-frame>.floor-stack{box-sizing:border-box;position:absolute;left:22px;bottom:44px;z-index:540;width:288px;padding:6px 8px 8px;background:var(--card,#241c14);border:1px solid var(--amber-border,#765533);border-radius:var(--radius,3px);box-shadow:var(--shadow,0 8px 32px #0d0a0866);user-select:none}
+.floor-stack-head{display:flex;gap:0;align-items:center;overflow:visible}
+#map-frame .floor-stack-toggle{flex:1;min-width:0;height:35px;min-height:0;text-align:left;padding:2px 8px;font:12px var(--body,Inter,system-ui);border:0;background:transparent;color:var(--foreground,#eadcc1)}
+#map-frame .floor-stack-head .floor-stack-size,#map-frame .floor-stack-head .floor-plan-actions button{width:30px;height:30px}
+#map-frame .floor-stack-size[hidden]{display:none}
+.floor-stack-plan,.floor-stack-map{position:relative;margin-top:6px;height:min(300px,max(120px,calc(100dvh - 340px)));overflow:hidden;border-radius:3px;isolation:isolate}
+.floor-stack-plan .relief-view{height:100%}
+.floor-stack:not(.floor-stack-big) .floor-stack-map,.floor-stack.collapsed>.floor-stack-plan,.floor-stack.collapsed>.floor-stack-map{display:none}
+#map-frame.floor-plan-full>.floor-stack-plan{position:absolute;inset:0;margin:0;height:auto;z-index:440;border-radius:0}
+#map-frame.floor-plan-full>.floor-stack-plan .relief-view{height:100%;border-radius:0}
+#map-frame.floor-plan-full>.floor-stack{inset:auto auto 44px 22px;width:288px;display:block}
+#map-frame .floor-stack-map #map{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:0}
+.floor-stack-map .leaflet-control-zoom,.floor-stack-map .leaflet-control-layers{display:none}
+.floor-stack-map .leaflet-control-attribution{font-size:8px;max-width:250px}
+/* The corner map pans and zooms; its markers and labels are read only. */
+.floor-stack-map .leaflet-marker-pane,.floor-stack-map .leaflet-marker-pane *,.floor-stack-map .leaflet-interactive,.floor-stack-map .leaflet-overlay-pane *{pointer-events:none!important;cursor:inherit}
+.floor-stack-map .leaflet-tooltip-pane,.floor-stack-map .leaflet-popup-pane{display:none}
+.floor-plan-full-tools{position:absolute;top:var(--plan-tools-top,20px);right:var(--plan-tools-right,70px);z-index:510}
+#map-frame .floor-plan-open{display:none}
+/* Phones use only a full view. The host still owns title, floors and all sheets. */
+#map-frame.floor-plan-phone>.floor-stack{display:none}
+#map-frame.floor-plan-phone .floor-plan-open{display:grid;place-items:center;font:600 12px var(--body,Inter,system-ui);width:44px;height:44px;padding:0}
+#map-frame.floor-plan-phone>.map-tools button{align-self:center}
+#map-frame.floor-plan-phone.floor-plan-full>.map-tools{visibility:hidden;pointer-events:none}
+#map-frame.floor-plan-phone.floor-plan-full .floor-plan-open{display:none}
+#map-frame.floor-plan-phone .floor-plan-full-tools button{width:44px;height:44px}
+/* Reserve the existing right-hand control lane; floor buttons may scroll in it. */
+#map-frame.floor-plan-phone #level-controls{max-width:calc(100% - 88px);overflow-x:auto}
+/* A short touch screen has room for a row above the site's bottom sheets. */
+@media(max-height:500px) and (pointer:coarse){#map-frame.floor-plan-phone .floor-plan-full-tools{flex-direction:row}}
