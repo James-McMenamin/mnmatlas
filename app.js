@@ -330,6 +330,10 @@ function drawMarkers(){
   // A marker that stands for another published map (a dungeon entrance on the world map) opens that map.
   // Personal zone exits keep their popup (Go to, Edit note) instead.
   const opens=!own&&!alignmentMode&&typeof m.toMap==='string'&&!m.toPlace&&registry.maps.find(c=>c.id===m.toMap);
+  // A pin that travels when clicked (an exit to another map, stairs or a lift set to go there) just travels outside edit
+  // mode: Leaflet's own click-to-open is taken off, so its card no longer flashes up before the new map or floor loads.
+  // Search results and the review desk still open its card through choose().
+  if(opens||m.switchOnClick&&!alignmentMode)pin.off('click',pin._openPopup,pin);
   pin.on('click',()=>window.atlasCommunity?.reviewOpen?.()?choose(m):opens?openMap(opens.id):m.switchOnClick&&!alignmentMode?switchAt(m):alignmentMode&&!own?window.atlasCommunity?.change?.(m,'edit-marker')||choose(m):choose(m));pin.on('contextmenu',()=>choose(m));
   if(alignmentMode){pin.on('dragstart',()=>{map.closePopup();if(!own)selectAlignment(m,'marker');});pin.on('dragend',()=>(own?movePersonal:moveAlignedMarker)(m.id,pin.getLatLng()));}
   bindMarkerTooltip(pin,m);if(showPins)pin.addTo(map);pins.set(m.id,pin);
