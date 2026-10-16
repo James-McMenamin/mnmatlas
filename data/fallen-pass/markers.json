@@ -715,5 +715,25 @@
   "y": 1157,
   "wiki": "https://monstersandmemories.wiki/npcs/captain-belvoir",
   "wikiId": "npc-captain-belvoir"
+ },
+ {
+  "id": "stablemaster-1",
+  "name": "a stablemaster",
+  "category": "Stable",
+  "note": "Inside the stable at the cliff foot.",
+  "x": 1802,
+  "y": 846,
+  "approximate": true,
+  "minZoom": 2
+ },
+ {
+  "id": "stablehand-1",
+  "name": "a stablehand",
+  "category": "Notable NPC",
+  "note": "Inside the stable at the cliff foot.",
+  "x": 1866,
+  "y": 882,
+  "approximate": true,
+  "minZoom": 2
  }
 ]

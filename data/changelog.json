@@ -2,6 +2,14 @@
  "entries": [
   {
    "date": "2026-10-16",
+   "title": "Fallen Pass stable",
+   "text": "The stable at the foot of the cliff north of Red Mantle Camp is now drawn on Fallen Pass, with its stablemaster and stablehand marked inside.",
+   "maps": [
+    "fallen-pass"
+   ]
+  },
+  {
+   "date": "2026-10-16",
    "title": "One marker per traveller",
    "text": "Adding someone the map already shows now points you to the existing marker so you can update it instead, and five doubled markers were merged. Ore, wood and herb spots stay in your own notes, Ctrl+F (Cmd+F) jumps to search, and Change and Remove sit with Copy link.",
    "maps": [
