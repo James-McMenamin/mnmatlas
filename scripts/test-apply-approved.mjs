@@ -379,7 +379,10 @@ try{
   const translated={...path,points:path.points.map(([x,y])=>[x+5,y+5])};approved=[R(1132,'move-marker',from.id,{name:from.name,from:[30,30],fromShape:path,to:[35,35],shape:translated})];r=await run();assert.equal(r.code,0,r.output);assert.deepEqual((await json('data/markers.json'))[0].shape,translated);
   const now=(await json('data/markers.json'))[0];approved=[R(1133,'edit-marker',from.id,{name:from.name,shape:null,from:now})];r=await run();assert.equal(r.code,0,r.output);assert(!Object.hasOwn((await json('data/markers.json'))[0],'shape'));
   approved=[R(1134,'edit-marker',from.id,{name:from.name,shape:bad[0],from:{name:from.name}})];r=await run();assert.equal(r.code,0,r.output);assert.equal((await json('.publish/held.json'))[0].id,1134);
-  console.log('Shape publisher checks passed: rectangle/circle/path, anchors, malformed/101-point holds, type preservation, reshaped credits, moves and clearing.');
+  // A new place name sent from a note that once had an area publishes at its spot without the outline; a label edit with one is held.
+  await reset([]);approved=[R(1140,'new-marker',null,{name:'Graveyard',category:'Personal',noteType:'label',shape:rect,x:20,y:20})];r=await run();assert.equal(r.code,0,r.output);let placed=(await json('data/labels.json')).labels;assert.equal(placed.length,1);assert.equal(placed[0].name,'Graveyard');assert(!Object.hasOwn(placed[0],'shape'));assert.deepEqual([placed[0].x,placed[0].y],[20,20]);
+  approved=[R(1141,'edit-label',placed[0].id,{name:'Graveyard',shape:rect,from:{name:'Graveyard'}})];r=await run();assert.equal(r.code,0,r.output);assert((await json('.publish/held.json')).some(h=>h.id===1141&&h.note.includes('Place names and zone exits cannot have an area')));
+  console.log('Shape publisher checks passed: outline-free new place names, rectangle/circle/path, anchors, malformed/101-point holds, type preservation, reshaped credits, moves and clearing.');
  }
  // Run the publish endpoint with local replies; a running batch gets one more dispatch, a waiting one does not.
  const source=stripTypeScriptTypes(await readFile(root+'/supabase/functions/publish-now/index.ts','utf8'));
