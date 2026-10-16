@@ -74,25 +74,16 @@
   "minZoom": 2
  },
  {
-  "id": "npc-1",
-  "name": "Notable NPC",
-  "category": "Notable NPC",
-  "x": 1852,
-  "y": 1081,
-  "approximate": true,
-  "note": "",
-  "minZoom": 2
- },
- {
   "id": "shady-merchant-1",
   "name": "Shady merchant",
   "category": "Vendor",
   "vendor": "Shady merchant",
-  "x": 1908,
-  "y": 1150,
+  "x": 1913,
+  "y": 1116,
   "approximate": true,
   "note": "",
-  "minZoom": 2
+  "minZoom": 2,
+  "community": true
  },
  {
   "id": "ratkin-31-40-2",
@@ -688,5 +679,41 @@
   ],
   "wiki": "https://monstersandmemories.wiki/npcs/qassem-brolt",
   "wikiId": "npc-qassem-brolt"
+ },
+ {
+  "id": "community-705",
+  "community": true,
+  "name": "Mia Tarcut (level 63+)",
+  "category": "Quest NPC",
+  "note": "",
+  "x": 2243,
+  "y": 1023,
+  "shape": {
+   "kind": "path",
+   "loop": true,
+   "points": [
+    [
+     2243,
+     1023
+    ],
+    [
+     2562,
+     742
+    ]
+   ]
+  },
+  "wiki": "https://monstersandmemories.wiki/npcs/mia-tarcut",
+  "wikiId": "npc-mia-tarcut"
+ },
+ {
+  "id": "community-707",
+  "community": true,
+  "name": "Captain Belvoir (level ~50)",
+  "category": "Quest NPC",
+  "note": "",
+  "x": 1918,
+  "y": 1157,
+  "wiki": "https://monstersandmemories.wiki/npcs/captain-belvoir",
+  "wikiId": "npc-captain-belvoir"
  }
 ]

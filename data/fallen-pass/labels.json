@@ -63,14 +63,15 @@
   {
    "id": "to-vale-of-zintar",
    "name": "to Vale of Zintar",
-   "x": 2116,
-   "y": 106,
+   "x": 2084,
+   "y": 370,
    "kind": "exit",
    "priority": 95,
    "minZoom": 1,
    "arrow": "north",
    "toMap": "vale-of-zintar",
-   "toPlace": "to-fallen-pass"
+   "toPlace": "to-fallen-pass",
+   "community": true
   },
   {
    "id": "to-fallen-watch",

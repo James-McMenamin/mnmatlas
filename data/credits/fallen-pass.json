@@ -114,5 +114,35 @@
       "name": null,
       "what": "added"
     }
+  ],
+  "marker:community-705": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:shady-merchant-1": [
+    {
+      "name": null,
+      "what": "moved"
+    }
+  ],
+  "marker:community-707": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:npc-1": [
+    {
+      "name": null,
+      "what": "removed"
+    }
+  ],
+  "label:to-vale-of-zintar": [
+    {
+      "name": "ocombe",
+      "what": "moved"
+    }
   ]
 }
