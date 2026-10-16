@@ -863,6 +863,41 @@
   const found=duplicatesOf(row);if(!found.length)return null;const box=text('div','','duplicate-box');box.append(text('strong','Possible duplicate'+(found.length>1?'s':'')));
   // Who sent each one, so two from the same person stand out (markers already on the map have no author here).
   for(const d of found){const by=d.row?' · '+(d.sameAuthor?'by the same person':'by '+(d.author||'a Discord member')):'';box.append(button(d.name+' · '+d.state+by+' ('+d.why+')',()=>onPick(d),'duplicate-jump'));}return box;}
+ // While a marker is being added, an NPC this map already marks (or someone already suggested) under the same wiki
+ // page or name is named in the form, with a way to update that one instead. It is a warning: the note still saves.
+ // A kind of NPC ("A cook", "the guard"), or a name the map already uses three times or more, never matches by name.
+ const notNpc=new Set(['Personal','Herbs','Wood','Ore','Mob camp']);
+ // "Elara Venn" is "Paymaster Elara Venn": a name of two words or more held whole in the other counts too.
+ const sameNpcName=(a,b)=>a===b||[[a,b],[b,a]].some(([short,long])=>short.includes(' ')&&short.length>=6&&(' '+long+' ').includes(' '+short+' '));
+ function existingNpcs(){
+  if(!draft||!config||config.zonesFile||noteTypeValue()!=='marker')return [];
+  const raw=String($('name')?.value||'').trim(),key=looseName(raw),wikiId=$('wiki')?.dataset.wikiId||'',npcs=originals.filter(m=>!notNpc.has(m.category));
+  const generic=/^(a|an|the)\s/i.test(raw)||key.length<4||npcs.filter(m=>looseName(m.name)===key).length>=3;
+  const why=(name,id)=>wikiId&&id===wikiId?'same wiki page':!generic&&sameNpcName(key,looseName(name))?'same name':'';
+  // This note's own suggestion (and the marker it became) is not a second one.
+  const own=user?readFollowed()[followId(draft)]?.id:null,found=[];
+  for(const m of npcs){if(own!=null&&m.id==='community-'+own)continue;const w=why(m.name,m.wikiId);if(w)found.push({marker:m,name:m.name,why:w,level:m.level});}
+  for(const r of [...pendingRows,...approvedRows]){const p=r.payload||{};
+   if(r.kind!=='new-marker'||r.id===own||r.note_id===draft.id||p.noteType||notNpc.has(p.category)||originals.some(m=>m.id==='community-'+r.id))continue;
+   const w=why(p.name,p.wikiId);if(w)found.push({row:r,name:p.name,why:w,level:r.level||p.level,mine:!!user&&r.user_id===user.id&&r.status==='pending'&&!r.reviewed_at});}
+  return found.slice(0,4);}
+ let npcBox=null,npcTimer=0;
+ function showExistingNpcs(){
+  const found=$('editor')?.open?existingNpcs():[],sig=JSON.stringify(found.map(d=>[d.marker?.id??d.row.id,d.why]));
+  if(!found.length){npcBox?.remove();npcBox=null;return;}if(npcBox?.isConnected&&npcBox.dataset.sig===sig)return;
+  npcBox?.remove();npcBox=text('div','','duplicate-box existing-npc');npcBox.dataset.sig=sig;npcBox.setAttribute('role','status');
+  npcBox.append(text('strong',found.length>1?'These NPCs may already be on the map':'This NPC may already be on the map'),text('p','Update the existing marker rather than adding a second one.','form-hint'));
+  const floor=l=>config.levels&&l?' · '+(config.levels.find(x=>x.id===l)?.title||l):'';
+  for(const d of found){const line=text('div','','existing-npc-row'),state=d.marker?'on the map':d.row.status==='approved'?'approved, not live yet':'waiting for review';
+   line.append(text('span',d.name+floor(d.level)+' · '+state+' ('+d.why+')'));
+   const go=d.marker?()=>{closeEditor();choose(d.marker);editDialog(d.marker,'edit-marker');}:d.mine?()=>{closeEditor();changeOwn(d.row);}:()=>{closeEditor();jumpTo(d);};
+   line.append(button(d.marker?'Update the existing one':d.mine?'Update your suggestion':'See that suggestion',go,'duplicate-jump'));npcBox.append(line);}
+  ($('name').closest('.shared-field')||$('name')).after(npcBox);}
+ {const form=$('marker-form'),soon=()=>{clearTimeout(npcTimer);npcTimer=setTimeout(showExistingNpcs,250);};
+  // A wiki pick fills the fields without an input event: a click in the form checks again too.
+  if(form)for(const type of ['input','change','click'])form.addEventListener(type,soon);
+  window.addEventListener('atlas:editor-open',()=>setTimeout(showExistingNpcs,0));
+  $('editor')?.addEventListener('close',()=>{clearTimeout(npcTimer);npcBox?.remove();npcBox=null;});}
  function jumpTo(d){map.closePopup();if(d.marker){choose(d.marker);return;}const pin=suggestionPins.get(d.row.id);if(pin){map.setView(pin.getLatLng(),Math.max(map.getZoom(),config.defaultView.placeZoom));pin.openPopup();}else preview(d.row,loadApproved,loadApproved,null,true);}
  function overlayToggle(id,key,label,count,after){
   let section=$(id);if(!count){section?.remove();return;}

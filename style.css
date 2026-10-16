@@ -588,3 +588,9 @@ dialog.moved::backdrop{background:#0000001f}
 ::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-track{background:#00000033;border-radius:3px}::-webkit-scrollbar-thumb{background:#7a6448;border:2px solid transparent;background-clip:padding-box;border-radius:3px}::-webkit-scrollbar-thumb:hover{background-color:#a3865f}::-webkit-scrollbar-corner{background:transparent}
 @supports not selector(::-webkit-scrollbar){*{scrollbar-width:thin;scrollbar-color:#7a6448 #00000033}}
 .leaflet-popup-content>div:has(>.popup-body){display:flex;flex-direction:column;max-height:min(640px,70dvh)}.popup-body{min-height:0;overflow-y:auto;overflow-x:hidden}
+/* Adding an NPC the map already has: the form names it, with a way to update that one. */
+.existing-npc{margin:2px 0 6px}
+.existing-npc .form-hint{margin:0}
+.existing-npc-row{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
+.existing-npc-row span{flex:1 1 12em}
+.existing-npc-row .duplicate-jump{flex:none}
