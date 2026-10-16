@@ -2,10 +2,15 @@
  "entries": [
   {
    "date": "2026-10-16",
-   "title": "Fallen Pass stable",
-   "text": "The stable at the foot of the cliff north of Red Mantle Camp is now drawn on Fallen Pass, with its stablemaster and stablehand marked inside.",
+   "title": "Missing buildings drawn",
+   "text": "Six places the maps had left blank are now drawn: the stable north of Red Mantle Camp in Fallen Pass (with its stablemaster and stablehand), the Stables cave on Fallen Watch's first level, and the stables of Ail'Vorith, Penshaw in Keeper's Bight, Evershade Weald and the Underdocks.",
    "maps": [
-    "fallen-pass"
+    "fallen-pass",
+    "fallen-watch",
+    "ail-vorith",
+    "keepers-bight",
+    "evershade-weald",
+    "underdocks"
    ]
   },
   {
