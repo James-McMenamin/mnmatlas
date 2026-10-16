@@ -2,6 +2,17 @@
  "entries": [
   {
    "date": "2026-10-16",
+   "title": "One marker per traveller",
+   "text": "Adding someone the map already shows now points you to the existing marker so you can update it instead, and five doubled markers were merged. Ore, wood and herb spots stay in your own notes, Ctrl+F (Cmd+F) jumps to search, and Change and Remove sit with Copy link.",
+   "maps": [
+    "night-harbor",
+    "sungreet-strand",
+    "fallen-pass",
+    "ail-vorith"
+   ]
+  },
+  {
+   "date": "2026-10-16",
    "title": "Grain Cellar stair redrawn",
    "text": "The Grain Cellar now has two floors. The entrance stair climbs from the corner of the octagonal hall to the passage under the granary door, all where it really runs; switch floors at the middle landing.",
    "maps": [
