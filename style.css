@@ -594,3 +594,4 @@ dialog.moved::backdrop{background:#0000001f}
 .existing-npc-row{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
 .existing-npc-row span{flex:1 1 12em}
 .existing-npc-row .duplicate-jump{flex:none}
+.resource-private-line{margin:0 0 4px}
