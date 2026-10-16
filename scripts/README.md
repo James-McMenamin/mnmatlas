@@ -57,4 +57,4 @@ Both are built by GitHub when publishing (`.github/workflows/pages.yml`), with t
 
 `node scripts/test-find.mjs` also checks trainer classes from tags and chips, and what a card keeps.
 
-Run `node scripts/test-camping-pin.mjs` to check the camping category and tent pictogram alongside the existing resource types.
+Run `node scripts/test-camping-pin.mjs` to check the camping category, its tent pictogram and that it stays private like the resource types.
