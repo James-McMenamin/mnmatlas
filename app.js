@@ -208,6 +208,8 @@ function actionIcon(b){
 function tidyActions(n){
  const actions=text('div','','popup-actions');
  for(const el of [...n.children]){if(el.matches('button:not(.level-link)'))actions.append(el);else if(el.matches('.community-actions')){actions.append(...el.children);el.remove();}}
+ // Change, Review and Remove sit with Copy link too, not inside the list of changes on their way.
+ for(const el of [...n.querySelectorAll('.change-actions')]){actions.append(...el.children);el.remove();}
  for(const b of actions.querySelectorAll('button'))actionIcon(b);
  // The details scroll on their own; the actions stay put under them.
  if(actions.children.length){const body=text('div','','popup-body');body.append(...(n.childNodes||n.children));n.append(body,actions);}return n;
