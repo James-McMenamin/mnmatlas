@@ -620,5 +620,20 @@
     "wikiId": "npc-a-muggrah-bonestealer"
    }
   ]
+ },
+ {
+  "id": "community-688",
+  "community": true,
+  "name": "Lord Ga'Duuz",
+  "category": "Named mob",
+  "note": "",
+  "x": 6641,
+  "y": 3534,
+  "levels": [
+   62,
+   62
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/lord-gaduuz",
+  "wikiId": "npc-lord-gaduuz"
  }
 ]

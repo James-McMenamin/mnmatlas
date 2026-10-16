@@ -47,12 +47,28 @@
     {
       "name": null,
       "what": "moved"
+    },
+    {
+      "name": null,
+      "what": "moved"
+    },
+    {
+      "name": "the.bob.father",
+      "what": "moved"
+    },
+    {
+      "name": null,
+      "what": "edited"
     }
   ],
   "marker:wiki-quartermaster": [
     {
       "name": null,
       "what": "moved"
+    },
+    {
+      "name": null,
+      "what": "edited"
     }
   ],
   "marker:wiki-marshall-harding": [
@@ -387,6 +403,12 @@
       "what": "edited"
     }
   ],
+  "label:community-498#lower": [
+    {
+      "name": "marauderxxx",
+      "what": "added"
+    }
+  ],
   "marker:community-533": [
     {
       "name": "the.bob.father",
@@ -397,12 +419,20 @@
     {
       "name": "phob0s89",
       "what": "added"
+    },
+    {
+      "name": "phob0s89",
+      "what": "moved"
     }
   ],
   "marker:community-549": [
     {
       "name": "phob0s89",
       "what": "added"
+    },
+    {
+      "name": "phob0s89",
+      "what": "moved"
     }
   ],
   "marker:community-550": [
@@ -455,6 +485,166 @@
     {
       "name": null,
       "what": "added"
+    }
+  ],
+  "marker:community-605": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-607": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-608": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-609": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-610": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-611": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-612": [
+    {
+      "name": "phob0s89",
+      "what": "added"
+    }
+  ],
+  "marker:community-624": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-625": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:wiki-medic": [
+    {
+      "name": ".relyc",
+      "what": "edited"
+    }
+  ],
+  "marker:community-627": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-628": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-629": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:wiki-leatherworking": [
+    {
+      "name": ".relyc",
+      "what": "moved"
+    },
+    {
+      "name": ".relyc",
+      "what": "edited"
+    }
+  ],
+  "marker:community-632": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-638": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-639": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-640": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-641": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-642": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-643": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-644": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-645": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-646": [
+    {
+      "name": ".relyc",
+      "what": "added"
+    }
+  ],
+  "marker:community-664": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:class-beastlord": [
+    {
+      "name": null,
+      "what": "removed"
     }
   ]
 }

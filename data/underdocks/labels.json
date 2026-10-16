@@ -158,22 +158,21 @@
       "note": "The river runs on to the Caves of Irem.",
       "toMap": "caves-of-irem",
       "toPlace": "to-underdocks"
+    },
+    {
+      "id": "community-498",
+      "community": true,
+      "name": "Graveyard",
+      "kind": "building",
+      "priority": 50,
+      "minZoom": 0,
+      "note": "",
+      "x": 5238,
+      "y": 4016,
+      "level": "lower"
     }
   ],
   "trainers": [
-    {
-      "id": "class-beastlord",
-      "abbreviations": [
-        "BST"
-      ],
-      "classes": [
-        "Beastlord"
-      ],
-      "building": "Beastlord",
-      "x": 4421,
-      "y": 3326,
-      "level": "lower"
-    },
     {
       "id": "class-elementalist-wizard-enchanter",
       "abbreviations": [

@@ -423,6 +423,10 @@
     {
       "name": "_ustas",
       "what": "added"
+    },
+    {
+      "name": "satoukurotama",
+      "what": "moved"
     }
   ],
   "marker:community-252": [
@@ -678,6 +682,76 @@
   "marker:community-496": [
     {
       "name": "tonio1432",
+      "what": "added"
+    }
+  ],
+  "marker:community-564": [
+    {
+      "name": "vulthoom.",
+      "what": "added"
+    },
+    {
+      "name": "ocombe",
+      "what": "edited"
+    }
+  ],
+  "marker:community-566": [
+    {
+      "name": "vulthoom.",
+      "what": "added"
+    }
+  ],
+  "marker:community-567": [
+    {
+      "name": "vulthoom.",
+      "what": "added"
+    }
+  ],
+  "marker:community-598": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-650": [
+    {
+      "name": "kaerlyzar",
+      "what": "added"
+    }
+  ],
+  "marker:community-651": [
+    {
+      "name": "kaerlyzar",
+      "what": "added"
+    }
+  ],
+  "marker:community-655": [
+    {
+      "name": "fictionalname",
+      "what": "added"
+    }
+  ],
+  "marker:community-660": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-681": [
+    {
+      "name": "highandry_",
+      "what": "added"
+    }
+  ],
+  "marker:community-691": [
+    {
+      "name": "obeyourfatheryah",
+      "what": "added"
+    }
+  ],
+  "marker:community-692": [
+    {
+      "name": "obeyourfatheryah",
       "what": "added"
     }
   ]

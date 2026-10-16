@@ -350,5 +350,15 @@
     "wikiId": "npc-a-defiled-asp"
    }
   ]
+ },
+ {
+  "id": "community-686",
+  "community": true,
+  "name": "Wizard Portal Landing",
+  "category": "Teleporter",
+  "note": "",
+  "x": 4530,
+  "y": 5923,
+  "travel": "Teleporter"
  }
 ]

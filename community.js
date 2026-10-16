@@ -540,11 +540,11 @@
   if(rows.length){box.append(text('h4','Changes on their way'));for(const r of rows){const pn=r.payload?.name,fields=[...r.fields].map(k=>k==='name'&&pn?'renamed to “'+pn+'”':k==='added'&&pn?'charted as “'+pn+'”':k==='type'&&r.payload?.category?'type changed to '+r.payload.category:({shape:'reshaped',position:'moved',note:'description updated',removed:'removal',type:'type changed',added:'charted'}[k]||k+' changed')),line=text('div','','ledger-change');line.append(text('i',r.fields.has('position')?'⚒':r.fields.has('removed')?'✕':'✎'),text('strong',fields.join(' · ')||'Details checked'),text('small','by '+(r.author_name||'a traveller')+' · '+new Date(r.created_at||r.reviewed_at||Date.now()).toLocaleString()));line.append(text('span',r.status==='approved'?'approved':'waiting for review','change-state '+r.status));box.append(line);}}
   const key=(kind==='edit-label'?'label':'marker')+':'+target.id,published=mapCredits[key+(kind==='edit-label'&&(target.level||config.levelId)?'#'+(target.level||config.levelId):'')]||mapCredits[key]||[];
   if(published.length)box.append(text('p',creditWords(published)+'.','contributors-line'));
-  const actions=text('div','','change-actions');actions.append(editButton(target,kind));const row=rows.find(r=>r.status==='pending')||rows[0];if(admin&&row&&!row.sourceStatus){const open=rows.filter(r=>['pending','approved'].includes(r.status)).length;actions.append(button('Review'+(open>1?' ('+open+')':''),()=>{map.closePopup();desk.open(row);}));}actions.append(button('✕ Remove',()=>removalDialog(target,kind),'community-remove'));box.append(actions);n.append(box);
+  const actions=text('div','','change-actions');actions.append(editButton(target,kind));const row=rows.find(r=>r.status==='pending')||rows[0];if(admin&&row&&!row.sourceStatus){const open=rows.filter(r=>['pending','approved'].includes(r.status)).length;actions.append(button('Review'+(open>1?' ('+open+')':''),()=>{map.closePopup();desk.open(row);}));}actions.append(button('Remove',()=>removalDialog(target,kind),'community-remove popup-delete','delete'));box.append(actions);n.append(box);
  }
  function creditWords(rows){const groups=new Map();for(const c of rows){const verb=c.what==='added'?'charted':c.what==='moved'?'moved':c.what==='reshaped'?'reshaped':'improved';if(!groups.has(verb))groups.set(verb,[]);groups.get(verb).push(c.name||null);}return [...groups].map(([verb,names],i)=>{const known=[...new Set(names.filter(Boolean))],unknown=names.filter(n=>!n).length,who=known.length>2?known.slice(0,2).join(', ')+' and '+(known.length===3?'a traveller':(known.length-2)+' travellers'):known.join(' and ');return (i?verb:verb[0].toUpperCase()+verb.slice(1))+' by '+who+(unknown?(who?' and ':'')+(unknown>1?'other travellers':'a traveller'):'');}).join(' · ');}
  window.atlasCommunity={filtersChanged:()=>{drawSuggestedShapes();desk.drawShapes();},deleteNotice,userId:()=>user?.id||null,move:moveDialog,offerPositions,hoverState(m){const t=targetState(m,'edit-marker');return t&&{rows:t.rows.filter(r=>['pending','approved'].includes(r.status)&&!approvedLive(r)),proposed:t.proposed};},change(target,kind){if(!user)return false;editDialog(target,kind);return true;},isAdmin:()=>admin,reviewOpen:()=>desk.opened,reviewCurrent:token=>desk.currentPreview(token),reviewLabel:()=>desk.opened&&desk.selected?.kind.endsWith('label')?desk.selected.target_id:null,leaveReview:token=>desk.leaveMap(token)&&allowLeave(),closeReview:()=>desk.opened?desk.close():null,afterPositions:go=>{if(dialog.open)dialog.addEventListener('close',go,{once:true});else go();},report:reportDialog,fields:window.atlasFields,refresh:loadApproved,popup(m,n){
-  if(m.atlasLabel){ledger(m,'edit-label',n);return;}if(m.id.startsWith('personal-')){if(alignmentMode)return;const shared=readSet(sharedKey).has(sharedToken(m));if(!config.zonesFile)n.append(shared?text('p','Shared for review','moved-note'):button('Share with everyone',()=>shareNote(m),'','share'));return;}ledger(m,'edit-marker',n);
+  if(m.atlasLabel){ledger(m,'edit-label',n);return;}if(m.id.startsWith('personal-')){if(alignmentMode)return;const shared=readSet(sharedKey).has(sharedToken(m));if(!config.zonesFile)n.append(shared?text('p','Shared for review','moved-note'):privateOnly(m)?text('p','Resource spots stay in your own notes.','moved-note'):button('Share with everyone',()=>shareNote(m),'','share'));return;}ledger(m,'edit-marker',n);
  },placePopup(p,n){if(!['label','exit','building','district'].includes(p.kind))return;const target=labelData.labels.find(l=>l.id===p.id)||changeSet().get('label:'+p.id)?.published||p;ledger(target,'edit-label',n);},chipPopup(p,n){ledger(p,'edit-marker',n);}};
  function movedItems(){
   const sent=readSet(sentKey),rows=[];
@@ -566,7 +566,7 @@
   const bounty=readBounties()[m.id];if(bounty&&m.wikiId===bounty.bounty){payload.bounty=bounty.bounty;if(bounty.priority)payload.priority=true;}
   return payload;
  }
- function shareNote(m){
+ function shareNote(m){if(privateOnly(m))return;
   sendDialog('Share a personal note',[{token:sharedToken(m),name:m.name,map:config.id,level:m.level||config.levelId||null,kind:'new-marker',target_id:null,payload:notePayload(m),note_id:m.id}],true);
  }
  // Being credited is opt-in: the Discord name goes into the public contributors list once a suggestion is published.
@@ -608,7 +608,7 @@
     // A note already suggested from here follows its suggestion, whether it was edited or only moved.
     const rec=user&&readFollowed()[followId(m)];if(rec){followNote(m,rec);return;}
     if(!e.detail.moved&&bountyOf(m)){if(privateSave){privateSave=false;status('Saved as a private note. Sign in to claim the bounty.');}else if(user)claimBounty(m,credit.checked);return;}
-    if(e.detail.moved||row.hidden||!check.checked)return;
+    if(e.detail.moved||row.hidden||!check.checked||privateOnly(m))return;
     if(!user){status('Saved to your field notes. Sign in to suggest it for the public map.');return;}suggestOnSave(m,credit.checked);});
   }}
  // A note placed from a bounty is always shared: saving claims the bounty. Its wiki facts are shown, not edited (only
@@ -616,12 +616,17 @@
  // Signed out, the main button signs in and then claims; "Save as a private note" keeps it on this device.
  const bountyOf=m=>{const b=m&&readBounties()[m.id];return b&&m.wikiId===b.bounty&&!readSet(sharedKey).has(sharedToken(m))?b:null;};
  let bountyForm=null,claimAfterSignIn=false,privateSave=false;
+ // A resource spot (ore, wood, herbs) cannot be suggested: the form says why instead of offering it.
+ function resourceForm(){const line=$('resource-private-line'),check=$('suggest-check'),credit=$('suggest-credit'),own=noteTypeValue()==='marker'&&privateOnlyCategories.has($('category').value);
+  if(line)line.hidden=!own;if(!check||!credit||bountyForm)return;check.parentElement.hidden=own;credit.parentElement.hidden=own||!check.checked;}
+ // The form's fields are built later than this file runs: the form itself listens.
+ $('marker-form')?.addEventListener('change',e=>{if(e.target.id==='category'||e.target.name==='note-type')resourceForm();});
  function setBountyForm(m){
   const form=$('marker-form'),b=bountyOf(m),save=$('save-note'),keep=$('save-private'),line=$('bounty-claim-line'),check=$('suggest-check'),credit=$('suggest-credit'),row=$('suggest-on-save');
   bountyForm=b?{note:m,...b}:null;form.classList.toggle('bounty-mode',!!b);$('bounty-facts')?.remove();
   if(save)save.textContent=b?(user?'Claim the bounty':'Sign in to claim'):'Save note';if(keep)keep.hidden=!b||!!user;if(line)line.hidden=!b;
   if(check)check.parentElement.hidden=!!b;
-  if(!b){if(credit&&check)credit.parentElement.hidden=!check.checked;return;}
+  if(!b){resourceForm();return;}
   row.hidden=false;credit.parentElement.hidden=false;$('editor-title').textContent='Claim a bounty';
   const classes=pickedClasses(),facts=text('div','','bounty-facts');facts.id='bounty-facts';const list=document.createElement('dl');
   const fact=(term,value)=>{list.append(text('dt',term));const dd=document.createElement('dd');dd.append(value);list.append(dd);};
@@ -681,7 +686,7 @@
  const readFollowed=()=>{try{const v=JSON.parse(localStorage.getItem(followKey)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch{return {};}};
  const writeFollowed=v=>{try{localStorage.setItem(followKey,JSON.stringify(v));}catch{}};
  const followId=m=>user.id+':'+scope()+':'+m.id;
- async function sendNote(m,credited){
+ async function sendNote(m,credited){if(privateOnly(m))throw Error('Resource spots stay in your own notes.');
   const payload=notePayload(m),{id,published}=await submitRow({map:config.id,level:m.level||config.levelId||null,kind:'new-marker',target_id:null,payload,note_id:m.id,user_id:user.id,author_name:displayName(user),comment:null,credit:credited});
   if(id!=null){const all=readFollowed();all[followId(m)]={id,sent:payload,credit:credited};writeFollowed(all);}
   return published;
@@ -691,7 +696,7 @@
   try{const published=await sendNote(m,credited);remember(sharedKey,[sharedToken(m)]);freshPopup();status(sentLine(published)||'Saved, and suggested for the public map: it is waiting for review.');event('suggestion-sent');}
   catch(e){status(e?.code==='23505'?'Someone just claimed this bounty. Your note is kept in your field notes.':'Saved to your field notes. '+sendError(e,'The suggestion did not go through: you can send it from the note’s popup with Share with everyone.'));}
  }
- async function followNote(m,rec){
+ async function followNote(m,rec){if(privateOnly(m))return;
   const payload=notePayload(m),key=followId(m),same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);if(same(payload,normaliseMarker(rec.sent)))return;
   const keep=()=>{const all=readFollowed();all[key]={...rec,sent:payload};writeFollowed(all);};
   try{
@@ -863,6 +868,43 @@
   const found=duplicatesOf(row);if(!found.length)return null;const box=text('div','','duplicate-box');box.append(text('strong','Possible duplicate'+(found.length>1?'s':'')));
   // Who sent each one, so two from the same person stand out (markers already on the map have no author here).
   for(const d of found){const by=d.row?' · '+(d.sameAuthor?'by the same person':'by '+(d.author||'a Discord member')):'';box.append(button(d.name+' · '+d.state+by+' ('+d.why+')',()=>onPick(d),'duplicate-jump'));}return box;}
+ // While a marker is being added, an NPC this map already marks (or someone already suggested) under the same wiki
+ // page or name is named in the form, with a way to update that one instead. It is a warning: the note still saves.
+ // A kind of NPC ("A cook", "the guard") never matches; a name the map already uses three times or more only by wiki page.
+ // People only: places, trade stations and ways through (banks, stairs, lifts...) are not checked.
+ const npcTypes=new Set(['Class trainer','Guild','Named mob','Notable NPC','Quest','Quest NPC','Vendor']);
+ // "Elara Venn" is "Paymaster Elara Venn": a name of two words or more held whole in the other counts too.
+ const sameNpcName=(a,b)=>a===b||[[a,b],[b,a]].some(([short,long])=>short.includes(' ')&&short.length>=6&&(' '+long+' ').includes(' '+short+' '));
+ function existingNpcs(){
+  if(!draft||!config||config.zonesFile||noteTypeValue()!=='marker')return [];
+  const raw=String($('name')?.value||'').trim(),key=looseName(raw),wikiId=$('wiki')?.dataset.wikiId||'',npcs=originals.filter(m=>npcTypes.has(m.category));
+  // A kind of NPC has one wiki page for all of them ("A cook"): it matches neither way.
+  const kind=/^(a|an|the)\s/i.test(raw),generic=kind||key.length<4||npcs.filter(m=>looseName(m.name)===key).length>=3;
+  const why=(name,id)=>wikiId&&id===wikiId&&!kind?'same wiki page':!generic&&sameNpcName(key,looseName(name))?'same name':'';
+  // This note's own suggestion (and the marker it became) is not a second one.
+  const own=user?readFollowed()[followId(draft)]?.id:null,found=[];
+  for(const m of npcs){if(own!=null&&m.id==='community-'+own)continue;const w=why(m.name,m.wikiId);if(w)found.push({marker:m,name:m.name,why:w,level:m.level});}
+  for(const r of [...pendingRows,...approvedRows]){const p=r.payload||{};
+   if(r.kind!=='new-marker'||r.id===own||r.note_id===draft.id||p.noteType||!npcTypes.has(p.category)||originals.some(m=>m.id==='community-'+r.id))continue;
+   const w=why(p.name,p.wikiId);if(w)found.push({row:r,name:p.name,why:w,level:r.level||p.level,mine:!!user&&r.user_id===user.id&&r.status==='pending'&&!r.reviewed_at});}
+  return found.slice(0,4);}
+ let npcBox=null,npcTimer=0;
+ function showExistingNpcs(){
+  const found=$('editor')?.open?existingNpcs():[],sig=JSON.stringify(found.map(d=>[d.marker?.id??d.row.id,d.why]));
+  if(!found.length){npcBox?.remove();npcBox=null;return;}if(npcBox?.isConnected&&npcBox.dataset.sig===sig)return;
+  npcBox?.remove();npcBox=text('div','','duplicate-box existing-npc');npcBox.dataset.sig=sig;npcBox.setAttribute('role','status');
+  npcBox.append(text('strong',found.length>1?'These NPCs may already be on the map':'This NPC may already be on the map'),text('p','Update the existing marker rather than adding a second one.','form-hint'));
+  const floor=l=>config.levels&&l?' · '+(config.levels.find(x=>x.id===l)?.title||l):'';
+  for(const d of found){const line=text('div','','existing-npc-row'),state=d.marker?'on the map':d.row.status==='approved'?'approved, not live yet':'waiting for review';
+   line.append(text('span',d.name+floor(d.level)+' · '+state+' ('+d.why+')'));
+   const go=d.marker?()=>{closeEditor();choose(d.marker);editDialog(d.marker,'edit-marker');}:d.mine?()=>{closeEditor();changeOwn(d.row);}:()=>{closeEditor();jumpTo(d);};
+   line.append(button(d.marker?'Update the existing one':d.mine?'Update your suggestion':'See that suggestion',go,'duplicate-jump'));npcBox.append(line);}
+  ($('name').closest('.shared-field')||$('name')).after(npcBox);}
+ {const form=$('marker-form'),soon=()=>{clearTimeout(npcTimer);npcTimer=setTimeout(showExistingNpcs,250);};
+  // A wiki pick fills the fields without an input event: a click in the form checks again too.
+  if(form)for(const type of ['input','change','click'])form.addEventListener(type,soon);
+  window.addEventListener('atlas:editor-open',()=>setTimeout(showExistingNpcs,0));
+  $('editor')?.addEventListener('close',()=>{clearTimeout(npcTimer);npcBox?.remove();npcBox=null;});}
  function jumpTo(d){map.closePopup();if(d.marker){choose(d.marker);return;}const pin=suggestionPins.get(d.row.id);if(pin){map.setView(pin.getLatLng(),Math.max(map.getZoom(),config.defaultView.placeZoom));pin.openPopup();}else preview(d.row,loadApproved,loadApproved,null,true);}
  function overlayToggle(id,key,label,count,after){
   let section=$(id);if(!count){section?.remove();return;}

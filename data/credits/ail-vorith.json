@@ -301,6 +301,10 @@
     {
       "name": "prowlingcactus",
       "what": "added"
+    },
+    {
+      "name": "darkhayn",
+      "what": "removed"
     }
   ],
   "marker:community-225": [
@@ -692,6 +696,78 @@
   "marker:community-582": [
     {
       "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-583": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-584": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-585": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-587": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-588": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-589": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-590": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-591": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-592": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-593": [
+    {
+      "name": "darkhayn",
+      "what": "added"
+    }
+  ],
+  "marker:community-661": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-662": [
+    {
+      "name": "mazamune",
       "what": "added"
     }
   ]

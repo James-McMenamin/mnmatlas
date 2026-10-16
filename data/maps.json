@@ -822,13 +822,13 @@
       "breadcrumb": "Monsters & Memories / Vale of Zintar",
       "description": "An illustrated fan atlas of the Vale of Zintar: the Sand Giant City, the lake camp, the Copper Mine, the Putrid Oasis and the coast, with place names and personal field notes.",
       "width": 8640,
-      "height": 10368,
+      "height": 9728,
       "minZoom": 0,
       "maxNativeZoom": 6,
       "maxZoom": 7,
       "coordinateZoom": 6,
       "tileSize": 256,
-      "tileRevision": "v1",
+      "tileRevision": "v3",
       "tilePath": "assets/tiles/vale-of-zintar/{z}/{x}/{y}.webp",
       "markersFile": "data/vale-of-zintar/markers.json",
       "labelsFile": "data/vale-of-zintar/labels.json",
@@ -870,8 +870,8 @@
       "maxZoom": 7,
       "coordinateZoom": 5,
       "tileSize": 256,
-      "tileRevision": "v1",
-      "tilePath": "assets/tiles/grain-cellar/{z}/{x}/{y}.webp",
+      "tileRevision": "v2",
+      "tilePath": "assets/tiles/grain-cellar/cellar/{z}/{x}/{y}.webp",
       "markersFile": "data/grain-cellar/markers.json",
       "labelsFile": "data/grain-cellar/labels.json",
       "hiddenAreasFile": null,
@@ -880,6 +880,19 @@
         "padding": 18,
         "placeZoom": 5
       },
+      "defaultLevel": "cellar",
+      "levels": [
+        {
+          "id": "cellar",
+          "title": "Cellar",
+          "tilePath": "assets/tiles/grain-cellar/cellar/{z}/{x}/{y}.webp"
+        },
+        {
+          "id": "entrance",
+          "title": "Entrance stair",
+          "tilePath": "assets/tiles/grain-cellar/entrance/{z}/{x}/{y}.webp"
+        }
+      ],
       "extraCategories": {
         "Stairs": [
           "↕",
@@ -1270,6 +1283,90 @@
         "sourceUrl": "",
         "license": "",
         "licenseUrl": ""
+      },
+      "hiddenPrimaryStack": null,
+      "legacyStorage": {}
+    },
+    {
+      "id": "sunken-resort",
+      "title": "Sunken Resort",
+      "subtitle": "Four floors beneath a Scarwood lake",
+      "cartoucheKicker": "The flooded halls",
+      "breadcrumb": "Monsters & Memories / Sunken Resort",
+      "description": "An illustrated fan atlas of Sunken Resort, a flooded resort beneath a Scarwood lake. Explore four floors, from the bowl, pool and kelp rooms to the wisp and elemental caves, and keep your own field notes.",
+      "width": 3488,
+      "height": 3232,
+      "frame": {
+        "x": 192,
+        "y": 192,
+        "width": 3104,
+        "height": 2976
+      },
+      "minZoom": 0,
+      "maxNativeZoom": 5,
+      "maxZoom": 7,
+      "coordinateZoom": 5,
+      "tileSize": 256,
+      "tileRevision": "v1",
+      "tilePath": "assets/tiles/sunken-resort/floor-1/{z}/{x}/{y}.webp",
+      "markersFile": "data/sunken-resort/markers.json",
+      "labelsFile": "data/sunken-resort/labels.json",
+      "hiddenAreasFile": null,
+      "defaultView": {
+        "mode": "fit",
+        "padding": 18,
+        "placeZoom": 5
+      },
+      "defaultLevel": "floor-1",
+      "levels": [
+        {
+          "id": "floor-1",
+          "title": "Floor -1",
+          "tilePath": "assets/tiles/sunken-resort/floor-1/{z}/{x}/{y}.webp"
+        },
+        {
+          "id": "floor-2",
+          "title": "Floor -2",
+          "tilePath": "assets/tiles/sunken-resort/floor-2/{z}/{x}/{y}.webp"
+        },
+        {
+          "id": "floor-3",
+          "title": "Floor -3",
+          "tilePath": "assets/tiles/sunken-resort/floor-3/{z}/{x}/{y}.webp"
+        },
+        {
+          "id": "floor-4",
+          "title": "Caves",
+          "tilePath": "assets/tiles/sunken-resort/floor-4/{z}/{x}/{y}.webp"
+        }
+      ],
+      "extraCategories": {
+        "Stairs": [
+          "↕",
+          "#64795b"
+        ],
+        "Ladder": [
+          "↕",
+          "#64795b"
+        ]
+      },
+      "attribution": {
+        "map": "Illustrated fan atlas · Not an official game map",
+        "text": "Names and positions after Map by Skoop (CC BY-SA 4.0) · approximate",
+        "sourceTitle": "Map by Skoop",
+        "sourceUrl": "https://monstersandmemories.miraheze.org/wiki/File:Sunken_resort.png",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "changes": "Names and positions only adapted from Map by Skoop; positions adjusted to this illustration. The adapted names and positions carry CC BY-SA 4.0; these credits do not cover the illustration.",
+        "sources": [
+          {
+            "sourceTitle": "Map by Skoop",
+            "sourceUrl": "https://monstersandmemories.miraheze.org/wiki/File:Sunken_resort.png",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "scope": "Names and positions only"
+          }
+        ]
       },
       "hiddenPrimaryStack": null,
       "legacyStorage": {}

@@ -161,6 +161,40 @@
     {
       "name": null,
       "what": "edited"
+    },
+    {
+      "name": "ocombe",
+      "what": "edited"
+    }
+  ],
+  "marker:community-654": [
+    {
+      "name": "ketchupmonster",
+      "what": "added"
+    }
+  ],
+  "marker:community-663": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-665": [
+    {
+      "name": "torgol",
+      "what": "added"
+    }
+  ],
+  "marker:community-701": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-702": [
+    {
+      "name": null,
+      "what": "added"
     }
   ]
 }

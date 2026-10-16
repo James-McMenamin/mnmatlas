@@ -294,25 +294,27 @@
   "id": "lumberjacks",
   "name": "Brother Gurrom",
   "category": "Quest NPC",
-  "x": 3745,
-  "y": 2693,
+  "x": 2799,
+  "y": 2177,
   "minZoom": 3,
   "approximate": true,
   "note": "At the lumberjack camp.",
   "wiki": "https://monstersandmemories.wiki/npcs/brother-gurrom",
-  "wikiId": "npc-brother-gurrom"
+  "wikiId": "npc-brother-gurrom",
+  "community": true
  },
  {
   "id": "lumberjacks-brother-juro",
   "name": "Brother Juro",
   "category": "Quest NPC",
-  "x": 3767,
-  "y": 2693,
+  "x": 2843,
+  "y": 2185,
   "minZoom": 3,
   "approximate": true,
   "note": "At the lumberjack camp.",
   "wiki": "https://monstersandmemories.wiki/npcs/brother-juro",
-  "wikiId": "npc-brother-juro"
+  "wikiId": "npc-brother-juro",
+  "community": true
  },
  {
   "id": "wood-elves",

@@ -168,11 +168,58 @@
    6,
    10
   ],
-  "x": 1542,
-  "y": 3367,
+  "x": 1569,
+  "y": 3043,
   "approximate": true,
   "note": "",
-  "minZoom": 3
+  "minZoom": 3,
+  "shape": {
+   "form": "outline",
+   "kind": "area",
+   "points": [
+    [
+     2419,
+     3639
+    ],
+    [
+     2378,
+     3392
+    ],
+    [
+     1735,
+     3288
+    ],
+    [
+     1594,
+     2835
+    ],
+    [
+     1723,
+     2535
+    ],
+    [
+     1411,
+     2269
+    ],
+    [
+     864,
+     2322
+    ],
+    [
+     1333,
+     3336
+    ],
+    [
+     1567,
+     3628
+    ],
+    [
+     2003,
+     3784
+    ]
+   ]
+  },
+  "community": true
  },
  {
   "id": "humanoid-6-10-1",
@@ -394,13 +441,72 @@
   "name": "Toma the Two-Faced",
   "category": "Named mob",
   "note": "",
-  "x": 2283,
-  "y": 3885,
+  "x": 2266,
+  "y": 3884,
   "levels": [
    8,
    8
   ],
   "wiki": "https://monstersandmemories.wiki/npcs/toma-the-two-faced",
-  "wikiId": "npc-toma-the-two-faced"
+  "wikiId": "npc-toma-the-two-faced",
+  "shape": {
+   "form": "outline",
+   "kind": "area",
+   "points": [
+    [
+     2216,
+     3829
+    ],
+    [
+     2282,
+     3854
+    ],
+    [
+     2336,
+     3814
+    ],
+    [
+     2394,
+     3810
+    ],
+    [
+     2393,
+     3924
+    ],
+    [
+     2130,
+     3950
+    ],
+    [
+     2144,
+     3845
+    ]
+   ]
+  }
+ },
+ {
+  "id": "community-619",
+  "community": true,
+  "name": "Chompers (level ~16)",
+  "category": "Quest NPC",
+  "note": "",
+  "x": 4488,
+  "y": 3844,
+  "shape": {
+   "kind": "path",
+   "loop": false,
+   "points": [
+    [
+     4488,
+     3844
+    ],
+    [
+     3071,
+     3752
+    ]
+   ]
+  },
+  "wiki": "https://monstersandmemories.wiki/npcs/chompers",
+  "wikiId": "npc-chompers"
  }
 ]

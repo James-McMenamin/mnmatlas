@@ -1,6 +1,47 @@
 {
  "entries": [
   {
+   "date": "2026-10-16",
+   "title": "Missing buildings drawn",
+   "text": "Six places the maps had left blank are now drawn: the stable north of Red Mantle Camp in Fallen Pass (with its stablemaster and stablehand), the Stables cave on Fallen Watch's first level, and the stables of Ail'Vorith, Penshaw in Keeper's Bight, Evershade Weald and the Underdocks.",
+   "maps": [
+    "fallen-pass",
+    "fallen-watch",
+    "ail-vorith",
+    "keepers-bight",
+    "evershade-weald",
+    "underdocks"
+   ]
+  },
+  {
+   "date": "2026-10-16",
+   "title": "One marker per traveller",
+   "text": "Adding someone the map already shows now points you to the existing marker so you can update it instead, and five doubled markers were merged. Ore, wood and herb spots stay in your own notes, Ctrl+F (Cmd+F) jumps to search, and Change and Remove sit with Copy link.",
+   "maps": [
+    "night-harbor",
+    "sungreet-strand",
+    "fallen-pass",
+    "ail-vorith"
+   ]
+  },
+  {
+   "date": "2026-10-16",
+   "title": "Grain Cellar stair redrawn",
+   "text": "The Grain Cellar now has two floors. The entrance stair climbs from the corner of the octagonal hall to the passage under the granary door, all where it really runs; switch floors at the middle landing.",
+   "maps": [
+    "grain-cellar"
+   ]
+  },
+  {
+   "date": "2026-10-15",
+   "title": "Sunken Resort is charted",
+   "text": "Beneath a Scarwood lake, the flooded halls of Sunken Resort join the atlas across four floors. Follow the bowl-room stairs and the well down to the wisp and elemental caves, find the two air pockets, and turn the new relief view to see how the floors stack.",
+   "maps": [
+    "sunken-resort",
+    "scarwood"
+   ]
+  },
+  {
    "date": "2026-10-15",
    "title": "Glinting Hollow is charted",
    "text": "The six fae hollows behind the druid portal of the Evershade Weald are on the atlas: the pine forest, the lily pond, the firepits under the great web, the snowy brazier grove, the ice ring and the glowing mushroom ruins. Step through the portal sign in the Weald to visit them.",

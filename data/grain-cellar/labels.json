@@ -1,11 +1,12 @@
 {
   "map": "grain-cellar",
-  "tileRevision": "v1",
+  "tileRevision": "v2",
   "coordinateZoom": 5,
   "labels": [
     {
       "id": "grain-bins",
       "name": "Grain bins",
+      "level": "cellar",
       "x": 2444.0,
       "y": 1388.3,
       "kind": "district",
@@ -17,6 +18,7 @@
     {
       "id": "central-hall",
       "name": "Octagonal hall",
+      "level": "cellar",
       "x": 1900.0,
       "y": 2474.6,
       "kind": "district",
@@ -28,6 +30,7 @@
     {
       "id": "east-cells",
       "name": "North-east stores",
+      "level": "cellar",
       "x": 3468.0,
       "y": 2464.5,
       "kind": "district",
@@ -39,6 +42,7 @@
     {
       "id": "south-stores",
       "name": "South-east stores",
+      "level": "cellar",
       "x": 3212.0,
       "y": 3504.5,
       "kind": "district",
@@ -50,6 +54,7 @@
     {
       "id": "altar",
       "name": "Crocodile altar",
+      "level": "cellar",
       "x": 1260.0,
       "y": 2651.0,
       "kind": "district",
@@ -61,6 +66,7 @@
     {
       "id": "cave",
       "name": "Cave tunnel",
+      "level": "cellar",
       "x": 2508.0,
       "y": 3261.7,
       "kind": "district",
@@ -72,26 +78,39 @@
     {
       "id": "exit-sungreet-strand",
       "name": "to Sungreet Strand",
-      "x": 432.0,
-      "y": 627.0,
+      "level": "entrance",
+      "x": 768.0,
+      "y": 2467.0,
       "kind": "exit",
       "priority": 95,
       "minZoom": 2,
       "arrow": "west",
       "approximate": true,
-      "note": "Top of the entrance stair (drawn in the inset); the secret granary door leads out to Sungreet Strand.",
+      "note": "Top of the entrance stair; the secret granary door leads out to Sungreet Strand.",
       "toMap": "sungreet-strand",
       "toPlace": "to-grain-cellar"
     },
     {
       "id": "entrance-stair",
       "name": "Entrance stair",
-      "x": 680.0,
-      "y": 1400.0,
+      "level": "cellar",
+      "x": 1632.0,
+      "y": 2700.0,
       "kind": "district",
       "priority": 85,
       "minZoom": 2.5,
-      "note": "The whole stair is drawn in the inset; it starts beside the altar."
+      "note": "Climbs from the hall to the entrance passage and the granary door."
+    },
+    {
+      "id": "entrance-passage",
+      "name": "Entrance passage",
+      "level": "entrance",
+      "x": 1296.0,
+      "y": 2837.0,
+      "kind": "district",
+      "priority": 85,
+      "minZoom": 2.5,
+      "note": ""
     }
   ],
   "trainers": []

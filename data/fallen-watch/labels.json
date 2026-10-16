@@ -124,6 +124,18 @@
       "note": ""
     },
     {
+      "id": "stables",
+      "name": "Stables",
+      "level": "floor-3",
+      "x": 2175,
+      "y": 2586,
+      "kind": "district",
+      "priority": 80,
+      "minZoom": 3,
+      "approximate": true,
+      "note": ""
+    },
+    {
       "id": "stores-north",
       "name": "Storage room",
       "level": "floor-4",

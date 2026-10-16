@@ -225,23 +225,27 @@
   },
   {
     "id": "wiki-medic",
-    "name": "First Aid — harbour island",
+    "name": "Medic Florina",
     "x": 3797,
     "y": 4713,
     "level": "lower",
     "approximate": true,
-    "note": "Medic trainer; training specialty to confirm in game.",
-    "category": "Tradeskill"
+    "note": "Upstairs in building with Assistant Norwan, who is visible from the outside.",
+    "category": "Tradeskill",
+    "trade": "First Aid",
+    "community": true
   },
   {
     "id": "wiki-leatherworking",
-    "name": "Leatherworking — harbour island",
-    "x": 3892,
-    "y": 4246,
+    "name": "Leatherworker Keiros",
+    "x": 3825,
+    "y": 4215,
     "level": "lower",
     "approximate": true,
     "note": "",
-    "category": "Tradeskill"
+    "category": "Tradeskill",
+    "community": true,
+    "trade": "Leatherworking"
   },
   {
     "id": "wiki-fletcher-bowyer",
@@ -252,19 +256,6 @@
     "approximate": true,
     "note": "Fletching and bow making.",
     "category": "Tradeskill"
-  },
-  {
-    "id": "class-beastlord",
-    "name": "Beastlord",
-    "x": 4421,
-    "y": 3326,
-    "level": "lower",
-    "approximate": true,
-    "note": "In a cave under the inn. Name follows the community sketch; class name and access to confirm.",
-    "category": "Class trainer",
-    "classes": [
-      "Beastlord"
-    ]
   },
   {
     "id": "class-elementalist-wizard-enchanter",
@@ -369,10 +360,10 @@
   },
   {
     "id": "trade-lumberjacking",
-    "name": "Lumberjacking — north-east quay",
+    "name": "Felara",
     "category": "Tradeskill",
-    "x": 4798,
-    "y": 4210,
+    "x": 4125,
+    "y": 4332,
     "level": "lower",
     "note": "",
     "community": true
@@ -442,7 +433,7 @@
   },
   {
     "id": "wiki-quartermaster",
-    "name": "Quartermaster",
+    "name": "Traven Keldress",
     "category": "Vendor",
     "vendor": "Quartermaster",
     "x": 4544,
@@ -450,7 +441,9 @@
     "note": "Buy / sell weapons and armour.",
     "level": "lower",
     "approximate": true,
-    "community": true
+    "community": true,
+    "wiki": "https://monstersandmemories.wiki/npcs/traven-keldress",
+    "wikiId": "npc-traven-keldress"
   },
   {
     "id": "wiki-apothecary",
@@ -1020,8 +1013,8 @@
     "name": "Stevran Understock",
     "category": "Vendor",
     "note": "",
-    "x": 3581,
-    "y": 4615,
+    "x": 3601,
+    "y": 4672,
     "level": "lower",
     "wiki": "https://monstersandmemories.wiki/npcs/stevran-understock",
     "wikiId": "npc-1790076534264-d7cpf"
@@ -1032,8 +1025,8 @@
     "name": "Innkeeper Farda",
     "category": "Quest NPC",
     "note": "",
-    "x": 4468,
-    "y": 3492,
+    "x": 2976,
+    "y": 5345,
     "level": "lower",
     "wiki": "https://monstersandmemories.wiki/npcs/innkeeper-farda",
     "wikiId": "npc-innkeeper-farda"
@@ -1140,5 +1133,267 @@
     ],
     "wiki": "https://monstersandmemories.wiki/npcs/an-abominable-ghoul",
     "wikiId": "npc-an-abominable-ghoul"
+  },
+  {
+    "id": "community-605",
+    "community": true,
+    "name": "Letharia Hollowgrove",
+    "category": "Class trainer",
+    "note": "",
+    "x": 3325,
+    "y": 5724,
+    "level": "lower",
+    "classes": [
+      "Druid"
+    ],
+    "wiki": "https://monstersandmemories.wiki/npcs/letharia-hollowgrove",
+    "wikiId": "npc-letharia-hollowgrove"
+  },
+  {
+    "id": "community-607",
+    "community": true,
+    "name": "Reyla Wildryn",
+    "category": "Class trainer",
+    "note": "",
+    "x": 4444,
+    "y": 3325,
+    "level": "lower",
+    "classes": [
+      "Beastlord"
+    ],
+    "wiki": "https://monstersandmemories.wiki/npcs/reyla-wildryn",
+    "wikiId": "npc-1790076532319-ns8qr"
+  },
+  {
+    "id": "community-608",
+    "community": true,
+    "name": "Moss",
+    "category": "Vendor",
+    "note": "",
+    "x": 3344,
+    "y": 5664,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/moss",
+    "wikiId": "npc-1790076530868-tqs6p"
+  },
+  {
+    "id": "community-609",
+    "community": true,
+    "name": "Vaelen Beastbind",
+    "category": "Vendor",
+    "note": "",
+    "x": 4425,
+    "y": 3329,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/vaelen-beastbind",
+    "wikiId": "npc-1790076535162-az41m"
+  },
+  {
+    "id": "community-610",
+    "community": true,
+    "name": "Barkeeper Tull",
+    "category": "Notable NPC",
+    "note": "2nd floor of the Inn in the SW of UD",
+    "x": 2954,
+    "y": 5331,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/barkeeper-tull",
+    "wikiId": "npc-barkeeper-tull"
+  },
+  {
+    "id": "community-611",
+    "community": true,
+    "name": "Chef Brigit",
+    "category": "Notable NPC",
+    "note": "",
+    "x": 2891,
+    "y": 5259,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/chef-brigit",
+    "wikiId": "npc-chef-brigit"
+  },
+  {
+    "id": "community-612",
+    "community": true,
+    "name": "Embalmer Tyriel",
+    "category": "Notable NPC",
+    "note": "Crypt level in Temple of Yzgorath, down the ramp from the foyer",
+    "x": 5686,
+    "y": 4205,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/embalmer-tyriel",
+    "wikiId": "npc-embalmer-tyriel"
+  },
+  {
+    "id": "community-624",
+    "community": true,
+    "name": "Helga Hewell",
+    "category": "Tradeskill",
+    "note": "",
+    "x": 4189,
+    "y": 5373,
+    "level": "lower",
+    "trade": "Carpentry / Woodworking"
+  },
+  {
+    "id": "community-625",
+    "community": true,
+    "name": "Swindy",
+    "category": "Vendor",
+    "note": "Honestly not sure what kind of vendor this is, but it was the only one I could find that would buy my gems in the Underdocks.",
+    "x": 2774,
+    "y": 4711,
+    "level": "lower",
+    "vendor": "Shady merchant"
+  },
+  {
+    "id": "community-627",
+    "community": true,
+    "name": "Assistant Norwan",
+    "category": "Vendor",
+    "note": "",
+    "x": 3809,
+    "y": 4728,
+    "level": "lower",
+    "vendor": "Medic"
+  },
+  {
+    "id": "community-628",
+    "community": true,
+    "name": "Tanner Paluvian",
+    "category": "Tradeskill",
+    "note": "",
+    "x": 3804,
+    "y": 4164,
+    "level": "lower",
+    "trade": "Skinning / Tanning"
+  },
+  {
+    "id": "community-629",
+    "community": true,
+    "name": "Tavia Tawyer",
+    "category": "Vendor",
+    "note": "Sells leatherworking kit, seam ripper, and rough/light/heavy/satin thread.",
+    "x": 3824,
+    "y": 4178,
+    "level": "lower",
+    "vendor": "Leatherworking vendor"
+  },
+  {
+    "id": "community-632",
+    "community": true,
+    "name": "Ruk Sacksnatch",
+    "category": "Vendor",
+    "note": "",
+    "x": 3885,
+    "y": 4282,
+    "level": "lower",
+    "vendor": "Bag merchant"
+  },
+  {
+    "id": "community-638",
+    "community": true,
+    "name": "a guild registrar",
+    "category": "Guild",
+    "note": "",
+    "x": 4524,
+    "y": 3502,
+    "level": "lower"
+  },
+  {
+    "id": "community-639",
+    "community": true,
+    "name": "Barkeeper Lyrsa",
+    "category": "Vendor",
+    "note": "",
+    "x": 4522,
+    "y": 3426,
+    "level": "lower",
+    "vendor": "Barkeep"
+  },
+  {
+    "id": "community-640",
+    "community": true,
+    "name": "Innkeeper Narik",
+    "category": "Inn",
+    "note": "",
+    "x": 4505,
+    "y": 3404,
+    "level": "lower"
+  },
+  {
+    "id": "community-641",
+    "community": true,
+    "name": "Feslan Godfrey",
+    "category": "Vendor",
+    "note": "",
+    "x": 4572,
+    "y": 3454,
+    "level": "lower",
+    "vendor": "Cook"
+  },
+  {
+    "id": "community-642",
+    "community": true,
+    "name": "Gorik Tundsen",
+    "category": "Vendor",
+    "note": "",
+    "x": 4551,
+    "y": 3431,
+    "level": "lower",
+    "vendor": "Cook"
+  },
+  {
+    "id": "community-643",
+    "community": true,
+    "name": "Cartalia Wain",
+    "category": "Tradeskill",
+    "note": "",
+    "x": 3680,
+    "y": 4111,
+    "level": "lower",
+    "trade": "Wagoneering"
+  },
+  {
+    "id": "community-644",
+    "community": true,
+    "name": "Solitary Tarka",
+    "category": "Notable NPC",
+    "note": "Solo Ruleset NPC",
+    "x": 3579,
+    "y": 4348,
+    "level": "lower"
+  },
+  {
+    "id": "community-645",
+    "community": true,
+    "name": "Magnificent Horgus",
+    "category": "Notable NPC",
+    "note": "Hardcore Ruleset NPC",
+    "x": 3574,
+    "y": 4373,
+    "level": "lower"
+  },
+  {
+    "id": "community-646",
+    "community": true,
+    "name": "Surtey the Pauper",
+    "category": "Notable NPC",
+    "note": "Self-Found Ruleset NPC",
+    "x": 3549,
+    "y": 4372,
+    "level": "lower"
+  },
+  {
+    "id": "community-664",
+    "community": true,
+    "name": "Slylara Llumare",
+    "category": "Quest NPC",
+    "note": "Rogue starter quest",
+    "x": 2615,
+    "y": 5223,
+    "level": "lower",
+    "wiki": "https://monstersandmemories.wiki/npcs/slylara-llumare",
+    "wikiId": "npc-slylara-llumare"
   }
 ]

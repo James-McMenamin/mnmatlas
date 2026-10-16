@@ -791,11 +791,63 @@
   "id": "community-437",
   "community": true,
   "name": "Klimpi the Feared",
-  "category": "Notable NPC",
+  "category": "Named mob",
   "note": "Muggrah Goblin Camp on the mountain past Tel Ekir.",
   "x": 2468,
   "y": 1034,
   "wiki": "https://monstersandmemories.wiki/npcs/klimpi-the-feared",
   "wikiId": "npc-klimpi-the-feared"
+ },
+ {
+  "id": "community-654",
+  "community": true,
+  "name": "Rizik Goresnout",
+  "category": "Named mob",
+  "note": "",
+  "x": 1039,
+  "y": 2725,
+  "levels": [
+   7,
+   7
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/rizik-goresnout",
+  "wikiId": "npc-rizik-goresnout"
+ },
+ {
+  "id": "community-665",
+  "community": true,
+  "name": "Rhakar Vexfang",
+  "category": "Named mob",
+  "note": "Central Ashira Camp near Night Harbor zoneline\nPH: Ashira Warrior",
+  "x": 4484,
+  "y": 8476,
+  "levels": [
+   5,
+   5
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/rhakar-vexfang",
+  "wikiId": "npc-rhakar-vexfang"
+ },
+ {
+  "id": "community-701",
+  "community": true,
+  "name": "Dizzik (level ~20)",
+  "category": "Named mob",
+  "note": "",
+  "x": 2755,
+  "y": 3924,
+  "wiki": "https://monstersandmemories.wiki/npcs/dizzik",
+  "wikiId": "npc-dizzik"
+ },
+ {
+  "id": "community-702",
+  "community": true,
+  "name": "Nerguk (level ~25)",
+  "category": "Named mob",
+  "note": "",
+  "x": 2287,
+  "y": 3668,
+  "wiki": "https://monstersandmemories.wiki/npcs/nerguk",
+  "wikiId": "npc-nerguk"
  }
 ]

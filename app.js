@@ -18,6 +18,8 @@ const baseCategories={'Bank':['▣','#916c30'],'Inn':['☾','#9a543a'],'Stable':
 // Additional marker types; a map's own extraCategories override these colours and glyphs.
 const noteCategories={'Camping spot':['⛺','#6b4f2e'],'Notable NPC':['●','#2388aa'],'Quest':['!','#b5861f'],'Quest NPC':['!','#b5861f'],'Mob camp':['⚔','#7a3328'],'Named mob':['☠','#46404f'],'Vendor':['◇','#876036'],'Herbs':['✿','#4f7a3a'],'Wood':['♣','#6b4f2e'],'Ore':['⛏','#55606b']};
 let categories={...baseCategories},allCategories={...baseCategories,...noteCategories};
+// Resource spots stay in personal notes: never shared, never a type for a public marker (2026-10-16).
+const privateOnlyCategories=new Set(['Herbs','Wood','Ore']),privateOnly=m=>!!m&&!m.noteType&&privateOnlyCategories.has(m.category);
 const mobileLayout=matchMedia('(max-width: 760px)');
 let embedded=false;try{embedded=window.self!==window.top;}catch{embedded=true;}
 const embedParam=new URLSearchParams(location.search).get('embed');
@@ -206,6 +208,8 @@ function actionIcon(b){
 function tidyActions(n){
  const actions=text('div','','popup-actions');
  for(const el of [...n.children]){if(el.matches('button:not(.level-link)'))actions.append(el);else if(el.matches('.community-actions')){actions.append(...el.children);el.remove();}}
+ // Change, Review and Remove sit with Copy link too, not inside the list of changes on their way.
+ for(const el of [...n.querySelectorAll('.change-actions')]){actions.append(...el.children);el.remove();}
  for(const b of actions.querySelectorAll('button'))actionIcon(b);
  // The details scroll on their own; the actions stay put under them.
  if(actions.children.length){const body=text('div','','popup-body');body.append(...(n.childNodes||n.children));n.append(body,actions);}return n;
@@ -883,6 +887,10 @@ function setupControls(){
  {const pick=$('vendor-filter-select');fillSelect(pick,[...vendorKindItems(true),{label:'Sells',options:sellTypes.map(t=>[t,'s:'+t])}]);pick.onchange=()=>{vendorGroup=pick.value;drawMarkers();};}
 
  for(const r of document.querySelectorAll('input[name="note-type"],input[name="pin-colour"]'))r.onchange=updateEditorFields;$('category').onchange=updateEditorFields;
+ // Ctrl+F (Cmd+F on a Mac) opens the Search menu on its search box. Pressed again there, in a dialog or at the review
+ // desk, it is the browser's own find.
+ document.addEventListener('keydown',e=>{if(e.key?.toLowerCase()!=='f'||!(e.ctrlKey||e.metaKey)||e.altKey||e.shiftKey||e.defaultPrevented)return;const box=$('search');
+  if(!box||document.activeElement===box||document.querySelector('dialog[open]')||window.atlasCommunity?.reviewOpen?.())return;e.preventDefault();setPanel(true);box.focus();box.select();});
  $('cancel-place').onclick=cancelPlacement;document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!window.atlasCommunity?.reviewOpen?.()){cancelPlacement();if(compact())setPanel(false);}});
  // Closing the editor without saving also drops a new note's pin; a saved note has already ended placement.
  $('cancel-edit').onclick=closeEditor;$('editor').addEventListener('close',()=>{draft=null;cancelPlacement();});
