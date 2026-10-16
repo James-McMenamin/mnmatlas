@@ -585,21 +585,6 @@
   "wikiId": "npc-lady-elana-torvald"
  },
  {
-  "id": "community-674",
-  "community": true,
-  "name": "Elda the Cook (level ~54)",
-  "category": "Named mob",
-  "note": "Upper Saman",
-  "x": 3063,
-  "y": 2472,
-  "levels": [
-   54,
-   54
-  ],
-  "wiki": "https://monstersandmemories.wiki/npcs/elda-the-cook",
-  "wikiId": "npc-elda-the-cook"
- },
- {
   "id": "community-675",
   "community": true,
   "name": "Elda the Cook (level ~54)",

@@ -749,17 +749,6 @@
     "vendor": "Fishing vendor"
   },
   {
-    "id": "community-236",
-    "community": true,
-    "name": "Alarys Drezzorith",
-    "category": "Vendor",
-    "note": "",
-    "x": 3588,
-    "y": 2934,
-    "wiki": "https://monstersandmemories.wiki/npcs/alarys-drezzorith",
-    "wikiId": "npc-alarys-drezzorith"
-  },
-  {
     "id": "community-239",
     "community": true,
     "name": "Ruzzuna",
@@ -770,17 +759,6 @@
     "vendor": "Cloth armorer",
     "wiki": "https://monstersandmemories.wiki/npcs/ruzzuna",
     "wikiId": "npc-ruzzuna"
-  },
-  {
-    "id": "community-249",
-    "community": true,
-    "name": "Tal Drezzorith",
-    "category": "Vendor",
-    "note": "",
-    "x": 3580,
-    "y": 2924,
-    "wiki": "https://monstersandmemories.wiki/npcs/tal-drezzorith",
-    "wikiId": "npc-tal-drezzorith"
   },
   {
     "id": "community-254",

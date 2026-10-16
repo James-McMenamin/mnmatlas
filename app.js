@@ -885,6 +885,10 @@ function setupControls(){
  {const pick=$('vendor-filter-select');fillSelect(pick,[...vendorKindItems(true),{label:'Sells',options:sellTypes.map(t=>[t,'s:'+t])}]);pick.onchange=()=>{vendorGroup=pick.value;drawMarkers();};}
 
  for(const r of document.querySelectorAll('input[name="note-type"],input[name="pin-colour"]'))r.onchange=updateEditorFields;$('category').onchange=updateEditorFields;
+ // Ctrl+F (Cmd+F on a Mac) opens the Search menu on its search box. Pressed again there, in a dialog or at the review
+ // desk, it is the browser's own find.
+ document.addEventListener('keydown',e=>{if(e.key?.toLowerCase()!=='f'||!(e.ctrlKey||e.metaKey)||e.altKey||e.shiftKey||e.defaultPrevented)return;const box=$('search');
+  if(!box||document.activeElement===box||document.querySelector('dialog[open]')||window.atlasCommunity?.reviewOpen?.())return;e.preventDefault();setPanel(true);box.focus();box.select();});
  $('cancel-place').onclick=cancelPlacement;document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!window.atlasCommunity?.reviewOpen?.()){cancelPlacement();if(compact())setPanel(false);}});
  // Closing the editor without saving also drops a new note's pin; a saved note has already ended placement.
  $('cancel-edit').onclick=closeEditor;$('editor').addEventListener('close',()=>{draft=null;cancelPlacement();});

@@ -814,21 +814,6 @@
   "wikiId": "npc-rizik-goresnout"
  },
  {
-  "id": "community-663",
-  "community": true,
-  "name": "Rhakar Vexfang",
-  "category": "Named mob",
-  "note": "Spawns at the tent west of the 4 rocks\nPH: Ashira Warrior",
-  "x": 4479,
-  "y": 8488,
-  "levels": [
-   5,
-   5
-  ],
-  "wiki": "https://monstersandmemories.wiki/npcs/rhakar-vexfang",
-  "wikiId": "npc-rhakar-vexfang"
- },
- {
   "id": "community-665",
   "community": true,
   "name": "Rhakar Vexfang",

@@ -1335,21 +1335,6 @@
     "wikiId": "npc-a-curious-jackal"
   },
   {
-    "id": "community-483",
-    "community": true,
-    "name": "Grubbfist (level 9)",
-    "category": "Named mob",
-    "note": "",
-    "x": 1707,
-    "y": 635,
-    "levels": [
-      9,
-      9
-    ],
-    "wiki": "https://monstersandmemories.wiki/npcs/grubbfist",
-    "wikiId": "npc-grubbfist"
-  },
-  {
     "id": "community-486",
     "community": true,
     "name": "Mirembe Tiifu",
