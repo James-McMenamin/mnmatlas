@@ -10,5 +10,23 @@
       "name": null,
       "what": "removed"
     }
+  ],
+  "marker:community-700": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-703": [
+    {
+      "name": null,
+      "what": "added"
+    }
+  ],
+  "marker:community-704": [
+    {
+      "name": null,
+      "what": "added"
+    }
   ]
 }

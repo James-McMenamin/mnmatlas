@@ -827,5 +827,27 @@
   ],
   "wiki": "https://monstersandmemories.wiki/npcs/rhakar-vexfang",
   "wikiId": "npc-rhakar-vexfang"
+ },
+ {
+  "id": "community-701",
+  "community": true,
+  "name": "Dizzik (level ~20)",
+  "category": "Named mob",
+  "note": "",
+  "x": 2755,
+  "y": 3924,
+  "wiki": "https://monstersandmemories.wiki/npcs/dizzik",
+  "wikiId": "npc-dizzik"
+ },
+ {
+  "id": "community-702",
+  "community": true,
+  "name": "Nerguk (level ~25)",
+  "category": "Named mob",
+  "note": "",
+  "x": 2287,
+  "y": 3668,
+  "wiki": "https://monstersandmemories.wiki/npcs/nerguk",
+  "wikiId": "npc-nerguk"
  }
 ]

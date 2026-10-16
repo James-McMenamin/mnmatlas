@@ -14,5 +14,43 @@
   "y": 4297,
   "wiki": "https://monstersandmemories.wiki/npcs/vhaleth-halkareth",
   "wikiId": "npc-vhaleth-hal-kareth"
+ },
+ {
+  "id": "community-700",
+  "community": true,
+  "name": "A shore Beetle",
+  "category": "Mob camp",
+  "note": "Green at level 17",
+  "x": 6438,
+  "y": 3732,
+  "levels": [
+   11,
+   14
+  ],
+  "mobs": []
+ },
+ {
+  "id": "community-703",
+  "community": true,
+  "name": "A Shelter Bat",
+  "category": "Mob camp",
+  "note": "Blue at 17",
+  "x": 5499,
+  "y": 4157,
+  "levels": [
+   12,
+   15
+  ],
+  "mobs": []
+ },
+ {
+  "id": "community-704",
+  "community": true,
+  "name": "A Fire Elemental",
+  "category": "Mob camp",
+  "note": "Red at 17",
+  "x": 5134,
+  "y": 4418,
+  "mobs": []
  }
 ]
