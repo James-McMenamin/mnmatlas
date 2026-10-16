@@ -870,20 +870,22 @@
   for(const d of found){const by=d.row?' · '+(d.sameAuthor?'by the same person':'by '+(d.author||'a Discord member')):'';box.append(button(d.name+' · '+d.state+by+' ('+d.why+')',()=>onPick(d),'duplicate-jump'));}return box;}
  // While a marker is being added, an NPC this map already marks (or someone already suggested) under the same wiki
  // page or name is named in the form, with a way to update that one instead. It is a warning: the note still saves.
- // A kind of NPC ("A cook", "the guard"), or a name the map already uses three times or more, never matches by name.
- const notNpc=new Set(['Personal','Herbs','Wood','Ore','Mob camp']);
+ // A kind of NPC ("A cook", "the guard") never matches; a name the map already uses three times or more only by wiki page.
+ // People only: places, trade stations and ways through (banks, stairs, lifts...) are not checked.
+ const npcTypes=new Set(['Class trainer','Guild','Named mob','Notable NPC','Quest','Quest NPC','Vendor']);
  // "Elara Venn" is "Paymaster Elara Venn": a name of two words or more held whole in the other counts too.
  const sameNpcName=(a,b)=>a===b||[[a,b],[b,a]].some(([short,long])=>short.includes(' ')&&short.length>=6&&(' '+long+' ').includes(' '+short+' '));
  function existingNpcs(){
   if(!draft||!config||config.zonesFile||noteTypeValue()!=='marker')return [];
-  const raw=String($('name')?.value||'').trim(),key=looseName(raw),wikiId=$('wiki')?.dataset.wikiId||'',npcs=originals.filter(m=>!notNpc.has(m.category));
-  const generic=/^(a|an|the)\s/i.test(raw)||key.length<4||npcs.filter(m=>looseName(m.name)===key).length>=3;
-  const why=(name,id)=>wikiId&&id===wikiId?'same wiki page':!generic&&sameNpcName(key,looseName(name))?'same name':'';
+  const raw=String($('name')?.value||'').trim(),key=looseName(raw),wikiId=$('wiki')?.dataset.wikiId||'',npcs=originals.filter(m=>npcTypes.has(m.category));
+  // A kind of NPC has one wiki page for all of them ("A cook"): it matches neither way.
+  const kind=/^(a|an|the)\s/i.test(raw),generic=kind||key.length<4||npcs.filter(m=>looseName(m.name)===key).length>=3;
+  const why=(name,id)=>wikiId&&id===wikiId&&!kind?'same wiki page':!generic&&sameNpcName(key,looseName(name))?'same name':'';
   // This note's own suggestion (and the marker it became) is not a second one.
   const own=user?readFollowed()[followId(draft)]?.id:null,found=[];
   for(const m of npcs){if(own!=null&&m.id==='community-'+own)continue;const w=why(m.name,m.wikiId);if(w)found.push({marker:m,name:m.name,why:w,level:m.level});}
   for(const r of [...pendingRows,...approvedRows]){const p=r.payload||{};
-   if(r.kind!=='new-marker'||r.id===own||r.note_id===draft.id||p.noteType||notNpc.has(p.category)||originals.some(m=>m.id==='community-'+r.id))continue;
+   if(r.kind!=='new-marker'||r.id===own||r.note_id===draft.id||p.noteType||!npcTypes.has(p.category)||originals.some(m=>m.id==='community-'+r.id))continue;
    const w=why(p.name,p.wikiId);if(w)found.push({row:r,name:p.name,why:w,level:r.level||p.level,mine:!!user&&r.user_id===user.id&&r.status==='pending'&&!r.reviewed_at});}
   return found.slice(0,4);}
  let npcBox=null,npcTimer=0;
