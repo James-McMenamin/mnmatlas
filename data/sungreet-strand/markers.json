@@ -797,5 +797,50 @@
   "y": 1034,
   "wiki": "https://monstersandmemories.wiki/npcs/klimpi-the-feared",
   "wikiId": "npc-klimpi-the-feared"
+ },
+ {
+  "id": "community-654",
+  "community": true,
+  "name": "Rizik Goresnout",
+  "category": "Named mob",
+  "note": "",
+  "x": 1039,
+  "y": 2725,
+  "levels": [
+   7,
+   7
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/rizik-goresnout",
+  "wikiId": "npc-rizik-goresnout"
+ },
+ {
+  "id": "community-663",
+  "community": true,
+  "name": "Rhakar Vexfang",
+  "category": "Named mob",
+  "note": "Spawns at the tent west of the 4 rocks\nPH: Ashira Warrior",
+  "x": 4479,
+  "y": 8488,
+  "levels": [
+   5,
+   5
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/rhakar-vexfang",
+  "wikiId": "npc-rhakar-vexfang"
+ },
+ {
+  "id": "community-665",
+  "community": true,
+  "name": "Rhakar Vexfang",
+  "category": "Named mob",
+  "note": "Central Ashira Camp near Night Harbor zoneline",
+  "x": 4484,
+  "y": 8476,
+  "levels": [
+   5,
+   5
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/rhakar-vexfang",
+  "wikiId": "npc-rhakar-vexfang"
  }
 ]

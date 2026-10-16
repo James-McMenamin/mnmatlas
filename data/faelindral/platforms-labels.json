@@ -101,7 +101,7 @@
     },
     {
       "id": "quite-den",
-      "name": "Quite Den",
+      "name": "Quiet Den",
       "x": 2144,
       "y": 1062,
       "kind": "building",
@@ -109,7 +109,8 @@
       "priority": 50,
       "minZoom": 0,
       "approximate": true,
-      "note": "Place name adapted from Maggot's Faelindral map (CC BY-SA 4.0)."
+      "note": "Place name adapted from Maggot's Faelindral map (CC BY-SA 4.0).",
+      "community": true
     },
     {
       "id": "well-of-order",

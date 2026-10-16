@@ -36,5 +36,11 @@
       "name": "ocombe",
       "what": "moved"
     }
+  ],
+  "marker:community-688": [
+    {
+      "name": "sanforce",
+      "what": "added"
+    }
   ]
 }

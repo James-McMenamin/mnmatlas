@@ -90,5 +90,17 @@
       "name": null,
       "what": "added"
     }
+  ],
+  "marker:lumberjacks-brother-juro": [
+    {
+      "name": null,
+      "what": "moved"
+    }
+  ],
+  "marker:lumberjacks": [
+    {
+      "name": null,
+      "what": "moved"
+    }
   ]
 }

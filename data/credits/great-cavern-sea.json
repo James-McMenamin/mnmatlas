@@ -4,5 +4,11 @@
       "name": null,
       "what": "moved"
     }
+  ],
+  "label:boat-route": [
+    {
+      "name": null,
+      "what": "removed"
+    }
   ]
 }

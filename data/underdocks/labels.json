@@ -162,19 +162,6 @@
   ],
   "trainers": [
     {
-      "id": "class-beastlord",
-      "abbreviations": [
-        "BST"
-      ],
-      "classes": [
-        "Beastlord"
-      ],
-      "building": "Beastlord",
-      "x": 4421,
-      "y": 3326,
-      "level": "lower"
-    },
-    {
       "id": "class-elementalist-wizard-enchanter",
       "abbreviations": [
         "ELE",

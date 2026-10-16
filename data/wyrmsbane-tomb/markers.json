@@ -256,8 +256,8 @@
   {
     "id": "jakob-tomb-route-to",
     "level": "floor-3",
-    "x": 2545.61,
-    "y": 2284.32,
+    "x": 2186,
+    "y": 2031,
     "category": "Stairs",
     "approximate": true,
     "note": "",
@@ -265,7 +265,8 @@
     "toMarker": "jakob-tomb-route-from",
     "direction": "up",
     "name": "Stairs up to the entrance halls",
-    "switchOnClick": true
+    "switchOnClick": true,
+    "community": true
   },
   {
     "id": "quartermaster-boothroy",
@@ -332,25 +333,27 @@
     "id": "dario-numas",
     "name": "Dario Numas",
     "category": "Named mob",
-    "x": 2472.24,
-    "y": 2292.31,
+    "x": 2093,
+    "y": 2397,
     "level": "floor-3",
     "approximate": true,
     "note": "",
     "wiki": "https://monstersandmemories.wiki/npcs/dario-numas",
-    "wikiId": "npc-dario-numas"
+    "wikiId": "npc-dario-numas",
+    "community": true
   },
   {
     "id": "ariblast-the-wicked",
     "name": "Ariblast the Wicked",
     "category": "Named mob",
-    "x": 2685.38,
-    "y": 2452.11,
+    "x": 2966,
+    "y": 2329,
     "level": "floor-3",
     "approximate": true,
     "note": "",
     "wiki": "https://monstersandmemories.wiki/npcs/ariblast-the-wicked",
-    "wikiId": "npc-ariblast-the-wicked"
+    "wikiId": "npc-ariblast-the-wicked",
+    "community": true
   },
   {
     "id": "grandmaster-gildas",
@@ -404,8 +407,8 @@
     "id": "escaped-minion",
     "name": "An escaped minion",
     "category": "Named mob",
-    "x": 2122.25,
-    "y": 2645.82,
+    "x": 2082,
+    "y": 3360,
     "level": "floor-1",
     "approximate": true,
     "note": "",

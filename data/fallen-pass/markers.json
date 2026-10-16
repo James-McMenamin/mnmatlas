@@ -414,17 +414,18 @@
  },
  {
   "id": "undead-40plus-4",
-  "name": "Undead",
+  "name": "Upper Saman",
   "category": "Mob camp",
   "levels": [
-   40,
-   null
+   50,
+   55
   ],
   "x": 2830,
   "y": 2582,
   "approximate": true,
   "note": "",
-  "minZoom": 2
+  "minZoom": 2,
+  "community": true
  },
  {
   "id": "humanoid-31-40-1",
@@ -481,5 +482,226 @@
   "approximate": true,
   "note": "",
   "minZoom": 2
+ },
+ {
+  "id": "community-617",
+  "community": true,
+  "name": "Necroferius",
+  "category": "Named mob",
+  "note": "",
+  "x": 2612,
+  "y": 1013,
+  "levels": [
+   25,
+   25
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/necroferius",
+  "wikiId": "npc-necroferius"
+ },
+ {
+  "id": "community-623",
+  "community": true,
+  "name": "Overseer Shuk'Naru (levels 41–42)",
+  "category": "Quest NPC",
+  "note": "Looking West from bridge, this named spawns dead center of this patio area.",
+  "x": 1230,
+  "y": 2002,
+  "wiki": "https://monstersandmemories.wiki/npcs/overseer-shuknaru",
+  "wikiId": "npc-overseer-shuknaru"
+ },
+ {
+  "id": "community-669",
+  "community": true,
+  "name": "Blightcaller Zirat (level ~55)",
+  "category": "Named mob",
+  "note": "Upper Saman",
+  "x": 2573,
+  "y": 2356,
+  "levels": [
+   55,
+   55
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/blightcaller-zirat",
+  "wikiId": "npc-blightcaller-zirat"
+ },
+ {
+  "id": "community-670",
+  "community": true,
+  "name": "Blightcaller Vethis (level ~55)",
+  "category": "Named mob",
+  "note": "Upper Saman",
+  "x": 2600,
+  "y": 2416,
+  "levels": [
+   55,
+   55
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/blightcaller-vethis",
+  "wikiId": "npc-blightcaller-vethis"
+ },
+ {
+  "id": "community-671",
+  "community": true,
+  "name": "Edric Torvald (level 53)",
+  "category": "Named mob",
+  "note": "",
+  "x": 3030,
+  "y": 2792,
+  "levels": [
+   53,
+   53
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/edric-torvald",
+  "wikiId": "npc-edric-torvald"
+ },
+ {
+  "id": "community-672",
+  "community": true,
+  "name": "Faylan Torvald (level 53)",
+  "category": "Named mob",
+  "note": "FP",
+  "x": 2831,
+  "y": 2641,
+  "levels": [
+   53,
+   53
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/faylan-torvald",
+  "wikiId": "npc-faylan-torvald"
+ },
+ {
+  "id": "community-673",
+  "community": true,
+  "name": "Lady Elana Torvald (level 55)",
+  "category": "Named mob",
+  "note": "Upper Saman",
+  "x": 3051,
+  "y": 2570,
+  "levels": [
+   55,
+   55
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/lady-elana-torvald",
+  "wikiId": "npc-lady-elana-torvald"
+ },
+ {
+  "id": "community-674",
+  "community": true,
+  "name": "Elda the Cook (level ~54)",
+  "category": "Named mob",
+  "note": "Upper Saman",
+  "x": 3063,
+  "y": 2472,
+  "levels": [
+   54,
+   54
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/elda-the-cook",
+  "wikiId": "npc-elda-the-cook"
+ },
+ {
+  "id": "community-675",
+  "community": true,
+  "name": "Elda the Cook (level ~54)",
+  "category": "Named mob",
+  "note": "Spawns in both buildings",
+  "x": 3063,
+  "y": 2355,
+  "levels": [
+   55,
+   55
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/elda-the-cook",
+  "wikiId": "npc-elda-the-cook"
+ },
+ {
+  "id": "community-676",
+  "community": true,
+  "name": "Dame Lysandra Thrym (level ~55)",
+  "category": "Named mob",
+  "note": "Upper Saman\nPH Plagueborn heiress (necro/chanter)\nSpawns at the same time as Yeoman",
+  "x": 3128,
+  "y": 2195,
+  "levels": [
+   55,
+   55
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/dame-lysandra-thrym",
+  "wikiId": "npc-dame-lysandra-thrym"
+ },
+ {
+  "id": "community-677",
+  "community": true,
+  "name": "Aidan Thrym (level ~54)",
+  "category": "Named mob",
+  "note": "Upper Saman",
+  "x": 3085,
+  "y": 2161,
+  "levels": [
+   54,
+   54
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/aidan-thrym",
+  "wikiId": "npc-aidan-thrym"
+ },
+ {
+  "id": "community-678",
+  "community": true,
+  "name": "Yeoman Borin Smythe (level ~55)",
+  "category": "Named mob",
+  "note": "Upper Saman\nSpawns at the same time as Dame",
+  "x": 3002,
+  "y": 2182,
+  "levels": [
+   55,
+   55
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/yeoman-borin-smythe",
+  "wikiId": "npc-yeoman-borin-smythe"
+ },
+ {
+  "id": "community-679",
+  "community": true,
+  "name": "Blightcaller Ghora (level ~55)",
+  "category": "Named mob",
+  "note": "Upper Saman. Spawns in the central temple thingy, wanders outside a little bit and back in.",
+  "x": 2892,
+  "y": 2346,
+  "levels": [
+   55,
+   55
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/blightcaller-ghora",
+  "wikiId": "npc-blightcaller-ghora"
+ },
+ {
+  "id": "community-680",
+  "community": true,
+  "name": "Blightcaller Harun (level ~55)",
+  "category": "Named mob",
+  "note": "Upper Saman",
+  "x": 2753,
+  "y": 2406,
+  "levels": [
+   53,
+   53
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/blightcaller-harun",
+  "wikiId": "npc-blightcaller-harun"
+ },
+ {
+  "id": "community-695",
+  "community": true,
+  "name": "Qassem Brolt (level 34)",
+  "category": "Named mob",
+  "note": "Spawns on the 2nd Floor of the Cave from the Cove.",
+  "x": 2448,
+  "y": 3050,
+  "levels": [
+   34,
+   34
+  ],
+  "wiki": "https://monstersandmemories.wiki/npcs/qassem-brolt",
+  "wikiId": "npc-qassem-brolt"
  }
 ]

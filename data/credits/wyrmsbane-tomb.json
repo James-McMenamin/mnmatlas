@@ -9,6 +9,28 @@
     {
       "name": "ocombe",
       "what": "edited"
+    },
+    {
+      "name": "theemcredible",
+      "what": "moved"
+    }
+  ],
+  "marker:ariblast-the-wicked": [
+    {
+      "name": "theemcredible",
+      "what": "moved"
+    }
+  ],
+  "marker:dario-numas": [
+    {
+      "name": "theemcredible",
+      "what": "moved"
+    }
+  ],
+  "marker:jakob-tomb-route-to": [
+    {
+      "name": null,
+      "what": "moved"
     }
   ]
 }

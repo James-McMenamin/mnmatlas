@@ -94,8 +94,8 @@
       "id": "to-shaded-dunes",
       "name": "to Shaded Dunes",
       "level": "floor-1",
-      "x": 3256,
-      "y": 3230.4,
+      "x": 2330,
+      "y": 3109,
       "kind": "exit",
       "priority": 95,
       "minZoom": 1.5,
@@ -103,7 +103,8 @@
       "approximate": true,
       "note": "South end of the canyon.",
       "toMap": "shaded-dunes",
-      "toPlace": "to-tel-ekir"
+      "toPlace": "to-tel-ekir",
+      "community": true
     }
   ],
   "trainers": [],

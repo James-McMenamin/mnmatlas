@@ -1054,8 +1054,8 @@
     "name": "Grubbfist (level 9)",
     "category": "Named mob",
     "note": "There’s a cave; he’s at the camp farthest from the North Gate.",
-    "x": 1691,
-    "y": 710,
+    "x": 1677,
+    "y": 626,
     "wiki": "https://monstersandmemories.wiki/npcs/grubbfist",
     "wikiId": "npc-grubbfist"
   },
@@ -1463,5 +1463,136 @@
     "y": 1226,
     "wiki": "https://monstersandmemories.wiki/npcs/guild-registrar-night-harbor",
     "wikiId": "npc-guild-registrar-night-harbor"
+  },
+  {
+    "id": "community-564",
+    "community": true,
+    "name": "Customs Inspector Bakari",
+    "category": "Vendor",
+    "note": "",
+    "x": 1648,
+    "y": 1907,
+    "wiki": "https://monstersandmemories.wiki/npcs/customs-inspector-bakari",
+    "wikiId": "npc-customs-inspector-bakari"
+  },
+  {
+    "id": "community-566",
+    "community": true,
+    "name": "Captain Eilionoir",
+    "category": "Vendor",
+    "note": "",
+    "x": 1559,
+    "y": 1217,
+    "wiki": "https://monstersandmemories.wiki/npcs/captain-eilionoir",
+    "wikiId": "npc-captain-eilionoir"
+  },
+  {
+    "id": "community-567",
+    "community": true,
+    "name": "Guard Andreu",
+    "category": "Quest",
+    "note": "",
+    "x": 949,
+    "y": 1764,
+    "wiki": "https://monstersandmemories.wiki/npcs/guard-andreu",
+    "wikiId": "npc-guard-andreu"
+  },
+  {
+    "id": "community-598",
+    "community": true,
+    "name": "Master Wincog",
+    "category": "Quest NPC",
+    "note": "Master Wincog, Enchanter quest.",
+    "x": 1553,
+    "y": 1278,
+    "wiki": "https://monstersandmemories.wiki/npcs/master-wincog",
+    "wikiId": "npc-master-wincog"
+  },
+  {
+    "id": "community-650",
+    "community": true,
+    "name": "Fadila",
+    "category": "Quest NPC",
+    "note": "Accepts various drops in return for rations, water, or torches.",
+    "x": 2256,
+    "y": 779,
+    "wiki": "https://monstersandmemories.wiki/npcs/fadila",
+    "wikiId": "npc-fadila"
+  },
+  {
+    "id": "community-651",
+    "community": true,
+    "name": "Farmer Ammar",
+    "category": "Quest NPC",
+    "note": "Gives a quest for gathering some creature drops to return to his wife, Fadila.",
+    "x": 2220,
+    "y": 802,
+    "wiki": "https://monstersandmemories.wiki/npcs/farmer-ammar",
+    "wikiId": "npc-farmer-ammar"
+  },
+  {
+    "id": "community-655",
+    "community": true,
+    "name": "A shaman scribe",
+    "category": "Vendor",
+    "note": "Inside on the second floor to the right, next to the beastmaster trainers",
+    "x": 1637,
+    "y": 1366,
+    "vendor": "Spell scribe",
+    "wiki": "https://monstersandmemories.wiki/npcs/a-shaman-scribe",
+    "wikiId": "npc-a-shaman-scribe"
+  },
+  {
+    "id": "community-660",
+    "community": true,
+    "name": "Piia",
+    "category": "Quest NPC",
+    "note": "Up the blue stairs. Open door. Turn right.",
+    "x": 1683,
+    "y": 1710,
+    "wiki": "https://monstersandmemories.wiki/npcs/piia",
+    "wikiId": "npc-piia"
+  },
+  {
+    "id": "community-681",
+    "community": true,
+    "name": "Foss Dunestrider",
+    "category": "Quest NPC",
+    "note": "",
+    "x": 905,
+    "y": 1497,
+    "wiki": "https://monstersandmemories.wiki/npcs/foss-dunestrider",
+    "wikiId": "npc-foss-dunestrider"
+  },
+  {
+    "id": "community-691",
+    "community": true,
+    "name": "A cloth armorer",
+    "category": "Vendor",
+    "note": "Night Market, Shortfolk area",
+    "x": 1113,
+    "y": 1519,
+    "vendor": "Cloth armorer",
+    "sells": [
+      "Armor",
+      "Materials"
+    ],
+    "wiki": "https://monstersandmemories.wiki/npcs/a-cloth-armorer",
+    "wikiId": "npc-a-cloth-armorer"
+  },
+  {
+    "id": "community-692",
+    "community": true,
+    "name": "A used weapons dealer",
+    "category": "Vendor",
+    "note": "Night Market, Shortfolk area",
+    "x": 1113,
+    "y": 1512,
+    "vendor": "Used weapons dealer",
+    "sells": [
+      "Weapons"
+    ],
+    "wiki": "https://monstersandmemories.wiki/npcs/a-used-weapons-dealer",
+    "wikiId": "npc-a-used-weapons-dealer"
   }
 ]

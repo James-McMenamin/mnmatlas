@@ -696,19 +696,6 @@
     "y": 2390
   },
   {
-    "id": "community-224",
-    "community": true,
-    "name": "Galvera",
-    "category": "Vendor",
-    "note": "",
-    "x": 3922,
-    "y": 3119,
-    "vendor": "Bag merchant",
-    "sells": [
-      "Bags"
-    ]
-  },
-  {
     "id": "community-225",
     "community": true,
     "name": "an herbalist",
@@ -1454,5 +1441,129 @@
     "x": 3800,
     "y": 3229,
     "vendor": "Reagent vendor"
+  },
+  {
+    "id": "community-583",
+    "community": true,
+    "name": "Vaelis Butcher",
+    "category": "Vendor",
+    "note": "",
+    "x": 4239,
+    "y": 2798,
+    "vendor": "Butcher"
+  },
+  {
+    "id": "community-584",
+    "community": true,
+    "name": "Baker Kaelen",
+    "category": "Vendor",
+    "note": "",
+    "x": 4208,
+    "y": 2754,
+    "vendor": "Baker"
+  },
+  {
+    "id": "community-585",
+    "community": true,
+    "name": "a used weapons dealer",
+    "category": "Vendor",
+    "note": "",
+    "x": 3659,
+    "y": 3038,
+    "vendor": "Used weapons dealer"
+  },
+  {
+    "id": "community-587",
+    "community": true,
+    "name": "Leric Tharkol",
+    "category": "Vendor",
+    "note": "",
+    "x": 3969,
+    "y": 3109,
+    "vendor": "General goods"
+  },
+  {
+    "id": "community-588",
+    "community": true,
+    "name": "Jexil Vhalens",
+    "category": "Vendor",
+    "note": "",
+    "x": 3952,
+    "y": 3073,
+    "vendor": "Grocer"
+  },
+  {
+    "id": "community-589",
+    "community": true,
+    "name": "Umben Fasseth",
+    "category": "Vendor",
+    "note": "",
+    "x": 3988,
+    "y": 3288,
+    "vendor": "Lumberjack vendor"
+  },
+  {
+    "id": "community-590",
+    "community": true,
+    "name": "Azana Ethinel",
+    "category": "Vendor",
+    "note": "",
+    "x": 3914,
+    "y": 3318,
+    "vendor": "Produce vendor"
+  },
+  {
+    "id": "community-591",
+    "community": true,
+    "name": "Korsen Yul",
+    "category": "Vendor",
+    "note": "wooden weapons merchant",
+    "x": 3891,
+    "y": 3206
+  },
+  {
+    "id": "community-592",
+    "community": true,
+    "name": "Rilar Tret\"rel",
+    "category": "Vendor",
+    "note": "",
+    "x": 3924,
+    "y": 3203
+  },
+  {
+    "id": "community-593",
+    "community": true,
+    "name": "Chief Glowgut",
+    "category": "Named mob",
+    "note": "inside the goblin cave",
+    "x": 1867,
+    "y": 1771,
+    "levels": [
+      13,
+      13
+    ],
+    "wiki": "https://monstersandmemories.wiki/npcs/chief-glowgut",
+    "wikiId": "npc-1790076524906-phjpl"
+  },
+  {
+    "id": "community-661",
+    "community": true,
+    "name": "Myal Vehear",
+    "category": "Quest NPC",
+    "note": "Quest giver for SPB and WIZ",
+    "x": 4541,
+    "y": 4131,
+    "wiki": "https://monstersandmemories.wiki/npcs/myal-vehear",
+    "wikiId": "npc-myal-vehear"
+  },
+  {
+    "id": "community-662",
+    "community": true,
+    "name": "Ailis Hal'kareth",
+    "category": "Quest NPC",
+    "note": "WIZ and SPB quest giver",
+    "x": 3868,
+    "y": 3491,
+    "wiki": "https://monstersandmemories.miraheze.org/wiki/Ailis_Hal%27kareth"
   }
 ]

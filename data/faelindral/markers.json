@@ -309,12 +309,14 @@
  },
  {
   "id": "maggot-npc-02",
-  "name": "Notable NPC — Pixie platform",
+  "name": "Sersil Tangleroot",
   "category": "Notable NPC",
   "x": 711.22,
   "y": 812.44,
   "approximate": true,
-  "note": "Notable NPC symbol on Maggot's Faelindral map. The map does not give the NPC's name."
+  "note": "",
+  "wiki": "https://monstersandmemories.wiki/npcs/npc-sersil-tangleroot",
+  "community": true
  },
  {
   "id": "maggot-npc-03",
@@ -673,5 +675,16 @@
   "y": 1988,
   "wiki": "https://monstersandmemories.wiki/npcs/researcher-fairgrove",
   "wikiId": "npc-researcher-fairgrove"
+ },
+ {
+  "id": "community-693",
+  "community": true,
+  "name": "Wyrdguard Oakenpine",
+  "category": "Quest NPC",
+  "note": "",
+  "x": 1299,
+  "y": 863,
+  "wiki": "https://monstersandmemories.wiki/npcs/wyrdguard-oakenpine",
+  "wikiId": "npc-wyrdguard-oakenpine"
  }
 ]
