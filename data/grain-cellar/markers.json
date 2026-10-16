@@ -2,6 +2,7 @@
   {
     "id": "a-sneaky-rat",
     "name": "A sneaky rat",
+    "level": "cellar",
     "category": "Named mob",
     "x": 2444,
     "y": 1488.3,
@@ -13,6 +14,7 @@
   {
     "id": "rais-muzari",
     "name": "Rais Muzari",
+    "level": "cellar",
     "category": "Named mob",
     "x": 3468,
     "y": 2564.5,
@@ -24,6 +26,7 @@
   {
     "id": "zakariah-shriki",
     "name": "Zakariah Shriki",
+    "level": "cellar",
     "category": "Named mob",
     "x": 3212,
     "y": 3604.5,
@@ -35,6 +38,7 @@
   {
     "id": "leila-al-bahri",
     "name": "Leila al-Bahri",
+    "level": "cellar",
     "category": "Named mob",
     "x": 1220,
     "y": 2691,
@@ -46,6 +50,7 @@
   {
     "id": "khalid-al-bahri",
     "name": "Khalid al-Bahri",
+    "level": "cellar",
     "category": "Named mob",
     "x": 1300,
     "y": 2691,
@@ -57,6 +62,7 @@
   {
     "id": "fariha-bint-nizar",
     "name": "Fariha bint Nizar",
+    "level": "cellar",
     "category": "Named mob",
     "x": 1220,
     "y": 2811,
@@ -68,6 +74,7 @@
   {
     "id": "priestess-of-kravvin",
     "name": "A priestess of Kravvin",
+    "level": "cellar",
     "category": "Named mob",
     "x": 1300,
     "y": 2811,
@@ -77,11 +84,29 @@
     "wikiId": "npc-a-priestess-of-kravvin"
   },
   {
-    "id": "stair-foot",
-    "name": "Foot of the entrance stair",
+    "id": "stair-up-entrance",
+    "name": "Stairs - up to Entrance stair",
+    "level": "cellar",
+    "x": 1584,
+    "y": 2440,
     "category": "Stairs",
-    "x": 1680,
-    "y": 2558.2,
-    "note": "The stair climbs to the granary door; see the inset in the north-west corner."
+    "note": "",
+    "toLevel": "entrance",
+    "toMarker": "stair-down-cellar",
+    "direction": "up",
+    "switchOnClick": true
+  },
+  {
+    "id": "stair-down-cellar",
+    "name": "Stairs - down to Cellar",
+    "level": "entrance",
+    "x": 1584,
+    "y": 2440,
+    "category": "Stairs",
+    "note": "",
+    "toLevel": "cellar",
+    "toMarker": "stair-up-entrance",
+    "direction": "down",
+    "switchOnClick": true
   }
 ]

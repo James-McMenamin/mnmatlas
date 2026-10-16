@@ -1,6 +1,14 @@
 {
  "entries": [
   {
+   "date": "2026-10-16",
+   "title": "Grain Cellar stair redrawn",
+   "text": "The Grain Cellar now has two floors. The entrance stair climbs from the corner of the octagonal hall to the passage under the granary door, all where it really runs; switch floors at the middle landing.",
+   "maps": [
+    "grain-cellar"
+   ]
+  },
+  {
    "date": "2026-10-15",
    "title": "Sunken Resort is charted",
    "text": "Beneath a Scarwood lake, the flooded halls of Sunken Resort join the atlas across four floors. Follow the bowl-room stairs and the well down to the wisp and elemental caves, find the two air pockets, and turn the new relief view to see how the floors stack.",
